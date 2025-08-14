@@ -9,8 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Maximize, Loader2, Image as ImageIcon, X } from "lucide-react";
+import { Maximize, Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 
 export default function ResizeDimensionsPage() {
   const [originalFile, setOriginalFile] = useState<File | null>(null);
@@ -60,7 +61,6 @@ export default function ResizeDimensionsPage() {
         ctx?.drawImage(img, 0, 0, Number(width), Number(height));
         const resizedDataUrl = canvas.toDataURL(originalFile?.type || "image/png");
         
-        // Store in session storage and navigate
         sessionStorage.setItem("resizedImageDataUrl", resizedDataUrl);
         sessionStorage.setItem("originalImageDataUrl", originalUrl);
         sessionStorage.setItem("resizedImageFileName", `resized-${originalFile?.name || 'image.png'}`);
@@ -98,41 +98,48 @@ export default function ResizeDimensionsPage() {
       <PageHeader title="Resize by Dimensions" showBackButton />
       <div className="flex-1 overflow-y-auto p-4 md:p-6">
         <Card className="w-full max-w-lg mx-auto">
-            <CardHeader>
-            <CardTitle className="flex items-center">
-                <Maximize className="mr-2 h-5 w-5 text-primary" />
-                Upload an Image
-            </CardTitle>
-            <CardDescription>Select an image to resize to specific dimensions.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-                {!originalUrl ? (
-                    <FileUploader onFileSelect={handleFileSelect} />
-                ) : (
-                    <div className="space-y-4">
-                        <div className="relative w-full h-64 border-2 border-dashed rounded-lg flex items-center justify-center bg-secondary/50">
-                            <Image src={originalUrl} alt="Original" layout="fill" className="rounded-lg object-contain p-2" />
-                            <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7 rounded-full z-10" onClick={handleReset}>
-                                <X className="h-4 w-4"/>
-                            </Button>
-                        </div>
+          {!originalUrl ? (
+            <>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Maximize className="mr-2 h-5 w-5 text-primary" />
+                  Upload an Image
+                </CardTitle>
+                <CardDescription>Select an image to resize to specific dimensions.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <FileUploader onFileSelect={handleFileSelect} />
+              </CardContent>
+            </>
+          ) : (
+            <CardContent className="pt-6">
+              <div className="space-y-4">
+                <div className={cn(
+                    "relative w-full h-64 border-2 border-dashed rounded-lg flex items-center justify-center bg-secondary/50",
+                    "transition-all duration-300 ease-in-out"
+                  )}>
+                  <Image src={originalUrl} alt="Original" layout="fill" className="rounded-lg object-contain p-2" />
+                  <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7 rounded-full z-10" onClick={handleReset}>
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="width">Width (px)</Label>
-                                <Input id="width" type="number" placeholder="e.g., 1920" value={width} onChange={e => setWidth(e.target.value === '' ? '' : Number(e.target.value))} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="height">Height (px)</Label>
-                                <Input id="height" type="number" placeholder="e.g., 1080" value={height} onChange={e => setHeight(e.target.value === '' ? '' : Number(e.target.value))} />
-                            </div>
-                        </div>
-                        <Button className="w-full" onClick={handleResize} disabled={isProcessing}>
-                            {isProcessing ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Resizing...</> : <><Maximize className="mr-2"/>Resize Image</>}
-                        </Button>
-                    </div>
-                )}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="width">Width (px)</Label>
+                    <Input id="width" type="number" placeholder="e.g., 1920" value={width} onChange={e => setWidth(e.target.value === '' ? '' : Number(e.target.value))} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="height">Height (px)</Label>
+                    <Input id="height" type="number" placeholder="e.g., 1080" value={height} onChange={e => setHeight(e.target.value === '' ? '' : Number(e.target.value))} />
+                  </div>
+                </div>
+                <Button className="w-full" onClick={handleResize} disabled={isProcessing}>
+                  {isProcessing ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Resizing...</> : <><Maximize className="mr-2 h-4 w-4" />Resize Image</>}
+                </Button>
+              </div>
             </CardContent>
+          )}
         </Card>
       </div>
     </div>

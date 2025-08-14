@@ -9,23 +9,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, RefreshCw, Loader2 } from "lucide-react";
 
 export default function ResizeResultPage() {
-    const [originalUrl, setOriginalUrl] = useState<string | null>(null);
     const [resizedUrl, setResizedUrl] = useState<string | null>(null);
     const [fileName, setFileName] = useState("resized-image.png");
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
     useEffect(() => {
-        const original = sessionStorage.getItem("originalImageDataUrl");
         const resized = sessionStorage.getItem("resizedImageDataUrl");
         const name = sessionStorage.getItem("resizedImageFileName");
 
-        if (resized && original && name) {
-            setOriginalUrl(original);
+        if (resized && name) {
             setResizedUrl(resized);
             setFileName(name);
         } else {
-            // Redirect if data is not available
             router.replace("/photo/resize-dimensions");
         }
         setLoading(false);
@@ -54,11 +50,13 @@ export default function ResizeResultPage() {
     <div className="flex flex-col min-h-screen">
       <PageHeader title="Resizing Result" showBackButton />
       <div className="flex-1 overflow-y-auto p-4 md:p-6">
-        <div className="w-full max-w-md mx-auto space-y-4">
+        <div className="w-full max-w-lg mx-auto space-y-4">
             <Card>
                 <CardHeader><CardTitle>Resized Image</CardTitle></CardHeader>
                 <CardContent>
-                    {resizedUrl && <Image src={resizedUrl} alt="Resized Image" width={512} height={512} className="rounded-lg object-contain w-full h-auto border" />}
+                    <div className="relative w-full h-auto aspect-square border rounded-lg flex items-center justify-center bg-secondary/50">
+                        <Image src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain p-2" />
+                    </div>
                 </CardContent>
             </Card>
              <Card>
@@ -72,7 +70,7 @@ export default function ResizeResultPage() {
                         </Button>
                     </a>
                     <Button variant="secondary" className="w-full" onClick={handleStartOver}>
-                        <RefreshCw className="mr-2 h-4 w-4" /> Start Over
+                        <RefreshCw className="mr-2 h-4 w-4" /> Resize Another
                     </Button>
                 </CardContent>
             </Card>
