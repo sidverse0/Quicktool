@@ -7,7 +7,7 @@ const qrTools = [
   {
     title: "QR Code Maker",
     description: "Generate QR codes for links, text & more.",
-    icon: <QrCode className="h-8 w-8 text-white" />,
+    icon: <QrCode className="h-8 w-8" />,
     href: "/qr/maker",
     color: 'from-red-500 to-red-600',
   },

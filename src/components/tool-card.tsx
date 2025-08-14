@@ -30,20 +30,39 @@ export default function ToolCard({
       >
         <Card
           className={cn(
-            "h-full transition-all duration-300 shadow-sm hover:shadow-lg border-primary/20 hover:border-primary/40",
-            color ? "text-white bg-gradient-to-br" : "bg-card"
+            "h-full transition-all duration-300 shadow-sm hover:shadow-lg",
+            color
+              ? "text-white bg-gradient-to-br " + color
+              : "bg-card border-primary/20 hover:border-primary/40"
           )}
         >
           <CardContent className="p-4 flex flex-col justify-between h-full">
             <div className="flex justify-between items-start">
-              <div className={cn("p-2 rounded-lg", color ? "" : "bg-primary/10 text-primary")}>
+              <div
+                className={cn(
+                  "p-2 rounded-lg",
+                  color ? "bg-white/20" : "bg-primary/10 text-primary"
+                )}
+              >
                 {icon}
               </div>
-               <ArrowRight className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-transform group-hover:translate-x-1" />
+              <ArrowRight
+                className={cn(
+                  "w-5 h-5 transition-transform group-hover:translate-x-1",
+                  color ? "text-white/70" : "text-muted-foreground group-hover:text-primary"
+                )}
+              />
             </div>
             <div className="mt-4">
               <h3 className="font-semibold font-headline">{title}</h3>
-              <p className={cn("text-xs", color ? "text-white/80" : "text-muted-foreground")}>{description}</p>
+              <p
+                className={cn(
+                  "text-xs",
+                  color ? "text-white/80" : "text-muted-foreground"
+                )}
+              >
+                {description}
+              </p>
             </div>
           </CardContent>
         </Card>
