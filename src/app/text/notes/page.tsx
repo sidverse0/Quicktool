@@ -67,8 +67,8 @@ export default function HandwrittenNotesPage() {
     backgroundSize: showLines ? `auto ${lineHeight}px` : undefined,
     backgroundImage: showLines ? `linear-gradient(to bottom, transparent ${lineHeight - 1}px, #aab5f1 1px)` : undefined,
     paddingTop: `${lineHeight * 0.25}px`,
-    paddingLeft: '20px',
-    paddingRight: '20px',
+    paddingLeft: '15px',
+    paddingRight: '15px',
     paddingBottom: '20px',
     height: `${lineHeight * 22}px`,
   };
@@ -89,7 +89,7 @@ export default function HandwrittenNotesPage() {
     setTimeout(() => {
         try {
             const FULL_PAGE_LINES = 22;
-            const paddingX = 20;
+            const paddingX = 15;
             const paddingTop = lineHeight * 0.25;
             const paddingBottom = 20;
 
@@ -148,14 +148,7 @@ export default function HandwrittenNotesPage() {
                 context.fillText(line, x, y + (lineIndex * lineHeight) - (fontSize * 0.2));
             }
             
-            wrapText(ctx, text, paddingX, paddingTop, maxWidth, lineHeight);
-            
-            const dataUrl = canvas.toDataURL("image/png");
-            
-            incrementToolUsage(toolName);
-            sessionStorage.setItem("toolColor", toolColor);
-            sessionStorage.setItem("noteImageDataUrl", dataUrl);
-            router.push('/text/notes/result');
+            wrapText(ctx, text, paddingX, paddingTop + (fontSize * 0.6), maxWidth, lineHeight);
             
         } catch (error) {
             console.error(error);
