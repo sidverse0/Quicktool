@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Download, RefreshCw, Loader2 } from "lucide-react";
 
 interface ConvertedImage {
@@ -53,21 +52,21 @@ export default function PdfToImageResultPage() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader title="Conversion Result" showBackButton />
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {convertedImages.map(image => (
-          <div key={image.page} className="space-y-4 rounded-lg border bg-card text-card-foreground shadow-sm p-4">
+          <div key={image.page} className="space-y-4">
               <p className="text-sm font-medium text-center">Page {image.page}</p>
-              <div className="relative w-full aspect-[8.5/11] border rounded-lg bg-white">
+              <div className="relative w-full aspect-[8.5/11] rounded-lg overflow-hidden bg-secondary">
                   <Image src={image.url} alt={`Page ${image.page}`} layout="fill" className="object-contain p-2" />
               </div>
               <a href={image.url} download={`page-${image.page}.${imageType}`}>
                   <Button className="w-full">
-                      <Download className="mr-2 h-4 w-4" /> Download Image
+                      <Download className="mr-2 h-4 w-4" /> Download Page {image.page}
                   </Button>
               </a>
           </div>
         ))}
-        <div className="p-4">
+        <div className="pt-4">
             <Button variant="secondary" className="w-full" onClick={handleStartOver}>
                 <RefreshCw className="mr-2 h-4 w-4" /> Convert Another PDF
             </Button>
