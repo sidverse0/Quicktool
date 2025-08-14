@@ -106,9 +106,11 @@ function QRResult() {
                         eyeRadius={5}
                         eyeColor={qrColor}
                         logoImage={qrLogo || undefined}
-                        logoWidth={60}
-                        logoHeight={60}
+                        logoWidth={qrLogo ? 80: undefined}
+                        logoHeight={qrLogo ? 80: undefined}
                         logoOpacity={1}
+                        logoPadding={qrLogo ? 5 : 0}
+                        logoPaddingStyle="circle"
                     />
                 ) : (
                     <LoadingIndicator />
