@@ -1,16 +1,15 @@
 
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { QrCode, Upload } from "lucide-react";
+import { QrCode } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ColorPickerDialog } from "@/components/color-picker-dialog";
-import Image from "next/image";
 
 const toolColor = "#e85d87";
 
@@ -18,23 +17,8 @@ export default function TextToQrPage() {
   const [text, setText] = useState("Hello, World!");
   const [color, setColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#FFFFFF");
-  const [logo, setLogo] = useState<File | null>(null);
-  const [logoUrl, setLogoUrl] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const { toast } = useToast();
-
-  const handleLogoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-          if (file.size > 1 * 1024 * 1024) { // 1MB limit
-            toast({ variant: 'destructive', title: "Logo is too large!", description: "Please choose a file smaller than 1MB." });
-            return;
-          }
-          setLogo(file);
-          setLogoUrl(URL.createObjectURL(file));
-      }
-  }
 
   const handleGenerate = () => {
     if (!text.trim()) {
@@ -46,31 +30,14 @@ export default function TextToQrPage() {
       return;
     }
 
-    const processAndNavigate = (logoDataUrl: string | null) => {
-        const params = new URLSearchParams({
-            text: text,
-            color,
-            bgColor,
-        });
+    const params = new URLSearchParams({
+        text: text,
+        color,
+        bgColor,
+    });
 
-        sessionStorage.setItem("toolColor", toolColor);
-        if (logoDataUrl) {
-            sessionStorage.setItem("qrLogo", logoDataUrl);
-        } else {
-            sessionStorage.removeItem("qrLogo");
-        }
-        router.push(`/qr/maker/result?${params.toString()}`);
-    };
-
-    if (logo) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            processAndNavigate(e.target?.result as string);
-        };
-        reader.readAsDataURL(logo);
-    } else {
-        processAndNavigate(null);
-    }
+    sessionStorage.setItem("toolColor", toolColor);
+    router.push(`/qr/maker/result?${params.toString()}`);
   };
 
   return (
@@ -106,22 +73,6 @@ export default function TextToQrPage() {
             </div>
         </div>
 
-        <div className="space-y-2">
-            <Label>Logo (optional)</Label>
-            <div className="flex items-center gap-4">
-                <input type="file" accept="image/png, image/jpeg, image/svg+xml" ref={fileInputRef} onChange={handleLogoSelect} className="hidden" />
-                <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
-                    <Upload className="mr-2 h-4 w-4"/>
-                    {logo ? "Change Logo" : "Upload Logo"}
-                </Button>
-                 {logoUrl && (
-                  <div className="relative h-10 w-10">
-                    <Image src={logoUrl} alt="Logo preview" className="rounded-md object-cover" layout="fill" />
-                  </div>
-                )}
-            </div>
-        </div>
-           
         <div className="pt-4">
             <Button
                 className="w-full"

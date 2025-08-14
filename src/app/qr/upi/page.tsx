@@ -1,16 +1,15 @@
 
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { IndianRupee, Upload, QrCode } from "lucide-react";
+import { IndianRupee } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ColorPickerDialog } from "@/components/color-picker-dialog";
-import Image from "next/image";
 
 const toolColor = "#5de87a";
 
@@ -20,23 +19,8 @@ export default function UpiPaymentPage() {
   const [phone, setPhone] = useState("");
   const [color, setColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#FFFFFF");
-  const [logo, setLogo] = useState<File | null>(null);
-  const [logoUrl, setLogoUrl] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const { toast } = useToast();
-
-  const handleLogoSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-          if (file.size > 1 * 1024 * 1024) { // 1MB limit
-            toast({ variant: 'destructive', title: "Logo is too large!", description: "Please choose a file smaller than 1MB." });
-            return;
-          }
-          setLogo(file);
-          setLogoUrl(URL.createObjectURL(file));
-      }
-  }
 
   const handleGenerate = () => {
     if (!payeeName.trim() || (!upiId.trim() && !phone.trim())) {
@@ -50,11 +34,9 @@ export default function UpiPaymentPage() {
 
     let upiUrl = `upi://pay?pn=${encodeURIComponent(payeeName)}&cu=INR`;
     
-    // Prefer UPI ID if both are provided
     if (upiId.trim()) {
         upiUrl += `&pa=${encodeURIComponent(upiId.trim())}`;
     } else if (phone.trim()) {
-        // Simple validation for phone number
         if (/^\d{10}$/.test(phone.trim())) {
             upiUrl += `&pa=${encodeURIComponent(phone.trim())}@paytm`;
         } else {
@@ -67,31 +49,14 @@ export default function UpiPaymentPage() {
         }
     }
     
-    const processAndNavigate = (logoDataUrl: string | null) => {
-        const params = new URLSearchParams({
-            text: upiUrl,
-            color,
-            bgColor,
-        });
+    const params = new URLSearchParams({
+        text: upiUrl,
+        color,
+        bgColor,
+    });
 
-        sessionStorage.setItem("toolColor", toolColor);
-        if (logoDataUrl) {
-            sessionStorage.setItem("qrLogo", logoDataUrl);
-        } else {
-            sessionStorage.removeItem("qrLogo");
-        }
-        router.push(`/qr/maker/result?${params.toString()}`);
-    };
-
-    if (logo) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            processAndNavigate(e.target?.result as string);
-        };
-        reader.readAsDataURL(logo);
-    } else {
-        processAndNavigate(null);
-    }
+    sessionStorage.setItem("toolColor", toolColor);
+    router.push(`/qr/maker/result?${params.toString()}`);
   };
 
   return (
@@ -129,22 +94,6 @@ export default function UpiPaymentPage() {
                      </ColorPickerDialog>
                      <span className="text-xs">Background</span>
                 </div>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label>Logo (optional)</Label>
-            <div className="flex items-center gap-4">
-                <input type="file" accept="image/png, image/jpeg, image/svg+xml" ref={fileInputRef} onChange={handleLogoSelect} className="hidden" />
-                <Button variant="outline" onClick={() => fileInputRef.current?.click()}>
-                    <Upload className="mr-2 h-4 w-4"/>
-                    {logo ? "Change Logo" : "Upload Logo"}
-                </Button>
-                 {logoUrl && (
-                  <div className="relative h-10 w-10">
-                    <Image src={logoUrl} alt="Logo preview" className="rounded-md object-cover" layout="fill" />
-                  </div>
-                )}
             </div>
           </div>
 
