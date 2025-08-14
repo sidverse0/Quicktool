@@ -1,28 +1,25 @@
+
 "use client";
 
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import Image from 'next/image';
 import { LucideIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 type ToolCardProps = {
   href: string;
   title: string;
-  imgSrc: string;
-  imgHint?: string;
   icon: LucideIcon;
   color?: string;
+  gradient?: string;
 };
 
 export default function ToolCard({
   href,
   title,
-  imgSrc,
-  imgHint,
   icon: Icon,
   color,
+  gradient,
 }: ToolCardProps) {
   return (
     <Link href={href} className="group">
@@ -33,19 +30,13 @@ export default function ToolCard({
       >
         <Card className="h-full w-full overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300">
             <CardContent className="p-0 relative">
-                <div className="relative aspect-square w-full">
-                    <Image 
-                        src={imgSrc} 
-                        alt={title}
-                        layout="fill" 
-                        className="object-cover transition-transform duration-300 group-hover:scale-110 filter blur-sm"
-                        data-ai-hint={imgHint}
-                    />
-                    <div className="absolute inset-0 bg-black/50" />
-                </div>
-                <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-                    <Icon className="h-10 w-10 mb-2" style={{ color: color || 'hsl(var(--primary))' }} />
-                    <h3 className="font-semibold text-white font-headline text-base text-center">
+                <div 
+                    className="relative aspect-square w-full transition-transform duration-300 group-hover:scale-110"
+                    style={{ background: gradient || 'hsl(var(--secondary))' }}
+                />
+                <div className="absolute inset-0 flex flex-col items-center justify-center p-4 bg-black/20">
+                    <Icon className="h-10 w-10 mb-2 drop-shadow-lg" style={{ color: color || 'white' }} />
+                    <h3 className="font-semibold text-white font-headline text-base text-center drop-shadow-lg">
                         {title}
                     </h3>
                 </div>

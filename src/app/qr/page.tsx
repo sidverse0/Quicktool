@@ -11,33 +11,29 @@ const qrTools = [
     title: "URL to QR",
     href: "/qr/maker",
     icon: Link,
-    color: "#7a5de8",
-    imgSrc: "https://i.postimg.cc/3JcWwms9/url-to-qr.png",
-    imgHint: "qr code link"
+    color: "#FFFFFF",
+    gradient: "linear-gradient(to top right, #8b5cf6, #a78bfa)",
   },
   {
     title: "Text to QR",
     href: "/qr/text",
     icon: CaseSensitive,
-    color: "#e85d87",
-    imgSrc: "https://i.postimg.cc/L5KZyYJb/text-to-qr.png",
-    imgHint: "text document"
+    color: "#FFFFFF",
+    gradient: "linear-gradient(to top right, #ec4899, #f472b6)",
   },
   {
     title: "vCard to QR",
     href: "/qr/vcard",
     icon: UserSquare,
-    color: "#de5de8",
-    imgSrc: "https://i.postimg.cc/tRnWzT2S/vcard-to-qr.png",
-    imgHint: "contact card"
+    color: "#FFFFFF",
+    gradient: "linear-gradient(to top right, #a855f7, #c084fc)",
   },
   {
     title: "UPI Payment QR",
     href: "/qr/upi",
     icon: IndianRupee,
-    color: "#5de87a",
-    imgSrc: "https://i.postimg.cc/7PMFk6B7/upi-to-qr.png",
-    imgHint: "payment currency"
+    color: "#FFFFFF",
+    gradient: "linear-gradient(to top right, #10b981, #34d399)",
   },
 ];
 

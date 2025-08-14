@@ -11,17 +11,15 @@ const textTools = [
     title: "Calligraphy Signature",
     href: "/text/signature",
     icon: PenSquare,
-    color: "#5de8e2",
-    imgSrc: "https://i.postimg.cc/W12bC2h7/calligraphy-signature.png",
-    imgHint: "signature calligraphy"
+    color: "#FFFFFF",
+    gradient: "linear-gradient(to top right, #14b8a6, #2dd4bf)",
   },
   {
     title: "Hand-written Notes",
     href: "/text/notes",
     icon: FileText,
-    color: "#e8d55d",
-    imgSrc: "https://i.postimg.cc/fLNdcLvt/hand-written-notes.png",
-    imgHint: "notebook paper"
+    color: "#FFFFFF",
+    gradient: "linear-gradient(to top right, #eab308, #fde047)",
   },
 ];
 

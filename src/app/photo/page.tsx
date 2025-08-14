@@ -17,49 +17,43 @@ const photoTools = [
     title: "PDF to Image",
     href: "/photo/pdf-to-image",
     icon: FileImage,
-    color: "#e85d5d",
-    imgSrc: "https://i.postimg.cc/d1T5nSJM/pdf-to-image.png",
-    imgHint: "file document"
+    color: "#FFFFFF",
+    gradient: "linear-gradient(to top right, #ef4444, #f87171)",
   },
   {
     title: "Image to PDF",
     href: "/photo/image-to-pdf",
     icon: ImageUp,
-    color: "#e88d5d",
-    imgSrc: "https://i.postimg.cc/qMhN1W2t/image-to-pdf.png",
-    imgHint: "image file"
+    color: "#FFFFFF",
+    gradient: "linear-gradient(to top right, #f97316, #fb923c)",
   },
   {
     title: "Dimension Resizer",
     href: "/photo/resize-dimensions",
     icon: Maximize,
-    color: "#5d87e8",
-    imgSrc: "https://i.postimg.cc/tJ05F2Yv/dimension-resizer.png",
-    imgHint: "landscape resize"
+    color: "#FFFFFF",
+    gradient: "linear-gradient(to top right, #3b82f6, #60a5fa)",
   },
   {
     title: "File Size Resizer",
     href: "/photo/resize-size",
     icon: Minimize,
-    color: "#5de899",
-    imgSrc: "https://i.postimg.cc/Kz8q4J9t/size-resizer.png",
-    imgHint: "compress quality"
+    color: "#FFFFFF",
+    gradient: "linear-gradient(to top right, #22c55e, #4ade80)",
   },
   {
     title: "Image Filters",
     href: "/photo/filters",
     icon: Palette,
-    color: "#e85dd5",
-    imgSrc: "https://i.postimg.cc/C5zB9fB5/image-filters.png",
-    imgHint: "camera filters"
+    color: "#FFFFFF",
+    gradient: "linear-gradient(to top right, #d946ef, #e879f9)",
   },
   {
     title: "Color Palette",
     href: "/photo/palette-generator",
     icon: Palette,
-    color: "#e8a05d",
-    imgSrc: "https://i.postimg.cc/P5LgZzP4/color-palette.png",
-    imgHint: "color palette"
+    color: "#FFFFFF",
+    gradient: "linear-gradient(to top right, #f59e0b, #facc15)",
   },
 ];
 
