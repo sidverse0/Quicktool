@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import NextImage from "next/image";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
@@ -86,7 +86,7 @@ export default function ResizeSizeResultPage() {
                   </CardHeader>
                   <CardContent>
                       <div className="relative w-full h-auto aspect-square border rounded-lg flex items-center justify-center bg-secondary/50">
-                          <Image src={originalUrl} alt="Original Image" layout="fill" className="rounded-lg object-contain p-2" />
+                          <NextImage src={originalUrl} alt="Original Image" layout="fill" className="rounded-lg object-contain p-2" />
                       </div>
                   </CardContent>
               </Card>
@@ -97,7 +97,7 @@ export default function ResizeSizeResultPage() {
                   </CardHeader>
                   <CardContent>
                       <div className="relative w-full h-auto aspect-square border rounded-lg flex items-center justify-center bg-secondary/50">
-                          <Image src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain p-2" />
+                          <NextImage src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain p-2" />
                       </div>
                   </CardContent>
               </Card>
