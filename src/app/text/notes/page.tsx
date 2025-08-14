@@ -5,24 +5,43 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
-import { FileText, Loader2 } from "lucide-react";
+import { Loader2, Pipette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserData } from "@/hooks/use-user-data";
 import { UsageLimitDialog } from "@/components/usage-limit-dialog";
 import { ColorPickerDialog } from "@/components/color-picker-dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { cn } from "@/lib/utils";
 
 const toolName = "handwrittenNotes";
 const toolColor = "#e8d55d";
 
+const fontOptions = [
+    { value: "'Kalam', cursive", label: "Kalam" },
+    { value: "'Great Vibes', cursive", label: "Great Vibes" },
+    { value: "'Parisienne', cursive", label: "Parisienne" },
+    { value: "'Sacramento', cursive", label: "Sacramento" },
+    { value: "'Dancing Script', cursive", label: "Dancing Script" },
+    { value: "'Pacifico', cursive", label: "Pacifico" },
+];
+
 export default function HandwrittenNotesPage() {
   const [text, setText] = useState("This is a sample note.\nYou can write multiple lines here.");
-  const [inkColor, setInkColor] = useState("#1E40AF"); // A nice blue ink color
+  const [inkColor, setInkColor] = useState("#1E40AF");
+  const [bgColor, setBgColor] = useState("#FFFFFF");
+  const [showLines, setShowLines] = useState(true);
   const [fontSize, setFontSize] = useState(24);
+  const [fontFamily, setFontFamily] = useState(fontOptions[0].value);
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
@@ -30,11 +49,14 @@ export default function HandwrittenNotesPage() {
   const [showUsageLimitDialog, setShowUsageLimitDialog] = useState(false);
 
   const noteStyle: React.CSSProperties = {
-    fontFamily: "'Kalam', cursive",
+    fontFamily: fontFamily,
     fontSize: `${fontSize}px`,
     color: inkColor,
     lineHeight: 1.6,
     whiteSpace: 'pre-wrap',
+    backgroundColor: bgColor,
+    backgroundSize: showLines ? `auto ${fontSize * 1.6}px` : undefined,
+    backgroundImage: showLines ? `linear-gradient(to bottom, transparent ${fontSize * 1.6 - 1}px, #aab5f1 1px)` : undefined,
   };
   
   const handleGenerate = () => {
@@ -52,14 +74,17 @@ export default function HandwrittenNotesPage() {
 
     setTimeout(() => {
         try {
+            const padding = 20;
+            const lineHeight = fontSize * 1.6;
+
             const tempDiv = document.createElement('div');
-            tempDiv.style.fontFamily = "'Kalam', cursive";
+            tempDiv.style.fontFamily = fontFamily;
             tempDiv.style.fontSize = `${fontSize}px`;
-            tempDiv.style.lineHeight = '1.6';
+            tempDiv.style.lineHeight = `${lineHeight}px`;
             tempDiv.style.whiteSpace = 'pre-wrap';
             tempDiv.style.position = 'absolute';
             tempDiv.style.left = '-9999px';
-            tempDiv.style.padding = '20px';
+            tempDiv.style.padding = `${padding}px`;
             tempDiv.innerText = text;
             document.body.appendChild(tempDiv);
             
@@ -68,20 +93,33 @@ export default function HandwrittenNotesPage() {
             if (!ctx) throw new Error("Canvas context not available");
 
             const dpr = window.devicePixelRatio || 1;
-            canvas.width = tempDiv.offsetWidth * dpr;
-            canvas.height = tempDiv.offsetHeight * dpr;
+            canvas.width = (tempDiv.offsetWidth) * dpr;
+            canvas.height = (tempDiv.offsetHeight) * dpr;
             
             ctx.scale(dpr, dpr);
-            ctx.fillStyle = "#FFFFFF"; // White paper background
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            ctx.font = `400 ${fontSize}px 'Kalam', cursive`;
+            ctx.fillStyle = bgColor;
+            ctx.fillRect(0, 0, canvas.width/dpr, canvas.height/dpr);
+            
+            const lines = text.split('\n');
+
+            if (showLines) {
+                ctx.strokeStyle = '#aab5f1';
+                ctx.lineWidth = 1;
+                for (let i = 0; i < lines.length; i++) {
+                    const y = padding + (i * lineHeight) + (fontSize * 1.2);
+                    if (y < canvas.height/dpr - padding/2) {
+                        ctx.beginPath();
+                        ctx.moveTo(padding, y);
+                        ctx.lineTo(canvas.width/dpr - padding, y);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            ctx.font = `400 ${fontSize}px ${fontFamily.split(',')[0]}`;
             ctx.fillStyle = inkColor;
             ctx.textBaseline = 'top';
-
-            const lines = text.split('\n');
-            const lineHeight = fontSize * 1.6;
-            const padding = 20;
 
             for (let i = 0; i < lines.length; i++) {
                 ctx.fillText(lines[i], padding, padding + (i * lineHeight));
@@ -97,6 +135,7 @@ export default function HandwrittenNotesPage() {
             router.push('/text/notes/result');
             
         } catch (error) {
+            console.error(error);
             toast({
                 variant: "destructive",
                 title: "Generation Failed",
@@ -115,10 +154,9 @@ export default function HandwrittenNotesPage() {
       <PageHeader title="Hand-written Notes" showBackButton />
       <div className="flex-1 flex flex-col p-4 space-y-4">
         <div 
-            className="flex-1 min-h-0 w-full p-5 bg-white rounded-lg border shadow-inner overflow-y-auto bg-[linear-gradient(to_bottom,transparent_29px,hsl(var(--primary))_30px),linear-gradient(to_right,transparent_29px,hsl(var(--primary))_30px)] bg-size-[30px_30px]"
-            style={{ backgroundPosition: "-1px -1px", backgroundOrigin: "content-box", backgroundColor: "#fff" }}
+            className="flex-1 min-h-[200px] w-full p-5 rounded-lg border shadow-inner overflow-y-auto"
+            style={noteStyle}
         >
-            <div style={noteStyle}>{text || "Start typing..."}</div>
         </div>
           
         <div className="space-y-6">
@@ -132,21 +170,51 @@ export default function HandwrittenNotesPage() {
                     rows={3}
                 />
             </div>
+
+            <div className="space-y-2">
+              <Label>Font Style</Label>
+              <Select value={fontFamily} onValueChange={setFontFamily}>
+                  <SelectTrigger>
+                      <SelectValue placeholder="Select a font" />
+                  </SelectTrigger>
+                  <SelectContent>
+                      {fontOptions.map(font => (
+                          <SelectItem key={font.value} value={font.value}>
+                              <span style={{fontFamily: font.value}}>{font.label}</span>
+                          </SelectItem>
+                      ))}
+                  </SelectContent>
+              </Select>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 items-end">
+                <div className="space-y-2">
+                    <Label>Font Size: {fontSize}px</Label>
+                    <Slider value={[fontSize]} onValueChange={([val]) => setFontSize(val)} min={12} max={48} step={1} />
+                </div>
+                 <div className="flex items-center space-x-2">
+                    <Switch id="show-lines" checked={showLines} onCheckedChange={setShowLines} />
+                    <Label htmlFor="show-lines">Show Lines</Label>
+                </div>
+            </div>
+
             <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2 flex flex-col items-center">
-                    <Label htmlFor="color">Ink Color</Label>
+                 <div className="space-y-2 flex flex-col items-center">
+                    <Label>Ink Color</Label>
                     <ColorPickerDialog value={inkColor} onChange={setInkColor}>
                         <button className="h-10 w-10 rounded-full border-2 border-muted" style={{ backgroundColor: inkColor }} aria-label="Select ink color" />
                     </ColorPickerDialog>
                 </div>
-                    <div className="space-y-2">
-                    <Label>Font Size: {fontSize}px</Label>
-                    <Slider value={[fontSize]} onValueChange={([val]) => setFontSize(val)} min={12} max={48} step={1} />
+                <div className="space-y-2 flex flex-col items-center">
+                    <Label>Paper Color</Label>
+                    <ColorPickerDialog value={bgColor} onChange={setBgColor}>
+                        <button className="h-10 w-10 rounded-full border-2 border-muted" style={{ backgroundColor: bgColor }} aria-label="Select background color" />
+                    </ColorPickerDialog>
                 </div>
             </div>
         </div>
 
-        <Button className="w-full" onClick={handleGenerate} disabled={isProcessing}>
+        <Button className="w-full mt-4" onClick={handleGenerate} disabled={isProcessing}>
             {isProcessing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : "Generate Note"}
         </Button>
 
