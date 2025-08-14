@@ -1,7 +1,7 @@
 import MainLayout from "@/components/layout/main-layout";
 import PageHeader from "@/components/layout/page-header";
 import ToolCard from "@/components/tool-card";
-import { PenSquare } from "lucide-react";
+import { PenSquare, FileText } from "lucide-react";
 
 const textTools = [
   {
@@ -10,6 +10,13 @@ const textTools = [
     icon: <PenSquare className="h-8 w-8" />,
     href: "/text/signature",
     color: 'from-blue-500 to-sky-500',
+  },
+  {
+    title: "Hand-written Notes",
+    description: "Convert text into hand-written style notes.",
+    icon: <FileText className="h-8 w-8" />,
+    href: "/text/notes",
+    color: 'from-green-500 to-teal-500',
   },
 ];
 
