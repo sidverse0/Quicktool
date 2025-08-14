@@ -148,10 +148,10 @@ export default function SignaturePage() {
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
+                <div className="space-y-2 flex flex-col items-center">
                     <Label>Color</Label>
                     <ColorPickerDialog value={color} onChange={setColor}>
-                        <button className="h-10 w-full rounded-md border-2 border-muted" style={{ backgroundColor: color }} aria-label="Select color" />
+                        <button className="h-10 w-10 rounded-full border-2 border-muted" style={{ backgroundColor: color }} aria-label="Select color" />
                     </ColorPickerDialog>
                 </div>
                 <div className="space-y-2">
