@@ -133,7 +133,7 @@ export default function FiltersPage() {
                 </div>
             </div>
             <div className="space-y-4 overflow-y-auto">
-                <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label>Grayscale: {filters.grayscale}%</Label>
                         <Slider value={[filters.grayscale]} onValueChange={([val]) => setFilters(f => ({...f, grayscale: val}))} max={100} />
@@ -150,7 +150,7 @@ export default function FiltersPage() {
                         <Label>Sepia: {filters.sepia}%</Label>
                         <Slider value={[filters.sepia]} onValueChange={([val]) => setFilters(f => ({...f, sepia: val}))} max={100} />
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-2 col-span-2">
                         <Label>Invert: {filters.invert}%</Label>
                         <Slider value={[filters.invert]} onValueChange={([val]) => setFilters(f => ({...f, invert: val}))} max={100} />
                     </div>
