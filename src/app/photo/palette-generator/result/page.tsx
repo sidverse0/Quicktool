@@ -68,12 +68,12 @@ export default function PaletteResultPage() {
             <Image src={originalUrl} alt="Original Image" layout="fill" className="rounded-lg object-contain p-2" />
         </div>
 
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+        <div className="grid grid-cols-6 gap-2 justify-center px-4">
         {palette.map(color => (
             <div key={color} onClick={() => handleCopy(color)} className="cursor-pointer group relative aspect-square">
-                <div style={{ backgroundColor: color }} className="h-full w-full rounded-md border" />
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Copy className="h-6 w-6 text-white" />
+                <div style={{ backgroundColor: color }} className="h-full w-full rounded-full border" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+                    <Copy className="h-5 w-5 text-white" />
                 </div>
             </div>
         ))}
