@@ -14,6 +14,7 @@ import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { useUserData } from "@/hooks/use-user-data";
 import { useToast } from "@/hooks/use-toast";
+import { RewardedAdDialog } from "@/components/rewarded-ad-dialog";
 
 const PREMIUM_COST = 499;
 
@@ -23,6 +24,7 @@ export default function ProfilePage() {
   const [language, setLanguage] = useState("en");
   const { userData, addCoins, unlockPremium } = useUserData();
   const { toast } = useToast();
+  const [showAdDialog, setShowAdDialog] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -38,12 +40,6 @@ export default function ProfilePage() {
     }
   }
 
-  const handleEarnCoins = () => {
-      // This is a placeholder for watching a rewarded ad.
-      addCoins(25);
-      toast({ title: "Coins Added!", description: "You earned 25 coins." });
-  }
-
   if (!mounted) {
     return (
       <MainLayout>
@@ -57,6 +53,11 @@ export default function ProfilePage() {
   return (
     <MainLayout>
       <div className="flex flex-col h-full">
+        <RewardedAdDialog
+          isOpen={showAdDialog}
+          onOpenChange={setShowAdDialog}
+          onReward={() => addCoins(25)}
+        />
         <PageHeader title="Profile" />
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
           <Card>
@@ -93,7 +94,7 @@ export default function ProfilePage() {
                         <p className="text-2xl font-bold">{userData.coins}</p>
                     </div>
                  </div>
-                 <Button className="w-full" onClick={handleEarnCoins}>
+                 <Button className="w-full" onClick={() => setShowAdDialog(true)}>
                     <Video className="mr-2" /> Earn 25 Coins
                  </Button>
               </CardContent>
