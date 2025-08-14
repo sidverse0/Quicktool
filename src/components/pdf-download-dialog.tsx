@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Download } from "lucide-react";
+import { SuccessDialog } from "./success-dialog";
 
 interface PdfDownloadDialogProps {
   children: React.ReactNode;
@@ -34,6 +35,8 @@ export function PdfDownloadDialog({
 }: PdfDownloadDialogProps) {
   const [fileName, setFileName] = useState(initialFileName);
   const { toast } = useToast();
+  const [showSuccess, setShowSuccess] = useState(false);
+
 
   useEffect(() => {
     if (isOpen) {
@@ -57,35 +60,43 @@ export function PdfDownloadDialog({
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast({ title: "Success!", description: "Your PDF has been downloaded." });
     onOpenChange(false);
+    setShowSuccess(true);
   };
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Download PDF</AlertDialogTitle>
-        </AlertDialogHeader>
-        <div className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="filename">Filename</Label>
-            <Input
-              id="filename"
-              value={fileName}
-              onChange={(e) => setFileName(e.target.value)}
-              addonAfter=".pdf"
-            />
-          </div>
-        </div>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <Button onClick={handleDownload}>
-            <Download className="mr-2 h-4 w-4" /> Download
-          </Button>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <>
+        <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
+        <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+            <AlertDialogTitle>Download PDF</AlertDialogTitle>
+            </AlertDialogHeader>
+            <div className="space-y-4">
+            <div className="space-y-2">
+                <Label htmlFor="filename">Filename</Label>
+                <Input
+                id="filename"
+                value={fileName}
+                onChange={(e) => setFileName(e.target.value)}
+                addonAfter=".pdf"
+                />
+            </div>
+            </div>
+            <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <Button onClick={handleDownload}>
+                <Download className="mr-2 h-4 w-4" /> Download
+            </Button>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+        </AlertDialog>
+        <SuccessDialog
+            isOpen={showSuccess}
+            onClose={() => setShowSuccess(false)}
+            title="Download Complete"
+            description="Your PDF has been successfully downloaded."
+        />
+    </>
   );
 }

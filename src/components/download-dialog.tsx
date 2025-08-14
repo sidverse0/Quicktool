@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { Download } from "lucide-react";
+import { SuccessDialog } from "./success-dialog";
 
 interface DownloadDialogProps {
   children: React.ReactNode;
@@ -33,6 +34,7 @@ interface DownloadDialogProps {
 
 export function DownloadDialog({ dataUrl, fileName: initialFileName, children }: DownloadDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const [fileName, setFileName] = useState(initialFileName);
   const [format, setFormat] = useState<"png" | "jpeg">("png");
   const { toast } = useToast();
@@ -71,8 +73,8 @@ export function DownloadDialog({ dataUrl, fileName: initialFileName, children }:
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        toast({ title: "Success!", description: "Your image has been downloaded." });
         setIsOpen(false);
+        setShowSuccess(true);
     }
     img.onerror = () => {
         toast({ variant: "destructive", title: "Error", description: "Could not load image for download." });
@@ -80,37 +82,45 @@ export function DownloadDialog({ dataUrl, fileName: initialFileName, children }:
   };
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-        <AlertDialogTrigger asChild>
-            {children}
-        </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Download Options</AlertDialogTitle>
-        </AlertDialogHeader>
-        <div className="space-y-4">
-            <div className="space-y-2">
-                <Label htmlFor="filename">Filename</Label>
-                <Input id="filename" value={fileName} onChange={(e) => setFileName(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-                <Label htmlFor="format">Format</Label>
-                <Select value={format} onValueChange={(value: "png" | "jpeg") => setFormat(value)}>
-                    <SelectTrigger id="format">
-                        <SelectValue placeholder="Select format" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="png">PNG</SelectItem>
-                        <SelectItem value="jpeg">JPG</SelectItem>
-                    </SelectContent>
-                </Select>
-            </div>
-        </div>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <Button onClick={handleDownload}><Download className="mr-2 h-4 w-4" /> Download</Button>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <>
+        <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
+            <AlertDialogTrigger asChild>
+                {children}
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>Download Options</AlertDialogTitle>
+                </AlertDialogHeader>
+                <div className="space-y-4">
+                    <div className="space-y-2">
+                        <Label htmlFor="filename">Filename</Label>
+                        <Input id="filename" value={fileName} onChange={(e) => setFileName(e.target.value)} />
+                    </div>
+                    <div className="space-y-2">
+                        <Label htmlFor="format">Format</Label>
+                        <Select value={format} onValueChange={(value: "png" | "jpeg") => setFormat(value)}>
+                            <SelectTrigger id="format">
+                                <SelectValue placeholder="Select format" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="png">PNG</SelectItem>
+                                <SelectItem value="jpeg">JPG</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                </div>
+                <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <Button onClick={handleDownload}><Download className="mr-2 h-4 w-4" /> Download</Button>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+        </AlertDialog>
+        <SuccessDialog
+            isOpen={showSuccess}
+            onClose={() => setShowSuccess(false)}
+            title="Download Complete"
+            description="Your image has been successfully downloaded."
+        />
+    </>
   );
 }
