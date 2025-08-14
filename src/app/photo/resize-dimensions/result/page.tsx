@@ -54,42 +54,31 @@ export default function ResizeResultPage() {
   return (
     <div className="flex flex-col min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-blue-950 dark:to-purple-950">
       <PageHeader title="Resizing Result" showBackButton />
-      <div className="flex-1 overflow-y-auto p-4 md:p-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-6xl mx-auto">
-            <div className="space-y-4">
-                <Card>
-                    <CardHeader><CardTitle>Original</CardTitle></CardHeader>
-                    <CardContent>
-                        {originalUrl && <Image src={originalUrl} alt="Original Image" width={512} height={512} className="rounded-lg object-contain w-full h-auto border" />}
-                    </CardContent>
-                </Card>
-            </div>
-            <div className="space-y-4">
-                <Card>
-                    <CardHeader><CardTitle>Resized</CardTitle></CardHeader>
-                    <CardContent>
-                        {resizedUrl && <Image src={resizedUrl} alt="Resized Image" width={512} height={512} className="rounded-lg object-contain w-full h-auto border" />}
-                    </CardContent>
-                </Card>
-                 <Card>
-                    <CardHeader>
-                        <CardTitle>Actions</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-2">
-                        <a href={resizedUrl} download={fileName}>
-                            <Button className="w-full">
-                                <Download className="mr-2 h-4 w-4" /> Download
-                            </Button>
-                        </a>
-                        <Button variant="secondary" className="w-full" onClick={handleStartOver}>
-                            <RefreshCw className="mr-2 h-4 w-4" /> Start Over
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 flex items-center justify-center">
+        <div className="w-full max-w-md space-y-4">
+            <Card>
+                <CardHeader><CardTitle>Resized Image</CardTitle></CardHeader>
+                <CardContent>
+                    {resizedUrl && <Image src={resizedUrl} alt="Resized Image" width={512} height={512} className="rounded-lg object-contain w-full h-auto border" />}
+                </CardContent>
+            </Card>
+             <Card>
+                <CardHeader>
+                    <CardTitle>Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-2">
+                    <a href={resizedUrl} download={fileName}>
+                        <Button className="w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white">
+                            <Download className="mr-2 h-4 w-4" /> Download
                         </Button>
-                    </CardContent>
-                </Card>
-            </div>
+                    </a>
+                    <Button variant="secondary" className="w-full" onClick={handleStartOver}>
+                        <RefreshCw className="mr-2 h-4 w-4" /> Start Over
+                    </Button>
+                </CardContent>
+            </Card>
         </div>
       </div>
     </div>
   );
 }
-
