@@ -14,6 +14,7 @@ import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { useUserData } from "@/hooks/use-user-data";
 import { UsageLimitDialog } from "@/components/usage-limit-dialog";
+import { ColorPickerDialog } from "@/components/color-picker-dialog";
 
 const toolName = "handwrittenNotes";
 const toolColor = "#e8d55d";
@@ -132,9 +133,11 @@ export default function HandwrittenNotesPage() {
                 />
             </div>
             <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
+                <div className="space-y-2 flex flex-col items-center">
                     <Label htmlFor="color">Ink Color</Label>
-                    <Input id="color" type="color" value={inkColor} onChange={e => setInkColor(e.target.value)} className="p-1 h-10 w-full" />
+                    <ColorPickerDialog value={inkColor} onChange={setInkColor}>
+                        <button className="h-10 w-10 rounded-full border-2 border-muted" style={{ backgroundColor: inkColor }} aria-label="Select ink color" />
+                    </ColorPickerDialog>
                 </div>
                     <div className="space-y-2">
                     <Label>Font Size: {fontSize}px</Label>
