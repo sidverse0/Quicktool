@@ -15,6 +15,7 @@ function QRResult() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const ref = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   
   const [qrValue, setQrValue] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -22,8 +23,6 @@ function QRResult() {
   const [dataUrl, setDataUrl] = useState<string | null>(null);
 
   const [options, setOptions] = useState<QRCodeStylingOptions>({
-    width: 512,
-    height: 512,
     data: "https://firebasestudio.com",
     image: "",
     dotsOptions: {
@@ -61,8 +60,16 @@ function QRResult() {
   }, [searchParams, router]);
 
   useEffect(() => {
-    if (isLoading || !qrValue) return;
-    const qrCode = new QRCodeStyling(options);
+    if (isLoading || !qrValue || !ref.current || !containerRef.current) return;
+    
+    const size = containerRef.current.offsetWidth - 48; // p-6 is 24px, so 2*24=48
+
+    const qrCode = new QRCodeStyling({
+      ...options,
+      width: size,
+      height: size,
+    });
+    
     if(ref.current) {
         ref.current.innerHTML = "";
         qrCode.append(ref.current);
@@ -76,7 +83,19 @@ function QRResult() {
             }
         });
     }
-  }, [options, ref, isLoading, qrValue]);
+    
+    const handleResize = () => {
+        if (!ref.current || !containerRef.current) return;
+        const newSize = containerRef.current.offsetWidth - 48;
+        qrCode.update({ width: newSize, height: newSize });
+    }
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+        window.removeEventListener('resize', handleResize);
+    }
+
+  }, [options, ref, containerRef, isLoading, qrValue]);
 
   const handleStartOver = () => {
     sessionStorage.removeItem("toolColor");
@@ -98,7 +117,7 @@ function QRResult() {
     <div className="flex flex-col h-full">
       <PageHeader title="QR Code Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
-        <div className="relative flex items-center justify-center aspect-square rounded-lg border-2 border-dashed" style={{ borderColor }}>
+        <div ref={containerRef} className="relative flex items-center justify-center aspect-square rounded-lg border-2 border-dashed" style={{ borderColor }}>
             <div className="w-full h-full p-6 bg-white flex items-center justify-center">
                 <div ref={ref} />
             </div>
