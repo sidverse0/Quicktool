@@ -27,18 +27,14 @@ const COUNTDOWN_SECONDS = 30;
 export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdDialogProps) {
   const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS);
   const [canClaim, setCanClaim] = useState(false);
-  const [timerStarted, setTimerStarted] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
     if (!isOpen) {
       setCountdown(COUNTDOWN_SECONDS);
       setCanClaim(false);
-      setTimerStarted(false);
       return;
     }
-
-    if (!timerStarted) return;
 
     const timer = setInterval(() => {
       setCountdown((prev) => {
@@ -52,7 +48,7 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isOpen, timerStarted]);
+  }, [isOpen]);
 
   const handleClaim = () => {
     onReward();
@@ -60,12 +56,6 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
     setShowSuccess(true);
   };
   
-  const handlePlay = () => {
-      if(!timerStarted) {
-          setTimerStarted(true);
-      }
-  }
-
   const videoSrc = `https://www.youtube.com/embed/${VIDEO_ID}?controls=0&loop=1&playlist=${VIDEO_ID}&autoplay=1&mute=0`;
 
   return (
@@ -76,35 +66,21 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
             <AlertDialogTitle className="text-center">Watch & Earn</AlertDialogTitle>
           </AlertDialogHeader>
           <div className="aspect-video relative w-full bg-black rounded-md overflow-hidden">
-            {timerStarted ? (
-                 <iframe
-                    src={videoSrc}
-                    title="YouTube video player"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    className="w-full h-full"
-                ></iframe>
-            ) : (
-                 <div 
-                    className="absolute inset-0 flex items-center justify-center cursor-pointer bg-black/50"
-                    onClick={handlePlay}
-                >
-                    <div className="text-center">
-                        <PlayCircle className="h-16 w-16 text-white/70 mx-auto" />
-                        <p className="text-white mt-2">Tap to play</p>
-                    </div>
-                </div>
-            )}
+             <iframe
+                src={videoSrc}
+                title="YouTube video player"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowFullScreen
+                className="w-full h-full"
+            ></iframe>
           </div>
           <AlertDialogFooter>
             <Button onClick={handleClaim} disabled={!canClaim} className="w-full">
               {canClaim ? (
                   <><Coins className="mr-2 h-4 w-4" /> Claim 10 Coins</>
-              ) : timerStarted ? (
-                  `Claim in ${countdown}s`
               ) : (
-                "Watch video to claim"
+                  `Claim in ${countdown}s`
               )}
             </Button>
           </AlertDialogFooter>
