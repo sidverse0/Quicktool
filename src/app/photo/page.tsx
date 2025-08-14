@@ -18,7 +18,7 @@ const photoTools = [
     href: "/photo/pdf-to-image",
     icon: FileImage,
     color: "#e85d5d",
-    imgSrc: "https://placehold.co/600x400.png",
+    imgSrc: "https://i.postimg.cc/d1T5nSJM/pdf-to-image.png",
     imgHint: "file document"
   },
   {
@@ -26,7 +26,7 @@ const photoTools = [
     href: "/photo/image-to-pdf",
     icon: ImageUp,
     color: "#e88d5d",
-    imgSrc: "https://placehold.co/600x400.png",
+    imgSrc: "https://i.postimg.cc/qMhN1W2t/image-to-pdf.png",
     imgHint: "image file"
   },
   {
@@ -34,7 +34,7 @@ const photoTools = [
     href: "/photo/resize-dimensions",
     icon: Maximize,
     color: "#5d87e8",
-    imgSrc: "https://placehold.co/600x400.png",
+    imgSrc: "https://i.postimg.cc/tJ05F2Yv/dimension-resizer.png",
     imgHint: "landscape resize"
   },
   {
@@ -42,7 +42,7 @@ const photoTools = [
     href: "/photo/resize-size",
     icon: Minimize,
     color: "#5de899",
-    imgSrc: "https://placehold.co/600x400.png",
+    imgSrc: "https://i.postimg.cc/Kz8q4J9t/size-resizer.png",
     imgHint: "compress quality"
   },
   {
@@ -50,7 +50,7 @@ const photoTools = [
     href: "/photo/filters",
     icon: Palette,
     color: "#e85dd5",
-    imgSrc: "https://placehold.co/600x400.png",
+    imgSrc: "https://i.postimg.cc/C5zB9fB5/image-filters.png",
     imgHint: "camera filters"
   },
   {
@@ -58,7 +58,7 @@ const photoTools = [
     href: "/photo/palette-generator",
     icon: Palette,
     color: "#e8a05d",
-    imgSrc: "https://placehold.co/600x400.png",
+    imgSrc: "https://i.postimg.cc/P5LgZzP4/color-palette.png",
     imgHint: "color palette"
   },
 ];

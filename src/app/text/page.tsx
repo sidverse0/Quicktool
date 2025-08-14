@@ -1,3 +1,4 @@
+
 "use client";
 
 import MainLayout from "@/components/layout/main-layout";
@@ -11,7 +12,7 @@ const textTools = [
     href: "/text/signature",
     icon: PenSquare,
     color: "#5de8e2",
-    imgSrc: "https://placehold.co/600x400.png",
+    imgSrc: "https://i.postimg.cc/W12bC2h7/calligraphy-signature.png",
     imgHint: "signature calligraphy"
   },
   {
@@ -19,7 +20,7 @@ const textTools = [
     href: "/text/notes",
     icon: FileText,
     color: "#e8d55d",
-    imgSrc: "https://placehold.co/600x400.png",
+    imgSrc: "https://i.postimg.cc/fLNdcLvt/hand-written-notes.png",
     imgHint: "notebook paper"
   },
 ];
