@@ -4,7 +4,7 @@
 import MainLayout from "@/components/layout/main-layout";
 import PageHeader from "@/components/layout/page-header";
 import ToolCard from "@/components/tool-card";
-import { Link, CaseSensitive, UserSquare } from "lucide-react";
+import { Link, CaseSensitive, UserSquare, IndianRupee } from "lucide-react";
 
 const qrTools = [
   {
@@ -30,6 +30,14 @@ const qrTools = [
     color: "#de5de8",
     imgSrc: "https://placehold.co/600x400.png",
     imgHint: "contact card"
+  },
+  {
+    title: "UPI Payment QR",
+    href: "/qr/upi",
+    icon: IndianRupee,
+    color: "#5de87a",
+    imgSrc: "https://placehold.co/600x400.png",
+    imgHint: "payment currency"
   },
 ];
 
