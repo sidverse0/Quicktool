@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
@@ -26,6 +26,13 @@ export default function ImageToPdfPage() {
   const { toast } = useToast();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+        scrollContainerRef.current.scrollLeft = scrollContainerRef.current.scrollWidth;
+    }
+  }, [imageFiles]);
 
   const handleFileSelect = (file: File) => {
     if (!file.type.startsWith("image/")) {
@@ -137,9 +144,9 @@ export default function ImageToPdfPage() {
         ) : (
           <>
             <div className="flex-1 min-h-0 p-2 border-2 border-dashed rounded-lg" style={{ borderColor: toolColor }}>
-                <div className="grid grid-cols-4 gap-2 overflow-y-auto h-full">
+                <div ref={scrollContainerRef} className="flex items-center gap-2 overflow-x-auto h-full pb-2">
                     {imageFiles.map((imgFile, index) => (
-                        <div key={index} className="relative aspect-square">
+                        <div key={index} className="relative aspect-square w-24 h-24 flex-shrink-0">
                             <Image src={imgFile.url} alt={`Preview ${index + 1}`} layout="fill" className="object-cover rounded-md" />
                             <Button
                                 variant="destructive"
@@ -161,7 +168,7 @@ export default function ImageToPdfPage() {
                      />
                     <button 
                         onClick={handleAddMoreClick}
-                        className="flex items-center justify-center aspect-square rounded-md border-2 border-dashed border-muted-foreground/50 hover:border-primary transition-colors group"
+                        className="flex-shrink-0 flex items-center justify-center aspect-square w-24 h-24 rounded-md border-2 border-dashed border-muted-foreground/50 hover:border-primary transition-colors group"
                     >
                         <Plus className="h-8 w-8 text-muted-foreground/50 group-hover:text-primary"/>
                     </button>
