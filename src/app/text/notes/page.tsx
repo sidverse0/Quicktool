@@ -129,8 +129,8 @@ export default function HandwrittenNotesPage() {
                     const y = paddingTop + (i * lineHeight) + (fontSize);
                      if (y < canvasHeight - paddingBottom/2) {
                         ctx.beginPath();
-                        ctx.moveTo(paddingX, y);
-                        ctx.lineTo(canvasWidth - paddingX, y);
+                        ctx.moveTo(0, y);
+                        ctx.lineTo(canvasWidth, y);
                         ctx.stroke();
                     }
                 }
