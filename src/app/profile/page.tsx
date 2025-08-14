@@ -15,16 +15,17 @@ import { cn } from "@/lib/utils";
 import { useUserData } from "@/hooks/use-user-data";
 import { useToast } from "@/hooks/use-toast";
 import { RewardedAdDialog } from "@/components/rewarded-ad-dialog";
+import { useLanguage } from "@/hooks/use-language";
 
 const PREMIUM_COST = 499;
 
 export default function ProfilePage() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [language, setLanguage] = useState("en");
   const { userData, addCoins, unlockPremium } = useUserData();
   const { toast } = useToast();
   const [showAdDialog, setShowAdDialog] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     setMounted(true);
@@ -33,7 +34,7 @@ export default function ProfilePage() {
   const handleUnlock = () => {
     if (userData.coins >= PREMIUM_COST) {
       unlockPremium();
-      toast({ title: "Success!", description: "Premium unlocked. All features are now unlimited." });
+      toast({ title: t('success'), description: t('premium_unlocked_desc') });
     } else {
         const upiUrl = `upi://pay?pa=8521672813@ybl&pn=Quick%20Tool&am=100.00&cu=INR&tn=Unlock%20Premium`;
         window.location.href = upiUrl;
@@ -44,7 +45,7 @@ export default function ProfilePage() {
     return (
       <MainLayout>
         <div className="flex flex-col h-full">
-          <PageHeader title="Profile" />
+          <PageHeader title={t('profile')} />
         </div>
       </MainLayout>
     );
@@ -58,7 +59,7 @@ export default function ProfilePage() {
           onOpenChange={setShowAdDialog}
           onReward={() => addCoins(10)}
         />
-        <PageHeader title="Profile" />
+        <PageHeader title={t('profile')} />
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
           <Card>
             <CardContent className="pt-6 flex flex-col items-center text-center">
@@ -82,20 +83,20 @@ export default function ProfilePage() {
               <CardHeader>
                 <CardTitle className="flex items-center">
                     <Coins className="mr-2 h-5 w-5 text-amber-500" />
-                    My Coins
+                    {t('my_coins')}
                 </CardTitle>
-                <CardDescription>Earn coins to unlock premium features.</CardDescription>
+                <CardDescription>{t('earn_coins_desc')}</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                  <div className="p-4 bg-secondary rounded-lg flex justify-between items-center">
-                    <p className="text-lg font-semibold">Your Balance:</p>
+                    <p className="text-lg font-semibold">{t('your_balance')}:</p>
                     <div className="flex items-center gap-2">
                         <Coins className="h-6 w-6 text-amber-500" />
                         <p className="text-2xl font-bold">{userData.coins}</p>
                     </div>
                  </div>
                  <Button className="w-full" onClick={() => setShowAdDialog(true)}>
-                    <Video className="mr-2" /> Earn 10 Coins
+                    <Video className="mr-2" /> {t('earn_10_coins')}
                  </Button>
               </CardContent>
           </Card>
@@ -105,13 +106,13 @@ export default function ProfilePage() {
               <CardHeader>
                   <CardTitle className="flex items-center text-primary">
                       <Gem className="mr-2 h-5 w-5" />
-                      Unlock Premium
+                      {t('unlock_premium')}
                   </CardTitle>
-                  <CardDescription>Get unlimited access to all tools forever.</CardDescription>
+                  <CardDescription>{t('unlock_premium_desc')}</CardDescription>
               </CardHeader>
               <CardContent>
                   <Button className="w-full" onClick={handleUnlock}>
-                     {userData.coins >= PREMIUM_COST ? `Unlock for ${PREMIUM_COST} Coins` : `Unlock for 100 INR or ${PREMIUM_COST} Coins`}
+                     {userData.coins >= PREMIUM_COST ? t('unlock_for_coins', { count: PREMIUM_COST }) : t('unlock_for_inr_or_coins', { inr: 100, coins: PREMIUM_COST })}
                   </Button>
               </CardContent>
             </Card>
@@ -122,8 +123,8 @@ export default function ProfilePage() {
                 <CardContent className="pt-6 flex items-center gap-4">
                     <Star className="h-10 w-10 text-white" fill="white" />
                     <div>
-                        <CardTitle>Premium Member</CardTitle>
-                        <CardDescription className="text-black/80">You have unlimited access to all tools.</CardDescription>
+                        <CardTitle>{t('premium_member')}</CardTitle>
+                        <CardDescription className="text-black/80">{t('premium_member_desc')}</CardDescription>
                     </div>
                 </CardContent>
              </Card>
@@ -131,14 +132,14 @@ export default function ProfilePage() {
 
           <Card>
             <CardHeader>
-                <CardTitle>Appearance</CardTitle>
+                <CardTitle>{t('appearance')}</CardTitle>
             </CardHeader>
             <CardContent>
                 <div className="flex items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
                     <Label htmlFor="dark-mode" className="text-base flex items-center">
                     {theme === 'dark' ? <Moon className="mr-2 h-4 w-4" /> : <Sun className="mr-2 h-4 w-4" />}
-                    Dark Mode
+                    {t('dark_mode')}
                     </Label>
                 </div>
                 <Switch
@@ -154,9 +155,9 @@ export default function ProfilePage() {
             <CardHeader>
                 <CardTitle className="flex items-center">
                     <Languages className="mr-2 h-5 w-5 text-muted-foreground" />
-                    Language
+                    {t('language')}
                 </CardTitle>
-                <CardDescription>Select your preferred language.</CardDescription>
+                <CardDescription>{t('select_language_desc')}</CardDescription>
             </CardHeader>
             <CardContent className="flex gap-2">
                 <Button onClick={() => setLanguage('en')} variant={language === 'en' ? 'default' : 'outline'} className="w-full">English</Button>
@@ -166,13 +167,15 @@ export default function ProfilePage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Support</CardTitle>
+              <CardTitle>{t('support')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <Button className="w-full" variant="outline">
-                  <LifeBuoy className="mr-2 h-4 w-4"/>
-                  Contact Support
-              </Button>
+              <a href="https://t.me/your_username_here" target="_blank" rel="noopener noreferrer" className="w-full">
+                <Button className="w-full" variant="outline">
+                    <LifeBuoy className="mr-2 h-4 w-4"/>
+                    {t('contact_support')}
+                </Button>
+              </a>
             </CardContent>
           </Card>
         </div>

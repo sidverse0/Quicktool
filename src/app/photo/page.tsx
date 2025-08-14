@@ -4,6 +4,7 @@
 import MainLayout from "@/components/layout/main-layout";
 import PageHeader from "@/components/layout/page-header";
 import ToolCard from "@/components/tool-card";
+import { useLanguage } from "@/hooks/use-language";
 import {
   FileImage,
   Maximize,
@@ -14,42 +15,42 @@ import {
 
 const photoTools = [
   {
-    title: "PDF to Image",
+    key: "pdfToImage",
     href: "/photo/pdf-to-image",
     icon: FileImage,
     color: "#FFFFFF",
     gradient: "linear-gradient(to top right, #ef4444, #f87171)",
   },
   {
-    title: "Image to PDF",
+    key: "imageToPdf",
     href: "/photo/image-to-pdf",
     icon: ImageUp,
     color: "#FFFFFF",
     gradient: "linear-gradient(to top right, #f97316, #fb923c)",
   },
   {
-    title: "Dimension Resizer",
+    key: "dimensionResizer",
     href: "/photo/resize-dimensions",
     icon: Maximize,
     color: "#FFFFFF",
     gradient: "linear-gradient(to top right, #3b82f6, #60a5fa)",
   },
   {
-    title: "File Size Resizer",
+    key: "fileSizeResizer",
     href: "/photo/resize-size",
     icon: Minimize,
     color: "#FFFFFF",
     gradient: "linear-gradient(to top right, #22c55e, #4ade80)",
   },
   {
-    title: "Image Filters",
+    key: "imageFilters",
     href: "/photo/filters",
     icon: Palette,
     color: "#FFFFFF",
     gradient: "linear-gradient(to top right, #d946ef, #e879f9)",
   },
   {
-    title: "Color Palette",
+    key: "colorPalette",
     href: "/photo/palette-generator",
     icon: Palette,
     color: "#FFFFFF",
@@ -58,14 +59,15 @@ const photoTools = [
 ];
 
 export default function PhotoPage() {
+  const { t } = useLanguage();
   return (
     <MainLayout>
       <div className="flex flex-col h-full">
-        <PageHeader title="Photo Tools" showBackButton/>
+        <PageHeader title={t('photo_tools')} showBackButton/>
         <div className="flex-1 overflow-y-auto p-4">
           <div className="grid grid-cols-2 gap-4">
             {photoTools.map((tool) => (
-              <ToolCard key={tool.href} {...tool} isTrial />
+              <ToolCard key={tool.href} {...tool} title={t(`tools.${tool.key}`)} isTrial />
             ))}
           </div>
         </div>

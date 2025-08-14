@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
+import { LanguageProvider } from '@/hooks/use-language';
 
 export const metadata: Metadata = {
   title: 'Quick Tool',
@@ -30,15 +31,17 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
       </head>
       <body className="font-body antialiased h-full">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster />
-        </ThemeProvider>
+        <LanguageProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </LanguageProvider>
       </body>
     </html>
   );

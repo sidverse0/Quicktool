@@ -6,17 +6,19 @@ import { usePathname } from "next/navigation";
 import { Home, Image as ImageIcon, QrCode, User, PenSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { useLanguage } from "@/hooks/use-language";
 
 const navItems = [
-  { href: "/", label: "Home", icon: Home, color: "text-primary", borderColor: "border-primary" },
-  { href: "/photo", label: "Photo", icon: ImageIcon, color: "text-rose-500", borderColor: "border-rose-500" },
-  { href: "/qr", label: "QR", icon: QrCode, color: "text-indigo-500", borderColor: "border-indigo-500" },
-  { href: "/text", label: "Text", icon: PenSquare, color: "text-teal-500", borderColor: "border-teal-500" },
-  { href: "/profile", label: "Profile", icon: User, color: "text-amber-500", borderColor: "border-amber-500" },
+  { href: "/", labelKey: "home", icon: Home, color: "text-primary", borderColor: "border-primary" },
+  { href: "/photo", labelKey: "photo", icon: ImageIcon, color: "text-rose-500", borderColor: "border-rose-500" },
+  { href: "/qr", labelKey: "qr", icon: QrCode, color: "text-indigo-500", borderColor: "border-indigo-500" },
+  { href: "/text", labelKey: "text", icon: PenSquare, color: "text-teal-500", borderColor: "border-teal-500" },
+  { href: "/profile", labelKey: "profile", icon: User, color: "text-amber-500", borderColor: "border-amber-500" },
 ];
 
 export default function BottomNav() {
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-t">
@@ -51,7 +53,7 @@ export default function BottomNav() {
                   isActive ? item.color : "text-muted-foreground"
                 )}
               >
-                {item.label}
+                {t(`nav.${item.labelKey}`)}
               </span>
             </Link>
           );
