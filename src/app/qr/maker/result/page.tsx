@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Download, RefreshCw, Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 function QRResult() {
   const router = useRouter();
@@ -59,12 +60,11 @@ function QRResult() {
   };
 
   const handleStartOver = () => {
+    const isImageQr = !!sessionStorage.getItem("qrImageDataUrl");
     sessionStorage.removeItem("toolColor");
     sessionStorage.removeItem("qrImageDataUrl");
-    // A bit of a guess here, but usually the user wants to go back to the start page
-    // for that tool. Since this result page is shared, we can't be 100% sure.
-    // A simple router.back() or a more specific path might be needed depending on UX.
-    if (sessionStorage.getItem("qrImageDataUrl")) {
+    
+    if (isImageQr) {
         router.push('/qr/image');
     } else {
         router.push('/qr/maker');
@@ -76,10 +76,19 @@ function QRResult() {
       <PageHeader title="QR Code Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
         <div className="flex items-center justify-center aspect-square rounded-lg border-2 border-dashed" style={{ borderColor }}>
-            {(isLoading || !qrCodeUrl) && (
-            <div className="flex flex-col items-center text-muted-foreground">
-                <Loader2 className="h-10 w-10 animate-spin text-primary" />
-            </div>
+            {isLoading && (
+              <div className="relative w-24 h-24 flex items-center justify-center">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{
+                    repeat: Infinity,
+                    duration: 1.5,
+                    ease: "linear",
+                  }}
+                  className="absolute inset-0 border-4 border-primary/50 border-t-primary rounded-full"
+                />
+                <Image src="https://i.postimg.cc/kXnSKfgf/wrench.png" alt="Quick Tool Logo" width={48} height={48} />
+              </div>
             )}
             {qrCodeUrl && (
             <Image
