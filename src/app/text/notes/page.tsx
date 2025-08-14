@@ -29,10 +29,10 @@ const toolColor = "#e8d55d";
 const fontOptions = [
     { value: "'Kalam', cursive", label: "Kalam" },
     { value: "'Great Vibes', cursive", label: "Great Vibes" },
-    { value: "'Parisienne', cursive", label: "Parisienne" },
-    { value: "'Sacramento', cursive", label: "Sacramento" },
-    { value: "'Dancing Script', cursive", label: "Dancing Script" },
-    { value: "'Pacifico', cursive", label: "Pacifico" },
+    { value: "'Parisienne', cursive', label: "Parisienne" },
+    { value: "'Sacramento', cursive', label: "Sacramento" },
+    { value: "'Dancing Script', cursive', label: "Dancing Script" },
+    { value: "'Pacifico', cursive', label: "Pacifico" },
 ];
 
 export default function HandwrittenNotesPage() {
@@ -48,15 +48,20 @@ export default function HandwrittenNotesPage() {
   const { canUseTool, incrementToolUsage } = useUserData();
   const [showUsageLimitDialog, setShowUsageLimitDialog] = useState(false);
 
+  const lineHeight = fontSize * 1.6;
   const noteStyle: React.CSSProperties = {
     fontFamily: fontFamily,
     fontSize: `${fontSize}px`,
     color: inkColor,
-    lineHeight: 1.6,
+    lineHeight: `${lineHeight}px`,
     whiteSpace: 'pre-wrap',
     backgroundColor: bgColor,
-    backgroundSize: showLines ? `auto ${fontSize * 1.6}px` : undefined,
-    backgroundImage: showLines ? `linear-gradient(to bottom, transparent ${fontSize * 1.6 - 1}px, #aab5f1 1px)` : undefined,
+    backgroundSize: showLines ? `auto ${lineHeight}px` : undefined,
+    backgroundImage: showLines ? `linear-gradient(to bottom, transparent ${lineHeight - 1}px, #aab5f1 1px)` : undefined,
+    paddingTop: `${lineHeight * 0.25}px`,
+    paddingLeft: '20px',
+    paddingRight: '20px',
+    paddingBottom: '20px',
   };
   
   const handleGenerate = () => {
@@ -74,8 +79,9 @@ export default function HandwrittenNotesPage() {
 
     setTimeout(() => {
         try {
-            const padding = 20;
-            const lineHeight = fontSize * 1.6;
+            const paddingX = 20;
+            const paddingTop = lineHeight * 0.25;
+            const paddingBottom = 20;
 
             const tempDiv = document.createElement('div');
             tempDiv.style.fontFamily = fontFamily;
@@ -84,7 +90,10 @@ export default function HandwrittenNotesPage() {
             tempDiv.style.whiteSpace = 'pre-wrap';
             tempDiv.style.position = 'absolute';
             tempDiv.style.left = '-9999px';
-            tempDiv.style.padding = `${padding}px`;
+            tempDiv.style.paddingLeft = `${paddingX}px`;
+            tempDiv.style.paddingRight = `${paddingX}px`;
+            tempDiv.style.paddingTop = `${paddingTop}px`;
+            tempDiv.style.paddingBottom = `${paddingBottom}px`;
             tempDiv.innerText = text;
             document.body.appendChild(tempDiv);
             
@@ -107,22 +116,22 @@ export default function HandwrittenNotesPage() {
                 ctx.strokeStyle = '#aab5f1';
                 ctx.lineWidth = 1;
                 for (let i = 0; i < lines.length; i++) {
-                    const y = padding + (i * lineHeight) + (fontSize * 1.2);
-                    if (y < canvas.height/dpr - padding/2) {
+                    const y = paddingTop + (i * lineHeight) + (fontSize);
+                     if (y < canvas.height/dpr - paddingBottom/2) {
                         ctx.beginPath();
-                        ctx.moveTo(padding, y);
-                        ctx.lineTo(canvas.width/dpr - padding, y);
+                        ctx.moveTo(paddingX, y);
+                        ctx.lineTo(canvas.width/dpr - paddingX, y);
                         ctx.stroke();
                     }
                 }
             }
-
+            
             ctx.font = `400 ${fontSize}px ${fontFamily.split(',')[0]}`;
             ctx.fillStyle = inkColor;
             ctx.textBaseline = 'top';
 
             for (let i = 0; i < lines.length; i++) {
-                ctx.fillText(lines[i], padding, padding + (i * lineHeight));
+                ctx.fillText(lines[i], paddingX, paddingTop + (i * lineHeight) - (fontSize * 0.2));
             }
             
             document.body.removeChild(tempDiv);
@@ -154,9 +163,10 @@ export default function HandwrittenNotesPage() {
       <PageHeader title="Hand-written Notes" showBackButton />
       <div className="flex-1 flex flex-col p-4 space-y-4">
         <div 
-            className="flex-1 min-h-[200px] w-full p-5 rounded-lg border shadow-inner overflow-y-auto"
+            className="flex-1 min-h-[200px] w-full rounded-lg border shadow-inner overflow-y-auto"
             style={noteStyle}
         >
+          {text}
         </div>
           
         <div className="space-y-6">
