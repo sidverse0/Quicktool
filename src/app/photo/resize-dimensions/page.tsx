@@ -111,9 +111,9 @@ export default function ResizeDimensionsPage() {
                     <FileUploader onFileSelect={handleFileSelect} />
                 ) : (
                     <div className="space-y-4">
-                        <div className="relative">
-                            <Image src={originalUrl} alt="Original" width={400} height={400} className="rounded-lg object-contain w-full h-auto border" />
-                            <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7 rounded-full" onClick={handleReset}>
+                        <div className="relative w-full h-64 border-2 border-dashed rounded-lg flex items-center justify-center bg-secondary/50">
+                            <Image src={originalUrl} alt="Original" layout="fill" className="rounded-lg object-contain p-2" />
+                            <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7 rounded-full z-10" onClick={handleReset}>
                                 <X className="h-4 w-4"/>
                             </Button>
                         </div>
