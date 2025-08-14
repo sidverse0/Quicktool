@@ -7,9 +7,10 @@ import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { UserSquare } from "lucide-react";
+import { UserSquare, Square, Circle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ColorPickerDialog } from "@/components/color-picker-dialog";
+import { cn } from "@/lib/utils";
 
 const toolColor = "#de5de8";
 
@@ -19,6 +20,7 @@ export default function VCardPage() {
   const [email, setEmail] = useState("john.doe@example.com");
   const [color, setColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#FFFFFF");
+  const [style, setStyle] = useState<"squares" | "dots">("squares");
   const router = useRouter();
   const { toast } = useToast();
 
@@ -35,6 +37,7 @@ END:VCARD`;
         text: vCard,
         color,
         bgColor,
+        style,
     });
 
     sessionStorage.setItem("toolColor", toolColor);
@@ -60,21 +63,34 @@ END:VCARD`;
             </div>
           </div>
           
-          <div className="space-y-4">
-            <Label>Colors</Label>
-             <div className="flex items-center gap-6">
-                <div className="flex flex-col items-center gap-2">
-                     <ColorPickerDialog value={color} onChange={setColor}>
-                        <button className="h-12 w-12 rounded-full border-2 border-muted" style={{ backgroundColor: color }} aria-label="Select dot color" />
-                     </ColorPickerDialog>
-                     <span className="text-xs">Dots</span>
-                </div>
-                 <div className="flex flex-col items-center gap-2">
-                     <ColorPickerDialog value={bgColor} onChange={setBgColor}>
-                        <button className="h-12 w-12 rounded-full border-2 border-muted" style={{ backgroundColor: bgColor }} aria-label="Select background color" />
-                     </ColorPickerDialog>
-                     <span className="text-xs">Background</span>
-                </div>
+          <div className="grid grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <Label>Colors</Label>
+              <div className="flex items-center gap-4">
+                  <div className="flex flex-col items-center gap-2">
+                      <ColorPickerDialog value={color} onChange={setColor}>
+                          <button className="h-12 w-12 rounded-full border-2 border-muted" style={{ backgroundColor: color }} aria-label="Select dot color" />
+                      </ColorPickerDialog>
+                      <span className="text-xs">Dots</span>
+                  </div>
+                  <div className="flex flex-col items-center gap-2">
+                      <ColorPickerDialog value={bgColor} onChange={setBgColor}>
+                          <button className="h-12 w-12 rounded-full border-2 border-muted" style={{ backgroundColor: bgColor }} aria-label="Select background color" />
+                      </ColorPickerDialog>
+                      <span className="text-xs">Background</span>
+                  </div>
+              </div>
+            </div>
+            <div className="space-y-4">
+              <Label>Style</Label>
+              <div className="flex items-center gap-4">
+                  <button onClick={() => setStyle("squares")} className={cn("h-12 w-12 rounded-full border-2 flex items-center justify-center", style === 'squares' ? 'border-primary ring-2 ring-primary' : 'border-muted')}>
+                      <Square className="h-6 w-6" />
+                  </button>
+                  <button onClick={() => setStyle("dots")} className={cn("h-12 w-12 rounded-full border-2 flex items-center justify-center", style === 'dots' ? 'border-primary ring-2 ring-primary' : 'border-muted')}>
+                      <Circle className="h-6 w-6" />
+                  </button>
+              </div>
             </div>
           </div>
 

@@ -7,31 +7,50 @@ import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Download, RefreshCw } from "lucide-react";
 import LoadingIndicator from "@/components/layout/loading-indicator";
-import QRCode from "react-qr-code";
 import { DownloadDialog } from "@/components/download-dialog";
+import QRCodeStyling from "qr-code-styling-react";
+import type { Options as QRCodeStylingOptions } from "qr-code-styling-react";
 
 function QRResult() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const qrCodeRef = useRef<HTMLDivElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   
   const [qrValue, setQrValue] = useState("");
-  const [qrColor, setQrColor] = useState("#000000");
-  const [qrBgColor, setQrBgColor] = useState("#FFFFFF");
   const [isLoading, setIsLoading] = useState(true);
   const [borderColor, setBorderColor] = useState("hsl(var(--border))");
   const [dataUrl, setDataUrl] = useState<string | null>(null);
+
+  const [options, setOptions] = useState<QRCodeStylingOptions>({
+    width: 512,
+    height: 512,
+    data: "https://firebasestudio.com",
+    image: "",
+    dotsOptions: {
+      color: "#000000",
+      type: "squares",
+    },
+    backgroundOptions: {
+      color: "#ffffff",
+    },
+  });
 
   useEffect(() => {
     const textFromUrl = searchParams.get('text');
     const colorParam = searchParams.get('color') || '#000000';
     const bgColorParam = searchParams.get('bgColor') || '#FFFFFF';
+    const styleParam = (searchParams.get('style') as 'squares' | 'dots') || 'squares';
     const toolColor = sessionStorage.getItem("toolColor");
 
     if (textFromUrl) {
       setQrValue(textFromUrl);
-      setQrColor(colorParam);
-      setQrBgColor(bgColorParam);
+      setOptions(prev => ({
+          ...prev,
+          data: textFromUrl,
+          dotsOptions: { ...prev.dotsOptions, color: colorParam, type: styleParam },
+          backgroundOptions: { ...prev.backgroundOptions, color: bgColorParam },
+      }));
+
       if(toolColor) {
           setBorderColor(toolColor);
       }
@@ -40,16 +59,23 @@ function QRResult() {
     }
     setIsLoading(false);
   }, [searchParams, router]);
-  
-   useEffect(() => {
-    if (qrCodeRef.current) {
-        const svg = qrCodeRef.current.querySelector('svg');
-        if (svg) {
-            const svgData = new XMLSerializer().serializeToString(svg);
-            setDataUrl(`data:image/svg+xml;base64,${btoa(svgData)}`);
-        }
+
+  useEffect(() => {
+    const qrCode = new QRCodeStyling(options);
+    if(ref.current) {
+        ref.current.innerHTML = "";
+        qrCode.append(ref.current);
+        qrCode.getRawData("png").then((blob) => {
+            if(blob) {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    setDataUrl(reader.result as string);
+                };
+                reader.readAsDataURL(blob);
+            }
+        });
     }
-  }, [qrValue, qrColor, qrBgColor]);
+  }, [options, ref]);
 
   const handleStartOver = () => {
     sessionStorage.removeItem("toolColor");
@@ -72,18 +98,8 @@ function QRResult() {
       <PageHeader title="QR Code Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
         <div className="relative flex items-center justify-center aspect-square rounded-lg border-2 border-dashed" style={{ borderColor }}>
-            <div ref={qrCodeRef} className="w-full h-full p-6 bg-white flex items-center justify-center">
-                {qrValue ? (
-                    <QRCode
-                        value={qrValue}
-                        size={512}
-                        fgColor={qrColor}
-                        bgColor={qrBgColor}
-                        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                    />
-                ) : (
-                    <LoadingIndicator />
-                )}
+            <div className="w-full h-full p-6 bg-white flex items-center justify-center">
+                <div ref={ref} />
             </div>
         </div>
         <div className="space-y-2">
