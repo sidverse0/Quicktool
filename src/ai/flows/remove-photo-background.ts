@@ -15,7 +15,7 @@ const RemovePhotoBackgroundInputSchema = z.object({
   photoDataUri: z
     .string()
     .describe(
-      "A photo to remove the background from, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."  
+      "A photo to remove the background from, as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'"  
     ),
 });
 export type RemovePhotoBackgroundInput = z.infer<typeof RemovePhotoBackgroundInputSchema>;
@@ -41,10 +41,10 @@ const removePhotoBackgroundFlow = ai.defineFlow(
   },
   async input => {
     const response = await ai.generate({
-      prompt: `Remove the background from this photo and return the image as a data URI. Be sure to preserve the subject of the photo. Only return the data URI, do not include any other text.`,
-      input: {
-        photoDataUri: input.photoDataUri,
-      },
+      prompt: [
+        {text: 'Remove the background from this photo and return the image. Be sure to preserve the subject of the photo.'},
+        {media: {url: input.photoDataUri}}
+      ],
       model: 'googleai/gemini-2.0-flash',
     });
 

@@ -33,15 +33,6 @@ export async function enhancePhoto(input: EnhancePhotoInput): Promise<EnhancePho
   return enhancePhotoFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'enhancePhotoPrompt',
-  input: {schema: EnhancePhotoInputSchema},
-  output: {schema: EnhancePhotoOutputSchema},
-  prompt: `You are an expert photo editor. Enhance the following photo by improving its lighting, colors, and sharpness. Return the enhanced image as a data URI. Only return the data URI, do not include any other text.
-
-{{media url=photoDataUri}}`,
-});
-
 const enhancePhotoFlow = ai.defineFlow(
   {
     name: 'enhancePhotoFlow',
@@ -50,10 +41,10 @@ const enhancePhotoFlow = ai.defineFlow(
   },
   async (input) => {
     const response = await ai.generate({
-      prompt: `You are an expert photo editor. Enhance the following photo by improving its lighting, colors, and sharpness. Return the enhanced image as a data URI. Only return the data URI, do not include any other text.`,
-      input: {
-        photoDataUri: input.photoDataUri,
-      },
+      prompt: [
+        {text: 'You are an expert photo editor. Enhance the following photo by improving its lighting, colors, and sharpness. Return the enhanced image.'},
+        {media: {url: input.photoDataUri}}
+      ],
       model: 'googleai/gemini-2.0-flash',
     });
 
