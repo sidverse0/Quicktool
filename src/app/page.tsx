@@ -4,9 +4,6 @@
 import Image from 'next/image';
 import MainLayout from '@/components/layout/main-layout';
 import { motion } from 'framer-motion';
-import { ImageIcon, PenSquare, QrCode } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -29,20 +26,6 @@ const itemVariants = {
     },
   },
 };
-
-const iconVariants = {
-    hidden: { scale: 0, y: 20 },
-    visible: (i: number) => ({
-      scale: 1,
-      y: 0,
-      transition: {
-        delay: i * 0.1 + 0.8,
-        type: 'spring',
-        stiffness: 300,
-        damping: 20,
-      },
-    }),
-  };
 
 export default function Home() {
   return (
@@ -78,36 +61,14 @@ export default function Home() {
             Your all-in-one toolbox for photos, QR codes, and more, powered by AI.
           </motion.p>
           
-          <div className="mt-16 flex space-x-8">
-            <motion.div custom={0} variants={iconVariants}>
-                <Link href="/photo" className="p-4 bg-secondary rounded-full shadow-md block">
-                    <ImageIcon className="h-8 w-8 text-rose-500" />
-                </Link>
-            </motion.div>
-            <motion.div custom={1} variants={iconVariants}>
-                <Link href="/qr" className="p-4 bg-secondary rounded-full shadow-md block">
-                    <QrCode className="h-8 w-8 text-indigo-500" />
-                </Link>
-            </motion.div>
-            <motion.div custom={2} variants={iconVariants}>
-                <Link href="/text" className="p-4 bg-secondary rounded-full shadow-md block">
-                    <PenSquare className="h-8 w-8 text-teal-500" />
-                </Link>
-            </motion.div>
-          </div>
+          <motion.div
+            variants={itemVariants}
+            className="mt-16 bg-secondary text-secondary-foreground py-2 px-6 rounded-full flex items-center text-sm"
+          >
+             <Image src="https://i.postimg.cc/kXnSKfgf/wrench.png" alt="Quick Tool Logo" width={16} height={16} className="mr-2 opacity-80" />
+             <p>&copy; 2024 Quick Tool. All rights reserved.</p>
+          </motion.div>
         </motion.div>
-
-        <footer className="w-full shrink-0 border-t mt-auto">
-            <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.5, duration: 0.5 }}
-                className="container flex h-16 items-center justify-center text-sm text-muted-foreground"
-            >
-                <Image src="https://i.postimg.cc/kXnSKfgf/wrench.png" alt="Quick Tool Logo" width={20} height={20} className="mr-2 opacity-70" />
-                <p>&copy; 2024 Quick Tool. All rights reserved.</p>
-            </motion.div>
-        </footer>
       </div>
     </MainLayout>
   );
