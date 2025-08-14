@@ -4,7 +4,7 @@
 import MainLayout from "@/components/layout/main-layout";
 import PageHeader from "@/components/layout/page-header";
 import ToolCard from "@/components/tool-card";
-import { Link, CaseSensitive, UserSquare, ImageIcon } from "lucide-react";
+import { Link, CaseSensitive, UserSquare, ImageUp } from "lucide-react";
 
 const qrTools = [
   {
@@ -16,7 +16,7 @@ const qrTools = [
     imgHint: "qr code link"
   },
   {
-    title: "vCard QR Code",
+    title: "vCard to QR",
     href: "/qr/vcard",
     icon: UserSquare,
     color: "#de5de8",
@@ -24,12 +24,12 @@ const qrTools = [
     imgHint: "contact card"
   },
   {
-    title: "AI Image to QR",
-    href: "/qr/ai-image",
-    icon: ImageIcon,
+    title: "Image to QR",
+    href: "/qr/image",
+    icon: ImageUp,
     color: "#5de8d4",
     imgSrc: "https://placehold.co/600x400.png",
-    imgHint: "ai robot"
+    imgHint: "upload image"
   },
 ];
 
