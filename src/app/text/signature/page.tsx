@@ -7,12 +7,12 @@ import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Slider } from "@/components/ui/slider";
 import { useUserData } from "@/hooks/use-user-data";
 import { UsageLimitDialog } from "@/components/usage-limit-dialog";
+import { ColorPickerDialog } from "@/components/color-picker-dialog";
 
 const toolName = "calligraphySignature";
 const toolColor = "#5de8e2";
@@ -115,8 +115,10 @@ export default function SignaturePage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="color">Color</Label>
-                    <Input id="color" type="color" value={color} onChange={e => setColor(e.target.value)} className="p-1 h-10 w-full" />
+                    <Label>Color</Label>
+                    <ColorPickerDialog value={color} onChange={setColor}>
+                        <button className="h-10 w-full rounded-md border-2 border-muted" style={{ backgroundColor: color }} aria-label="Select color" />
+                    </ColorPickerDialog>
                 </div>
                     <div className="space-y-2">
                     <Label>Font Size: {fontSize}px</Label>
