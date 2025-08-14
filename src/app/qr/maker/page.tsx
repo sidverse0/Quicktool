@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -9,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { QrCode } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+const toolColor = "#7a5de8";
 
 export default function QrMakerPage() {
   const [text, setText] = useState("https://firebase.google.com/");
@@ -31,6 +34,7 @@ export default function QrMakerPage() {
         color,
         bgColor,
     });
+    sessionStorage.setItem("toolColor", toolColor);
     router.push(`/qr/maker/result?${params.toString()}`);
   };
 

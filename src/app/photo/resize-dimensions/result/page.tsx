@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -11,15 +12,20 @@ export default function ResizeResultPage() {
     const [resizedUrl, setResizedUrl] = useState<string | null>(null);
     const [fileName, setFileName] = useState("resized-image.png");
     const [loading, setLoading] = useState(true);
+    const [borderColor, setBorderColor] = useState("hsl(var(--border))");
     const router = useRouter();
 
     useEffect(() => {
         const resized = sessionStorage.getItem("resizedImageDataUrl");
         const name = sessionStorage.getItem("resizedImageFileName");
+        const color = sessionStorage.getItem("toolColor");
 
         if (resized && name) {
             setResizedUrl(resized);
             setFileName(name);
+            if (color) {
+                setBorderColor(color);
+            }
         } else {
             router.replace("/photo/resize-dimensions");
         }
@@ -30,6 +36,7 @@ export default function ResizeResultPage() {
         sessionStorage.removeItem("originalImageDataUrl");
         sessionStorage.removeItem("resizedImageDataUrl");
         sessionStorage.removeItem("resizedImageFileName");
+        sessionStorage.removeItem("toolColor");
         router.push("/photo/resize-dimensions");
     }
 
@@ -49,7 +56,7 @@ export default function ResizeResultPage() {
     <div className="flex flex-col h-full">
       <PageHeader title="Resizing Result" showBackButton />
       <div className="flex-1 flex flex-col p-4 space-y-4 justify-center">
-        <div className="relative w-full aspect-square border-2 border-dashed rounded-lg">
+        <div className="relative w-full aspect-square border-2 border-dashed rounded-lg" style={{ borderColor }}>
             <Image src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain p-2" />
         </div>
         <div className="space-y-2">

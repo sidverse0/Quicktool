@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -12,9 +13,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 
+const toolColor = "#e8d55d";
+
 export default function HandwrittenNotesPage() {
   const [text, setText] = useState("This is a sample note.\nYou can write multiple lines here.");
-  const [color, setColor] = useState("#1E40AF"); // A nice blue ink color
+  const [inkColor, setInkColor] = useState("#1E40AF"); // A nice blue ink color
   const [fontSize, setFontSize] = useState(24);
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
@@ -23,7 +26,7 @@ export default function HandwrittenNotesPage() {
   const noteStyle: React.CSSProperties = {
     fontFamily: "'Kalam', cursive",
     fontSize: `${fontSize}px`,
-    color: color,
+    color: inkColor,
     lineHeight: 1.6,
     whiteSpace: 'pre-wrap',
   };
@@ -62,7 +65,7 @@ export default function HandwrittenNotesPage() {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             ctx.font = `400 ${fontSize}px 'Kalam', cursive`;
-            ctx.fillStyle = color;
+            ctx.fillStyle = inkColor;
             ctx.textBaseline = 'top';
 
             const lines = text.split('\n');
@@ -76,6 +79,7 @@ export default function HandwrittenNotesPage() {
             document.body.removeChild(tempDiv);
 
             const dataUrl = canvas.toDataURL("image/png");
+            sessionStorage.setItem("toolColor", toolColor);
             sessionStorage.setItem("noteImageDataUrl", dataUrl);
             router.push('/text/notes/result');
             
@@ -117,7 +121,7 @@ export default function HandwrittenNotesPage() {
             <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                     <Label htmlFor="color">Ink Color</Label>
-                    <Input id="color" type="color" value={color} onChange={e => setColor(e.target.value)} className="p-1 h-10 w-full" />
+                    <Input id="color" type="color" value={inkColor} onChange={e => setInkColor(e.target.value)} className="p-1 h-10 w-full" />
                 </div>
                     <div className="space-y-2">
                     <Label>Font Size: {fontSize}px</Label>

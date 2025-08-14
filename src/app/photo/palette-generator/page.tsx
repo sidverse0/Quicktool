@@ -11,6 +11,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Palette, Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+const toolColor = "#e8a05d";
+
 export default function PaletteGeneratorPage() {
   const [originalFile, setOriginalFile] = useState<File | null>(null);
   const [originalUrl, setOriginalUrl] = useState<string | null>(null);
@@ -64,6 +66,7 @@ export default function PaletteGeneratorPage() {
         const sortedColors = Object.keys(colorCounts).sort((a, b) => colorCounts[b] - colorCounts[a]);
         const palette = sortedColors.slice(0, 6);
         
+        sessionStorage.setItem("toolColor", toolColor);
         sessionStorage.setItem("paletteOriginalUrl", originalUrl);
         sessionStorage.setItem("paletteResult", JSON.stringify(palette));
         router.push('/photo/palette-generator/result');
@@ -97,7 +100,7 @@ export default function PaletteGeneratorPage() {
           <div className="flex-1 flex items-center justify-center">
             <Card className="w-full max-w-md shadow-none border-none">
                 <CardContent className="p-0">
-                    <FileUploader onFileSelect={handleFileSelect} color="#e8a05d" />
+                    <FileUploader onFileSelect={handleFileSelect} color={toolColor} />
                 </CardContent>
             </Card>
           </div>

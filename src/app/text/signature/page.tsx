@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -10,6 +11,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Slider } from "@/components/ui/slider";
+
+const toolColor = "#5de8e2";
 
 export default function SignaturePage() {
   const [text, setText] = useState("Your Name");
@@ -67,6 +70,7 @@ export default function SignaturePage() {
             document.body.removeChild(tempSpan);
 
             const dataUrl = canvas.toDataURL("image/png");
+            sessionStorage.setItem("toolColor", toolColor);
             sessionStorage.setItem("signatureImageDataUrl", dataUrl);
             router.push('/text/signature/result');
             

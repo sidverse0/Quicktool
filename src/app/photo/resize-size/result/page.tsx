@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -15,17 +16,22 @@ export default function ResizeSizeResultPage() {
     const [originalSize, setOriginalSize] = useState<number | null>(null);
     const [resizedSize, setResizedSize] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
+    const [borderColor, setBorderColor] = useState("hsl(var(--border))");
     const router = useRouter();
 
     useEffect(() => {
         const original = sessionStorage.getItem("originalImageDataUrl");
         const resized = sessionStorage.getItem("resizedImageDataUrl");
         const name = sessionStorage.getItem("resizedImageFileName");
+        const color = sessionStorage.getItem("toolColor");
 
         if (resized && original && name) {
             setOriginalUrl(original);
             setResizedUrl(resized);
             setFileName(name);
+            if(color) {
+                setBorderColor(color);
+            }
             
             fetch(original).then(res => res.blob()).then(blob => setOriginalSize(blob.size));
             fetch(resized).then(res => res.blob()).then(blob => setResizedSize(blob.size));
@@ -49,6 +55,7 @@ export default function ResizeSizeResultPage() {
         sessionStorage.removeItem("originalImageDataUrl");
         sessionStorage.removeItem("resizedImageDataUrl");
         sessionStorage.removeItem("resizedImageFileName");
+        sessionStorage.removeItem("toolColor");
         router.push("/photo/resize-size");
     }
 
@@ -75,7 +82,7 @@ export default function ResizeSizeResultPage() {
                     Original: {formatFileSize(originalSize)} | New: {formatFileSize(resizedSize)}
                 </CardDescription>
             </CardHeader>
-            <div className="relative w-full aspect-square border-2 border-dashed rounded-lg">
+            <div className="relative w-full aspect-square border-2 border-dashed rounded-lg" style={{ borderColor }}>
                 <NextImage src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain p-2" />
             </div>
         </div>

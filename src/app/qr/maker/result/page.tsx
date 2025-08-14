@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState, Suspense } from "react";
@@ -13,17 +14,22 @@ function QRResult() {
   
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [borderColor, setBorderColor] = useState("hsl(var(--border))");
 
   useEffect(() => {
     const text = searchParams.get('text');
-    const color = searchParams.get('color')?.substring(1); // remove #
+    const colorParam = searchParams.get('color')?.substring(1); // remove #
     const bgColor = searchParams.get('bgColor')?.substring(1); // remove #
+    const toolColor = sessionStorage.getItem("toolColor");
     
-    if (text && color && bgColor) {
+    if (text && colorParam && bgColor) {
       const url = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
         text
-      )}&size=512x512&margin=20&format=png&color=${color}&bgcolor=${bgColor}`;
+      )}&size=512x512&margin=20&format=png&color=${colorParam}&bgcolor=${bgColor}`;
       setQrCodeUrl(url);
+      if(toolColor) {
+          setBorderColor(toolColor);
+      }
     } else {
       router.replace('/qr/maker');
     }
@@ -48,6 +54,7 @@ function QRResult() {
   };
 
   const handleStartOver = () => {
+    sessionStorage.removeItem("toolColor");
     router.push('/qr/maker');
   };
 
@@ -55,7 +62,7 @@ function QRResult() {
     <div className="flex flex-col h-full">
       <PageHeader title="QR Code Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
-        <div className="flex items-center justify-center aspect-square rounded-lg border-2 border-dashed">
+        <div className="flex items-center justify-center aspect-square rounded-lg border-2 border-dashed" style={{ borderColor }}>
             {(isLoading || !qrCodeUrl) && (
             <div className="flex flex-col items-center text-muted-foreground">
                 <Loader2 className="h-10 w-10 animate-spin text-primary" />

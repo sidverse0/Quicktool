@@ -11,13 +11,18 @@ import { Download, RefreshCw, Loader2 } from "lucide-react";
 export default function SignatureResultPage() {
     const [signatureUrl, setSignatureUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
+    const [borderColor, setBorderColor] = useState("hsl(var(--border))");
     const router = useRouter();
 
     useEffect(() => {
         const url = sessionStorage.getItem("signatureImageDataUrl");
+        const color = sessionStorage.getItem("toolColor");
 
         if (url) {
             setSignatureUrl(url);
+            if (color) {
+                setBorderColor(color);
+            }
         } else {
             router.replace("/text/signature");
         }
@@ -26,6 +31,7 @@ export default function SignatureResultPage() {
 
     const handleStartOver = () => {
         sessionStorage.removeItem("signatureImageDataUrl");
+        sessionStorage.removeItem("toolColor");
         router.push("/text/signature");
     }
 
@@ -45,7 +51,7 @@ export default function SignatureResultPage() {
     <div className="flex flex-col h-full">
       <PageHeader title="Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
-        <div className="relative w-full h-48 flex items-center justify-center bg-secondary rounded-lg border-2 border-dashed">
+        <div className="relative w-full h-48 flex items-center justify-center bg-secondary rounded-lg border-2 border-dashed" style={{ borderColor }}>
             <Image src={signatureUrl} alt="Generated Signature" layout="fill" className="object-contain p-4" />
         </div>
         <div className="space-y-2">

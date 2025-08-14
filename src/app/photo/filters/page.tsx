@@ -22,6 +22,8 @@ type Filters = {
   invert: number;
 };
 
+const toolColor = "#e85dd5";
+
 export default function FiltersPage() {
   const [originalFile, setOriginalFile] = useState<File | null>(null);
   const [originalUrl, setOriginalUrl] = useState<string | null>(null);
@@ -70,6 +72,7 @@ export default function FiltersPage() {
 
                 const filteredDataUrl = canvas.toDataURL(originalFile.type);
                 
+                sessionStorage.setItem("toolColor", toolColor);
                 sessionStorage.setItem("filteredImageDataUrl", filteredDataUrl);
                 sessionStorage.setItem("filteredImageFileName", `filtered-${originalFile.name}`);
                 router.push('/photo/filters/result');
@@ -115,7 +118,7 @@ export default function FiltersPage() {
           <div className="flex-1 flex items-center justify-center">
             <Card className="w-full max-w-md shadow-none border-none">
               <CardContent className="p-0">
-                <FileUploader onFileSelect={handleFileSelect} color="#e85dd5" />
+                <FileUploader onFileSelect={handleFileSelect} color={toolColor} />
               </CardContent>
             </Card>
           </div>

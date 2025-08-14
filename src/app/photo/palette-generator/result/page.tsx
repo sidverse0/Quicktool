@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -14,16 +15,21 @@ export default function PaletteResultPage() {
     const [originalUrl, setOriginalUrl] = useState<string | null>(null);
     const [palette, setPalette] = useState<ColorPalette | null>(null);
     const [loading, setLoading] = useState(true);
+    const [borderColor, setBorderColor] = useState("hsl(var(--border))");
     const router = useRouter();
     const { toast } = useToast();
 
     useEffect(() => {
         const url = sessionStorage.getItem("paletteOriginalUrl");
         const paletteStr = sessionStorage.getItem("paletteResult");
+        const color = sessionStorage.getItem("toolColor");
 
         if (url && paletteStr) {
             setOriginalUrl(url);
             setPalette(JSON.parse(paletteStr));
+            if(color) {
+                setBorderColor(color);
+            }
         } else {
             router.replace("/photo/palette-generator");
         }
@@ -33,6 +39,7 @@ export default function PaletteResultPage() {
     const handleStartOver = () => {
         sessionStorage.removeItem("paletteOriginalUrl");
         sessionStorage.removeItem("paletteResult");
+        sessionStorage.removeItem("toolColor");
         router.push("/photo/palette-generator");
     }
 
@@ -57,7 +64,7 @@ export default function PaletteResultPage() {
     <div className="flex flex-col h-full">
       <PageHeader title="Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
-        <div className="relative w-full aspect-square border-2 border-dashed rounded-lg">
+        <div className="relative w-full aspect-square border-2 border-dashed rounded-lg" style={{ borderColor }}>
             <Image src={originalUrl} alt="Original Image" layout="fill" className="rounded-lg object-contain p-2" />
         </div>
 

@@ -18,6 +18,8 @@ import { Minimize, Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
+const toolColor = "#5de899";
+
 export default function ResizeSizePage() {
   const [originalFile, setOriginalFile] = useState<File | null>(null);
   const [originalUrl, setOriginalUrl] = useState<string | null>(null);
@@ -88,6 +90,7 @@ export default function ResizeSizePage() {
         }
         
         if (result) {
+            sessionStorage.setItem("toolColor", toolColor);
             sessionStorage.setItem("resizedImageDataUrl", result.url);
             sessionStorage.setItem("originalImageDataUrl", originalUrl);
             sessionStorage.setItem("resizedImageFileName", `resized-${originalFile.name || 'image.jpg'}`);
@@ -135,7 +138,7 @@ export default function ResizeSizePage() {
           <div className="flex-1 flex items-center justify-center">
              <Card className="w-full max-w-md shadow-none border-none">
               <CardContent className="p-0">
-                <FileUploader onFileSelect={handleFileSelect} color="#5de899" />
+                <FileUploader onFileSelect={handleFileSelect} color={toolColor} />
               </CardContent>
             </Card>
           </div>
