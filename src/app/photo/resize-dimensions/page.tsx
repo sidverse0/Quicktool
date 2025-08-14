@@ -121,7 +121,7 @@ export default function ResizeDimensionsPage() {
             </div>
             <Card className="shadow-none border-none">
                 <CardContent className="p-0 space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 sm:grid-cols-2 gap-4">
                     <div className="space-y-2">
                         <Label htmlFor="width">Width (px)</Label>
                         <Input id="width" type="number" placeholder="e.g., 1920" value={width} onChange={e => setWidth(e.target.value === '' ? '' : Number(e.target.value))} />
