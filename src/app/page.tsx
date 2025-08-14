@@ -78,29 +78,21 @@ export default function Home() {
             Your all-in-one toolbox for photos, QR codes, and more, powered by AI.
           </motion.p>
           
-          <motion.div variants={itemVariants} className="mt-12 flex space-x-6">
-            <Link href="/photo">
-                <Button size="lg" className="rounded-full px-8 py-6 text-lg">
-                    Get Started
-                </Button>
-            </Link>
-          </motion.div>
-
           <div className="mt-16 flex space-x-8">
             <motion.div custom={0} variants={iconVariants}>
-                <div className="p-4 bg-secondary rounded-full shadow-md">
+                <Link href="/photo" className="p-4 bg-secondary rounded-full shadow-md block">
                     <ImageIcon className="h-8 w-8 text-rose-500" />
-                </div>
+                </Link>
             </motion.div>
             <motion.div custom={1} variants={iconVariants}>
-                <div className="p-4 bg-secondary rounded-full shadow-md">
+                <Link href="/qr" className="p-4 bg-secondary rounded-full shadow-md block">
                     <QrCode className="h-8 w-8 text-indigo-500" />
-                </div>
+                </Link>
             </motion.div>
             <motion.div custom={2} variants={iconVariants}>
-                <div className="p-4 bg-secondary rounded-full shadow-md">
+                <Link href="/text" className="p-4 bg-secondary rounded-full shadow-md block">
                     <PenSquare className="h-8 w-8 text-teal-500" />
-                </div>
+                </Link>
             </motion.div>
           </div>
         </motion.div>
