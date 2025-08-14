@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -65,7 +66,7 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
       }
   }
 
-  const videoSrc = `https://www.youtube.com/embed/${VIDEO_ID}?controls=0&loop=1&playlist=${VIDEO_ID}&autoplay=1`;
+  const videoSrc = `https://www.youtube.com/embed/${VIDEO_ID}?controls=0&loop=1&playlist=${VIDEO_ID}&autoplay=1&mute=0`;
 
   return (
     <>
@@ -75,20 +76,24 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
             <AlertDialogTitle className="text-center">Watch & Earn</AlertDialogTitle>
           </AlertDialogHeader>
           <div className="aspect-video relative w-full bg-black rounded-md overflow-hidden">
-            <iframe
-              src={videoSrc}
-              title="YouTube video player"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              className="w-full h-full"
-            ></iframe>
-            {!timerStarted && (
+            {timerStarted ? (
+                 <iframe
+                    src={videoSrc}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    className="w-full h-full"
+                ></iframe>
+            ) : (
                  <div 
                     className="absolute inset-0 flex items-center justify-center cursor-pointer bg-black/50"
                     onClick={handlePlay}
                 >
-                    <PlayCircle className="h-16 w-16 text-white/70" />
+                    <div className="text-center">
+                        <PlayCircle className="h-16 w-16 text-white/70 mx-auto" />
+                        <p className="text-white mt-2">Tap to play</p>
+                    </div>
                 </div>
             )}
           </div>
