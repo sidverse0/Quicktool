@@ -68,31 +68,27 @@ export default function ResizeSizeResultPage() {
     <div className="flex flex-col h-full">
       <PageHeader title="Compression Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
-        <Card className="shadow-none border-none">
-            <CardHeader>
-            <CardTitle>Compressed Image</CardTitle>
-            <CardDescription>
-                Original: {formatFileSize(originalSize)} | New: {formatFileSize(resizedSize)}
-            </CardDescription>
+        <div>
+            <CardHeader className="p-0 pb-2">
+                <CardTitle>Compressed Image</CardTitle>
+                <CardDescription>
+                    Original: {formatFileSize(originalSize)} | New: {formatFileSize(resizedSize)}
+                </CardDescription>
             </CardHeader>
-            <CardContent className="p-0">
-                <div className="relative w-full aspect-square">
-                    <NextImage src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain" />
-                </div>
-            </CardContent>
-        </Card>
-        <Card className="shadow-none border-none">
-            <CardContent className="p-0 space-y-2">
-                <a href={resizedUrl} download={fileName}>
-                    <Button className="w-full">
-                        <Download className="mr-2 h-4 w-4" /> Download
-                    </Button>
-                </a>
-                <Button variant="secondary" className="w-full" onClick={handleStartOver}>
-                    <RefreshCw className="mr-2 h-4 w-4" /> Compress Another
+            <div className="relative w-full aspect-square">
+                <NextImage src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain" />
+            </div>
+        </div>
+        <div className="space-y-2">
+            <a href={resizedUrl} download={fileName}>
+                <Button className="w-full">
+                    <Download className="mr-2 h-4 w-4" /> Download
                 </Button>
-            </CardContent>
-        </Card>
+            </a>
+            <Button variant="secondary" className="w-full" onClick={handleStartOver}>
+                <RefreshCw className="mr-2 h-4 w-4" /> Compress Another
+            </Button>
+        </div>
       </div>
     </div>
   );

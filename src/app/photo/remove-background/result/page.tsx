@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Download, RefreshCw, Loader2, Palette } from "lucide-react";
 import {
   Dialog,
@@ -89,46 +88,44 @@ export default function RemoveBackgroundResultPage() {
             </div>
         </div>
 
-        <Card className="shadow-none border-none">
-            <CardContent className="p-0 space-y-2">
-                <a href={processedUrl} download="background-removed.png">
-                    <Button className="w-full">
-                        <Download className="mr-2 h-4 w-4" /> Download (Transparent)
-                    </Button>
-                </a>
-                <Dialog>
-                    <DialogTrigger asChild>
-                    <Button variant="outline" className="w-full">
-                        <Palette className="mr-2 h-4 w-4" />
-                        Download with Color
-                    </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                    <DialogHeader>
-                        <DialogTitle>Choose Background Color</DialogTitle>
-                    </DialogHeader>
-                    <div className="flex items-center gap-4">
-                        <label htmlFor="color-picker">Color:</label>
-                        <Input
-                        id="color-picker"
-                        type="color"
-                        value={backgroundColor}
-                        onChange={(e) => setBackgroundColor(e.target.value)}
-                        className="w-16 h-10 p-1"
-                        />
-                        <span>{backgroundColor}</span>
-                    </div>
-                    <Button onClick={downloadWithColor}>
-                        <Download className="mr-2 h-4 w-4" />
-                        Download
-                    </Button>
-                    </DialogContent>
-                </Dialog>
-                <Button variant="secondary" className="w-full" onClick={handleStartOver}>
-                    <RefreshCw className="mr-2 h-4 w-4" /> Process Another
+        <div className="space-y-2">
+            <a href={processedUrl} download="background-removed.png">
+                <Button className="w-full">
+                    <Download className="mr-2 h-4 w-4" /> Download (Transparent)
                 </Button>
-            </CardContent>
-        </Card>
+            </a>
+            <Dialog>
+                <DialogTrigger asChild>
+                <Button variant="outline" className="w-full">
+                    <Palette className="mr-2 h-4 w-4" />
+                    Download with Color
+                </Button>
+                </DialogTrigger>
+                <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Choose Background Color</DialogTitle>
+                </DialogHeader>
+                <div className="flex items-center gap-4">
+                    <label htmlFor="color-picker">Color:</label>
+                    <Input
+                    id="color-picker"
+                    type="color"
+                    value={backgroundColor}
+                    onChange={(e) => setBackgroundColor(e.target.value)}
+                    className="w-16 h-10 p-1"
+                    />
+                    <span>{backgroundColor}</span>
+                </div>
+                <Button onClick={downloadWithColor}>
+                    <Download className="mr-2 h-4 w-4" />
+                    Download
+                </Button>
+                </DialogContent>
+            </Dialog>
+            <Button variant="secondary" className="w-full" onClick={handleStartOver}>
+                <RefreshCw className="mr-2 h-4 w-4" /> Process Another
+            </Button>
+        </div>
       </div>
     </div>
   );

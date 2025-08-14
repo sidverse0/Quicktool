@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Download, RefreshCw, Loader2 } from "lucide-react";
 
 export default function EnhanceResultPage() {
@@ -60,18 +59,16 @@ export default function EnhanceResultPage() {
             </div>
         </div>
 
-        <Card className="shadow-none border-none">
-            <CardContent className="p-0 space-y-2">
-                <a href={enhancedUrl} download="enhanced-photo.png">
-                    <Button className="w-full">
-                        <Download className="mr-2 h-4 w-4" /> Download
-                    </Button>
-                </a>
-                <Button variant="secondary" className="w-full" onClick={handleStartOver}>
-                    <RefreshCw className="mr-2 h-4 w-4" /> Enhance Another
+        <div className="space-y-2">
+            <a href={enhancedUrl} download="enhanced-photo.png">
+                <Button className="w-full">
+                    <Download className="mr-2 h-4 w-4" /> Download
                 </Button>
-            </CardContent>
-        </Card>
+            </a>
+            <Button variant="secondary" className="w-full" onClick={handleStartOver}>
+                <RefreshCw className="mr-2 h-4 w-4" /> Enhance Another
+            </Button>
+        </div>
       </div>
     </div>
   );

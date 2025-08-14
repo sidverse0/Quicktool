@@ -55,8 +55,7 @@ export default function PdfToImageResultPage() {
       <PageHeader title="Conversion Result" showBackButton />
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {convertedImages.map(image => (
-          <Card key={image.page}>
-            <CardContent className="p-4 space-y-4">
+          <div key={image.page} className="space-y-4 rounded-lg border bg-card text-card-foreground shadow-sm p-4">
               <p className="text-sm font-medium text-center">Page {image.page}</p>
               <div className="relative w-full aspect-[8.5/11] border rounded-lg bg-white">
                   <Image src={image.url} alt={`Page ${image.page}`} layout="fill" className="object-contain p-2" />
@@ -66,16 +65,13 @@ export default function PdfToImageResultPage() {
                       <Download className="mr-2 h-4 w-4" /> Download Image
                   </Button>
               </a>
-            </CardContent>
-          </Card>
+          </div>
         ))}
-        <Card>
-            <CardContent className="p-4">
-                <Button variant="secondary" className="w-full" onClick={handleStartOver}>
-                    <RefreshCw className="mr-2 h-4 w-4" /> Convert Another PDF
-                </Button>
-            </CardContent>
-        </Card>
+        <div className="p-4">
+            <Button variant="secondary" className="w-full" onClick={handleStartOver}>
+                <RefreshCw className="mr-2 h-4 w-4" /> Convert Another PDF
+            </Button>
+        </div>
       </div>
     </div>
   );

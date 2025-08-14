@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Download, RefreshCw, Loader2 } from "lucide-react";
 
 export default function ResizeResultPage() {
@@ -50,25 +49,19 @@ export default function ResizeResultPage() {
     <div className="flex flex-col h-full">
       <PageHeader title="Resizing Result" showBackButton />
       <div className="flex-1 flex flex-col p-4 space-y-4 justify-center">
-          <Card className="shadow-none border-none">
-            <CardContent className="p-0">
-                <div className="relative w-full aspect-square">
-                    <Image src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain" />
-                </div>
-            </CardContent>
-          </Card>
-           <Card className="shadow-none border-none">
-            <CardContent className="p-0 space-y-2">
-                <a href={resizedUrl} download={fileName}>
-                    <Button className="w-full">
-                        <Download className="mr-2 h-4 w-4" /> Download
-                    </Button>
-                </a>
-                <Button variant="secondary" className="w-full" onClick={handleStartOver}>
-                    <RefreshCw className="mr-2 h-4 w-4" /> Resize Another
+        <div className="relative w-full aspect-square">
+            <Image src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain" />
+        </div>
+        <div className="space-y-2">
+            <a href={resizedUrl} download={fileName}>
+                <Button className="w-full">
+                    <Download className="mr-2 h-4 w-4" /> Download
                 </Button>
-            </CardContent>
-          </Card>
+            </a>
+            <Button variant="secondary" className="w-full" onClick={handleStartOver}>
+                <RefreshCw className="mr-2 h-4 w-4" /> Resize Another
+            </Button>
+        </div>
       </div>
     </div>
   );

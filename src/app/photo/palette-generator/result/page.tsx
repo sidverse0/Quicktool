@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { RefreshCw, Loader2, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -58,36 +57,24 @@ export default function PaletteResultPage() {
     <div className="flex flex-col h-full">
       <PageHeader title="Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
-        <Card className="shadow-none border-none">
-            <CardContent className="p-0">
-                <div className="relative w-full aspect-square">
-                    <Image src={originalUrl} alt="Original Image" layout="fill" className="rounded-lg object-contain" />
-                </div>
-            </CardContent>
-        </Card>
+        <div className="relative w-full aspect-square">
+            <Image src={originalUrl} alt="Original Image" layout="fill" className="rounded-lg object-contain" />
+        </div>
 
-        <Card className="shadow-none border-none">
-            <CardContent className="p-0">
-                    <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                    {palette.map(color => (
-                        <div key={color} onClick={() => handleCopy(color)} className="cursor-pointer group relative aspect-square">
-                            <div style={{ backgroundColor: color }} className="h-full w-full rounded-md border" />
-                             <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <Copy className="h-6 w-6 text-white" />
-                            </div>
-                        </div>
-                    ))}
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+        {palette.map(color => (
+            <div key={color} onClick={() => handleCopy(color)} className="cursor-pointer group relative aspect-square">
+                <div style={{ backgroundColor: color }} className="h-full w-full rounded-md border" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Copy className="h-6 w-6 text-white" />
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        ))}
+        </div>
 
-        <Card className="shadow-none border-none">
-            <CardContent className="p-0">
-                <Button variant="secondary" className="w-full" onClick={handleStartOver}>
-                    <RefreshCw className="mr-2 h-4 w-4" /> Generate Another
-                </Button>
-            </CardContent>
-        </Card>
+        <Button variant="secondary" className="w-full" onClick={handleStartOver}>
+            <RefreshCw className="mr-2 h-4 w-4" /> Generate Another
+        </Button>
       </div>
     </div>
   );

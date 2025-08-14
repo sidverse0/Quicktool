@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Download, RefreshCw, Loader2 } from "lucide-react";
 
 function QRResult() {
@@ -56,43 +55,39 @@ function QRResult() {
     <div className="flex flex-col h-full">
       <PageHeader title="QR Code Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
-        <Card className="shadow-none border-none">
-            <CardContent className="p-4 flex items-center justify-center aspect-square bg-gray-100 rounded-lg">
-              {(isLoading || !qrCodeUrl) && (
-                <div className="flex flex-col items-center text-muted-foreground">
-                  <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                </div>
-              )}
-              {qrCodeUrl && (
-                <Image
-                  src={qrCodeUrl}
-                  alt="Generated QR Code"
-                  width={512}
-                  height={512}
-                  className={`transition-opacity duration-300 rounded-lg ${
-                    isLoading ? "opacity-0" : "opacity-100"
-                  }`}
-                  onLoad={() => setIsLoading(false)}
-                  unoptimized
-                />
-              )}
-            </CardContent>
-          </Card>
-           <Card className="shadow-none border-none">
-             <CardContent className="p-0 space-y-2">
-                <Button
-                  className="w-full"
-                  onClick={handleDownload}
-                  disabled={!qrCodeUrl || isLoading}
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  Download QR Code
-                </Button>
-                 <Button variant="secondary" className="w-full" onClick={handleStartOver}>
-                    <RefreshCw className="mr-2 h-4 w-4" /> Create Another
-                </Button>
-             </CardContent>
-           </Card>
+        <div className="flex items-center justify-center aspect-square bg-gray-100 rounded-lg">
+            {(isLoading || !qrCodeUrl) && (
+            <div className="flex flex-col items-center text-muted-foreground">
+                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+            </div>
+            )}
+            {qrCodeUrl && (
+            <Image
+                src={qrCodeUrl}
+                alt="Generated QR Code"
+                width={512}
+                height={512}
+                className={`transition-opacity duration-300 rounded-lg ${
+                isLoading ? "opacity-0" : "opacity-100"
+                }`}
+                onLoad={() => setIsLoading(false)}
+                unoptimized
+            />
+            )}
+        </div>
+        <div className="space-y-2">
+            <Button
+                className="w-full"
+                onClick={handleDownload}
+                disabled={!qrCodeUrl || isLoading}
+            >
+                <Download className="mr-2 h-4 w-4" />
+                Download QR Code
+            </Button>
+                <Button variant="secondary" className="w-full" onClick={handleStartOver}>
+                <RefreshCw className="mr-2 h-4 w-4" /> Create Another
+            </Button>
+        </div>
       </div>
     </div>
   );

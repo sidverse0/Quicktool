@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Download, RefreshCw, Loader2 } from "lucide-react";
 
 export default function NoteResultPage() {
@@ -45,25 +44,19 @@ export default function NoteResultPage() {
     <div className="flex flex-col h-full">
       <PageHeader title="Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
-        <Card className="shadow-none border-none">
-            <CardContent className="p-0">
-                <div className="relative w-full aspect-[4/5] border rounded-lg bg-white">
-                    <Image src={noteUrl} alt="Generated Note" layout="fill" className="object-contain p-2" />
-                </div>
-            </CardContent>
-        </Card>
-         <Card className="shadow-none border-none">
-            <CardContent className="p-0 space-y-2">
-                <a href={noteUrl} download="handwritten-note.png">
-                    <Button className="w-full">
-                        <Download className="mr-2 h-4 w-4" /> Download
-                    </Button>
-                </a>
-                <Button variant="secondary" className="w-full" onClick={handleStartOver}>
-                    <RefreshCw className="mr-2 h-4 w-4" /> Create Another
+        <div className="relative w-full aspect-[4/5] border rounded-lg bg-white">
+            <Image src={noteUrl} alt="Generated Note" layout="fill" className="object-contain p-2" />
+        </div>
+        <div className="space-y-2">
+            <a href={noteUrl} download="handwritten-note.png">
+                <Button className="w-full">
+                    <Download className="mr-2 h-4 w-4" /> Download
                 </Button>
-            </CardContent>
-        </Card>
+            </a>
+            <Button variant="secondary" className="w-full" onClick={handleStartOver}>
+                <RefreshCw className="mr-2 h-4 w-4" /> Create Another
+            </Button>
+        </div>
       </div>
     </div>
   );
