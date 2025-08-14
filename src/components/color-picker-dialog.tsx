@@ -9,6 +9,7 @@ import {
   AlertDialogTitle,
   AlertDialogFooter,
   AlertDialogCancel,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "./ui/input";
@@ -44,7 +45,9 @@ export function ColorPickerDialog({ children, value, onChange }: ColorPickerDial
 
   return (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
-        <button onClick={() => setIsOpen(true)}>{children}</button>
+        <AlertDialogTrigger asChild>
+            {children}
+        </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Select a Color</AlertDialogTitle>
