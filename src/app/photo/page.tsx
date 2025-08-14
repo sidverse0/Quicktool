@@ -15,42 +15,42 @@ import {
 
 const photoTools = [
   {
-    key: "pdfToImage",
+    toolKey: "pdfToImage",
     href: "/photo/pdf-to-image",
     icon: FileImage,
     color: "#FFFFFF",
     gradient: "linear-gradient(to top right, #ef4444, #f87171)",
   },
   {
-    key: "imageToPdf",
+    toolKey: "imageToPdf",
     href: "/photo/image-to-pdf",
     icon: ImageUp,
     color: "#FFFFFF",
     gradient: "linear-gradient(to top right, #f97316, #fb923c)",
   },
   {
-    key: "dimensionResizer",
+    toolKey: "dimensionResizer",
     href: "/photo/resize-dimensions",
     icon: Maximize,
     color: "#FFFFFF",
     gradient: "linear-gradient(to top right, #3b82f6, #60a5fa)",
   },
   {
-    key: "fileSizeResizer",
+    toolKey: "fileSizeResizer",
     href: "/photo/resize-size",
     icon: Minimize,
     color: "#FFFFFF",
     gradient: "linear-gradient(to top right, #22c55e, #4ade80)",
   },
   {
-    key: "imageFilters",
+    toolKey: "imageFilters",
     href: "/photo/filters",
     icon: Palette,
     color: "#FFFFFF",
     gradient: "linear-gradient(to top right, #d946ef, #e879f9)",
   },
   {
-    key: "colorPalette",
+    toolKey: "colorPalette",
     href: "/photo/palette-generator",
     icon: Palette,
     color: "#FFFFFF",
@@ -66,8 +66,8 @@ export default function PhotoPage() {
         <PageHeader title={t('photo_tools')} showBackButton/>
         <div className="flex-1 overflow-y-auto p-4">
           <div className="grid grid-cols-2 gap-4">
-            {photoTools.map((tool) => (
-              <ToolCard key={tool.href} {...tool} title={t(`tools.${tool.key}`)} isTrial />
+            {photoTools.map(({ toolKey, ...rest }) => (
+              <ToolCard key={toolKey} {...rest} title={t(`tools.${toolKey}`)} isTrial />
             ))}
           </div>
         </div>

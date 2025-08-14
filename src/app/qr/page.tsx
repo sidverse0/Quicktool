@@ -9,28 +9,28 @@ import { Link, CaseSensitive, UserSquare, IndianRupee } from "lucide-react";
 
 const qrTools = [
   {
-    key: "urlToQr",
+    toolKey: "urlToQr",
     href: "/qr/maker",
     icon: Link,
     color: "#FFFFFF",
     gradient: "linear-gradient(to top right, #8b5cf6, #a78bfa)",
   },
   {
-    key: "textToQr",
+    toolKey: "textToQr",
     href: "/qr/text",
     icon: CaseSensitive,
     color: "#FFFFFF",
     gradient: "linear-gradient(to top right, #ec4899, #f472b6)",
   },
   {
-    key: "vcardToQr",
+    toolKey: "vcardToQr",
     href: "/qr/vcard",
     icon: UserSquare,
     color: "#FFFFFF",
     gradient: "linear-gradient(to top right, #a855f7, #c084fc)",
   },
   {
-    key: "upiToQr",
+    toolKey: "upiToQr",
     href: "/qr/upi",
     icon: IndianRupee,
     color: "#FFFFFF",
@@ -47,8 +47,8 @@ export default function QrPage() {
         <PageHeader title={t('qr_tools')} showBackButton/>
         <div className="flex-1 overflow-y-auto p-4">
           <div className="grid grid-cols-2 gap-4">
-            {qrTools.map((tool) => (
-              <ToolCard key={tool.href} {...tool} title={t(`tools.${tool.key}`)} isTrial />
+            {qrTools.map(({ toolKey, ...rest }) => (
+              <ToolCard key={toolKey} {...rest} title={t(`tools.${toolKey}`)} isTrial />
             ))}
           </div>
         </div>
