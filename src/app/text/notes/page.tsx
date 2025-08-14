@@ -29,10 +29,10 @@ const toolColor = "#e8d55d";
 const fontOptions = [
     { value: "'Kalam', cursive", label: "Kalam" },
     { value: "'Great Vibes', cursive", label: "Great Vibes" },
-    { value: "'Parisienne', cursive', label: "Parisienne" },
-    { value: "'Sacramento', cursive', label: "Sacramento" },
-    { value: "'Dancing Script', cursive', label: "Dancing Script" },
-    { value: "'Pacifico', cursive', label: "Pacifico" },
+    { value: "'Parisienne', cursive", label: "Parisienne" },
+    { value: "'Sacramento', cursive", label: "Sacramento" },
+    { value: "'Dancing Script', cursive", label: "Dancing Script" },
+    { value: "'Pacifico', cursive", label: "Pacifico" },
 ];
 
 export default function HandwrittenNotesPage() {
