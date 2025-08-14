@@ -89,7 +89,7 @@ export default function HandwrittenNotesPage() {
     setTimeout(() => {
         try {
             const FULL_PAGE_LINES = 22;
-            const paddingX = 15;
+            const paddingX = 10;
             const paddingTop = lineHeight * 0.25;
             const paddingBottom = 20;
 
@@ -114,7 +114,7 @@ export default function HandwrittenNotesPage() {
                 ctx.strokeStyle = '#aab5f1';
                 ctx.lineWidth = 1;
                 for (let i = 0; i < FULL_PAGE_LINES; i++) {
-                    const y = paddingTop + (i * lineHeight) + (fontSize);
+                    const y = paddingTop + (i * lineHeight) + (fontSize * 0.9);
                      if (y < canvasHeight - paddingBottom/2) {
                         ctx.beginPath();
                         ctx.moveTo(0, y);
@@ -124,32 +124,44 @@ export default function HandwrittenNotesPage() {
                 }
             }
             
-            ctx.font = `400 ${fontSize}px ${fontFamily.split(',')[0]}`;
+            ctx.font = `400 ${fontSize}px ${fontFamily.split(',')[0].replace(/'/g, "")}`;
             ctx.fillStyle = inkColor;
             ctx.textBaseline = 'top';
 
             function wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
-                const words = text.split(' ');
-                let line = '';
+                const paragraphs = text.split('\n');
                 let lineIndex = 0;
 
-                for (let n = 0; n < words.length; n++) {
-                    const testLine = line + words[n] + ' ';
-                    const metrics = context.measureText(testLine);
-                    const testWidth = metrics.width;
-                    if (testWidth > maxWidth && n > 0) {
-                        context.fillText(line, x, y + (lineIndex * lineHeight) - (fontSize * 0.2));
-                        line = words[n] + ' ';
-                        lineIndex++;
-                    } else {
-                        line = testLine;
+                for (const paragraph of paragraphs) {
+                    const words = paragraph.split(' ');
+                    let line = '';
+
+                    for (let n = 0; n < words.length; n++) {
+                        const testLine = line + words[n] + ' ';
+                        const metrics = context.measureText(testLine);
+                        const testWidth = metrics.width;
+                        if (testWidth > maxWidth && n > 0) {
+                            context.fillText(line, x, y + (lineIndex * lineHeight));
+                            line = words[n] + ' ';
+                            lineIndex++;
+                        } else {
+                            line = testLine;
+                        }
                     }
+                    context.fillText(line, x, y + (lineIndex * lineHeight));
+                    lineIndex++;
                 }
-                context.fillText(line, x, y + (lineIndex * lineHeight) - (fontSize * 0.2));
             }
             
-            wrapText(ctx, text, paddingX, paddingTop + (fontSize * 0.6), maxWidth, lineHeight);
+            wrapText(ctx, text, paddingX, paddingTop + (fontSize * 0.4), maxWidth, lineHeight);
             
+            const dataUrl = canvas.toDataURL("image/png");
+            
+            incrementToolUsage(toolName);
+            sessionStorage.setItem("toolColor", toolColor);
+            sessionStorage.setItem("noteImageDataUrl", dataUrl);
+            router.push('/text/notes/result');
+
         } catch (error) {
             console.error(error);
             toast({
