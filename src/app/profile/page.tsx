@@ -8,7 +8,7 @@ import PageHeader from "@/components/layout/page-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { QrCode, Image, LifeBuoy, User as UserIcon, Settings, Moon, Sun, Languages } from "lucide-react";
+import { QrCode, Image, LifeBuoy, User as UserIcon, Moon, Sun, Languages, Wrench } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
@@ -60,7 +60,10 @@ export default function ProfilePage() {
                   </AvatarFallback>
                 </Avatar>
               </div>
-              <h2 className="text-2xl font-bold font-headline mt-4">Quick Tool</h2>
+              <h2 className="text-2xl font-bold font-headline mt-4 flex items-center gap-2">
+                Quick Tool
+                <Wrench className="h-6 w-6 text-primary" />
+              </h2>
               <p className="text-muted-foreground">quicktool@sid.com</p>
             </CardContent>
           </Card>
