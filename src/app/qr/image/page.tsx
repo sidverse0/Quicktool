@@ -1,99 +1,136 @@
-
 "use client";
 
-import { useState } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, Suspense, useRef } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
-import FileUploader from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { QrCode, Loader2, X } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { Download, RefreshCw } from "lucide-react";
+import LoadingIndicator from "@/components/layout/loading-indicator";
+import QRCode from "react-qr-code";
 
-const toolColor = "#5de8d4";
-
-export default function ImageToQrPage() {
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const { toast } = useToast();
+function QRResult() {
   const router = useRouter();
-
-  const handleFileSelect = (file: File) => {
-    if (!file.type.startsWith("image/")) {
-        toast({
-            variant: "destructive",
-            title: "Invalid File",
-            description: "Please select an image file.",
-        });
-        return;
-    }
-    setImageFile(file);
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setImageUrl(e.target?.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
+  const searchParams = useSearchParams();
+  const qrCodeRef = useRef<HTMLDivElement>(null);
   
-  const handleGenerateQrCode = () => {
-    if (!imageUrl) {
-        toast({
-            variant: "destructive",
-            title: "No Image",
-            description: "Please select an image to generate a QR code.",
-        });
-        return;
+  const [qrValue, setQrValue] = useState("");
+  const [qrColor, setQrColor] = useState("#000000");
+  const [qrBgColor, setQrBgColor] = useState("#FFFFFF");
+  const [isLoading, setIsLoading] = useState(true);
+  const [borderColor, setBorderColor] = useState("hsl(var(--border))");
+
+  useEffect(() => {
+    const textFromUrl = searchParams.get('text');
+    const colorParam = searchParams.get('color') || '#000000';
+    const bgColorParam = searchParams.get('bgColor') || '#FFFFFF';
+    const toolColor = sessionStorage.getItem("toolColor");
+
+    if (textFromUrl) {
+      setQrValue(textFromUrl);
+      setQrColor(colorParam);
+      setQrBgColor(bgColorParam);
+      if(toolColor) {
+          setBorderColor(toolColor);
+      }
+    } else {
+      router.back();
     }
-    setIsProcessing(true);
+    setIsLoading(false);
+  }, [searchParams, router]);
+
+  const handleDownload = () => {
+    if (!qrCodeRef.current) return;
     
-    // The image data URL can be very long, which might create a QR code
-    // that is too dense to be scanned by some readers. This is a limitation
-    // of storing image data directly in a QR code.
-    sessionStorage.setItem("qrImageDataUrl", imageUrl);
-    sessionStorage.setItem("toolColor", toolColor);
-    router.push(`/qr/maker/result`);
+    const svg = qrCodeRef.current.querySelector('svg');
+    if (!svg) return;
+
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const img = new Image();
+    img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx.drawImage(img, 0, 0);
+        const pngFile = canvas.toDataURL("image/png");
+        
+        const link = document.createElement("a");
+        link.href = pngFile;
+        link.download = "qrcode.png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+    img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
   };
 
-  const handleReset = () => {
-    setImageFile(null);
-    setImageUrl(null);
-    setIsProcessing(false);
+
+  const handleStartOver = () => {
+    sessionStorage.removeItem("toolColor");
+    router.back();
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col h-full">
+        <PageHeader title="QR Code Result" showBackButton />
+        <div className="flex-1 flex items-center justify-center">
+          <LoadingIndicator />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full">
-      <PageHeader title="Image to QR Code" showBackButton />
-      <div className="flex-1 flex flex-col p-4 space-y-4 justify-center">
-        {!imageUrl ? (
-          <div className="flex-1 flex items-center justify-center">
-            <Card className="w-full max-w-md shadow-none border-none">
-                <CardContent className="p-0">
-                    <FileUploader onFileSelect={handleFileSelect} color={toolColor} />
-                </CardContent>
-            </Card>
-          </div>
-        ) : (
-          <>
-            <div className="flex-1 min-h-0 flex items-center justify-center">
-                <div className="relative w-full h-full border-2 border-dashed rounded-lg">
-                  <Image src={imageUrl} alt="Selected" layout="fill" className="rounded-lg object-contain p-2" />
-                  <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7 rounded-full z-10" onClick={handleReset}>
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
+      <PageHeader title="QR Code Result" showBackButton />
+      <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
+        <div className="relative flex items-center justify-center aspect-square rounded-lg border-2 border-dashed" style={{ borderColor }}>
+            <div ref={qrCodeRef} className="w-full h-full p-6 bg-white flex items-center justify-center">
+                {qrValue ? (
+                    <QRCode
+                        value={qrValue}
+                        size={512}
+                        fgColor={qrColor}
+                        bgColor={qrBgColor}
+                        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                    />
+                ) : (
+                    <LoadingIndicator />
+                )}
             </div>
-            <Card className="shadow-none border-none">
-                <CardContent className="p-0">
-                    <Button className="w-full" onClick={handleGenerateQrCode} disabled={isProcessing}>
-                    {isProcessing ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating...</> : <><QrCode className="mr-2 h-4 w-4" />Generate QR Code</>}
-                    </Button>
-                </CardContent>
-            </Card>
-          </>
-        )}
+        </div>
+        <div className="space-y-2">
+            <Button
+                className="w-full"
+                onClick={handleDownload}
+                disabled={!qrValue}
+            >
+                <Download className="mr-2 h-4 w-4" />
+                Download QR Code
+            </Button>
+                <Button variant="secondary" className="w-full" onClick={handleStartOver}>
+                <RefreshCw className="mr-2 h-4 w-4" /> Create Another
+            </Button>
+        </div>
       </div>
     </div>
   );
+}
+
+export default function QrMakerResultPage() {
+    return (
+        <Suspense fallback={
+            <div className="flex flex-col h-full">
+                <PageHeader title="QR Code Result" showBackButton />
+                <div className="flex-1 flex items-center justify-center">
+                    <LoadingIndicator />
+                </div>
+            </div>
+        }>
+            <QRResult />
+        </Suspense>
+    )
 }

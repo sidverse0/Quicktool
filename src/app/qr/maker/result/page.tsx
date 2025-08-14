@@ -19,34 +19,22 @@ function QRResult() {
   const [qrBgColor, setQrBgColor] = useState("#FFFFFF");
   const [isLoading, setIsLoading] = useState(true);
   const [borderColor, setBorderColor] = useState("hsl(var(--border))");
-  const [isImageQr, setIsImageQr] = useState(false);
 
   useEffect(() => {
     const textFromUrl = searchParams.get('text');
     const colorParam = searchParams.get('color') || '#000000';
     const bgColorParam = searchParams.get('bgColor') || '#FFFFFF';
-    
-    const textFromSession = sessionStorage.getItem("qrImageDataUrl");
     const toolColor = sessionStorage.getItem("toolColor");
 
-    let finalValue = "";
-    if (textFromSession) {
-      finalValue = textFromSession;
-      setIsImageQr(true);
-    } else if (textFromUrl) {
-      finalValue = textFromUrl;
-      setIsImageQr(false);
-    }
-
-    if (finalValue) {
-      setQrValue(finalValue);
+    if (textFromUrl) {
+      setQrValue(textFromUrl);
       setQrColor(colorParam);
       setQrBgColor(bgColorParam);
       if(toolColor) {
           setBorderColor(toolColor);
       }
     } else {
-      router.replace('/qr/maker');
+      router.back();
     }
     setIsLoading(false);
   }, [searchParams, router]);
@@ -81,15 +69,8 @@ function QRResult() {
 
 
   const handleStartOver = () => {
-    const isImage = !!sessionStorage.getItem("qrImageDataUrl");
     sessionStorage.removeItem("toolColor");
-    sessionStorage.removeItem("qrImageDataUrl");
-    
-    if (isImage) {
-        router.back();
-    } else {
-        router.back();
-    }
+    router.back();
   };
 
   if (isLoading) {
@@ -109,13 +90,17 @@ function QRResult() {
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
         <div className="relative flex items-center justify-center aspect-square rounded-lg border-2 border-dashed" style={{ borderColor }}>
             <div ref={qrCodeRef} className="w-full h-full p-6 bg-white flex items-center justify-center">
-                <QRCode
-                    value={qrValue}
-                    size={512}
-                    fgColor={qrColor}
-                    bgColor={qrBgColor}
-                    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                />
+                {qrValue ? (
+                    <QRCode
+                        value={qrValue}
+                        size={512}
+                        fgColor={qrColor}
+                        bgColor={qrBgColor}
+                        style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                    />
+                ) : (
+                    <LoadingIndicator />
+                )}
             </div>
         </div>
         <div className="space-y-2">
