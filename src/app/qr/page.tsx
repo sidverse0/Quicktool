@@ -1,18 +1,35 @@
+
 "use client";
 
 import MainLayout from "@/components/layout/main-layout";
 import PageHeader from "@/components/layout/page-header";
 import ToolCard from "@/components/tool-card";
-import { QrCode } from "lucide-react";
+import { Link, CaseSensitive, UserSquare, ImageIcon } from "lucide-react";
 
 const qrTools = [
   {
-    title: "QR Code Maker",
+    title: "Text/URL to QR",
     href: "/qr/maker",
-    icon: QrCode,
+    icon: Link,
     color: "#7a5de8",
     imgSrc: "https://placehold.co/600x400.png",
-    imgHint: "qr code"
+    imgHint: "qr code link"
+  },
+  {
+    title: "vCard QR Code",
+    href: "/qr/vcard",
+    icon: UserSquare,
+    color: "#de5de8",
+    imgSrc: "https://placehold.co/600x400.png",
+    imgHint: "contact card"
+  },
+  {
+    title: "AI Image to QR",
+    href: "/qr/ai-image",
+    icon: ImageIcon,
+    color: "#5de8d4",
+    imgSrc: "https://placehold.co/600x400.png",
+    imgHint: "ai robot"
   },
 ];
 
