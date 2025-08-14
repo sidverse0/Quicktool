@@ -17,6 +17,7 @@ function QRResult() {
   const [qrValue, setQrValue] = useState("");
   const [qrColor, setQrColor] = useState("#000000");
   const [qrBgColor, setQrBgColor] = useState("#FFFFFF");
+  const [qrLogo, setQrLogo] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [borderColor, setBorderColor] = useState("hsl(var(--border))");
 
@@ -25,11 +26,13 @@ function QRResult() {
     const colorParam = searchParams.get('color') || '#000000';
     const bgColorParam = searchParams.get('bgColor') || '#FFFFFF';
     const toolColor = sessionStorage.getItem("toolColor");
+    const logo = sessionStorage.getItem("qrLogo");
 
     if (textFromUrl) {
       setQrValue(textFromUrl);
       setQrColor(colorParam);
       setQrBgColor(bgColorParam);
+      setQrLogo(logo);
       if(toolColor) {
           setBorderColor(toolColor);
       }
@@ -49,7 +52,7 @@ function QRResult() {
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
-
+    
     const img = new Image();
     img.onload = () => {
         canvas.width = img.width;
@@ -70,6 +73,7 @@ function QRResult() {
 
   const handleStartOver = () => {
     sessionStorage.removeItem("toolColor");
+    sessionStorage.removeItem("qrLogo");
     router.back();
   };
 
@@ -97,6 +101,15 @@ function QRResult() {
                         fgColor={qrColor}
                         bgColor={qrBgColor}
                         style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+                        // @ts-ignore
+                        qrStyle="squares"
+                        eyeRadius={5}
+                        eyeColor={qrColor}
+                        logoImage={qrLogo || undefined}
+                        logoWidth={60}
+                        logoHeight={60}
+                        logoOpacity={1}
+                        removeQrCodeBehindLogo={true}
                     />
                 ) : (
                     <LoadingIndicator />
