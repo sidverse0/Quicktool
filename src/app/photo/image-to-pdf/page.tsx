@@ -30,7 +30,7 @@ export default function ImageToPdfPage() {
 
   useEffect(() => {
     if (scrollContainerRef.current) {
-        scrollContainerRef.current.scrollLeft = scrollContainerRef.current.scrollWidth;
+        scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
     }
   }, [imageFiles]);
 
@@ -143,36 +143,34 @@ export default function ImageToPdfPage() {
           </div>
         ) : (
           <>
-            <div className="flex-1 min-h-0 p-2 border-2 border-dashed rounded-lg" style={{ borderColor: toolColor }}>
-                <div ref={scrollContainerRef} className="flex items-center gap-2 overflow-x-auto h-full pb-2">
-                    {imageFiles.map((imgFile, index) => (
-                        <div key={index} className="relative aspect-square w-24 h-24 flex-shrink-0">
-                            <Image src={imgFile.url} alt={`Preview ${index + 1}`} layout="fill" className="object-cover rounded-md" />
-                            <Button
-                                variant="destructive"
-                                size="icon"
-                                className="absolute top-1 right-1 h-6 w-6 rounded-full z-10"
-                                onClick={() => handleRemoveImage(index)}
-                            >
-                                <X className="h-4 w-4" />
-                            </Button>
-                        </div>
-                    ))}
-                     <input 
-                        type="file" 
-                        ref={fileInputRef} 
-                        onChange={(e) => handleAdditionalFileSelect(e.target.files)}
-                        className="hidden"
-                        accept="image/*"
-                        multiple
-                     />
-                    <button 
-                        onClick={handleAddMoreClick}
-                        className="flex-shrink-0 flex items-center justify-center aspect-square w-24 h-24 rounded-md border-2 border-dashed border-muted-foreground/50 hover:border-primary transition-colors group"
-                    >
-                        <Plus className="h-8 w-8 text-muted-foreground/50 group-hover:text-primary"/>
-                    </button>
-                </div>
+            <div ref={scrollContainerRef} className="flex-1 min-h-0 p-2 border-2 border-dashed rounded-lg flex flex-wrap gap-2 overflow-y-auto content-start" style={{ borderColor: toolColor }}>
+                {imageFiles.map((imgFile, index) => (
+                    <div key={index} className="relative aspect-square w-20 h-20 flex-shrink-0">
+                        <Image src={imgFile.url} alt={`Preview ${index + 1}`} layout="fill" className="object-cover rounded-md" />
+                        <Button
+                            variant="destructive"
+                            size="icon"
+                            className="absolute -top-1 -right-1 h-5 w-5 rounded-full z-10"
+                            onClick={() => handleRemoveImage(index)}
+                        >
+                            <X className="h-3 w-3" />
+                        </Button>
+                    </div>
+                ))}
+                 <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    onChange={(e) => handleAdditionalFileSelect(e.target.files)}
+                    className="hidden"
+                    accept="image/*"
+                    multiple
+                 />
+                <button 
+                    onClick={handleAddMoreClick}
+                    className="flex-shrink-0 flex items-center justify-center aspect-square w-20 h-20 rounded-md border-2 border-dashed border-muted-foreground/50 hover:border-primary transition-colors group"
+                >
+                    <Plus className="h-8 w-8 text-muted-foreground/50 group-hover:text-primary"/>
+                </button>
             </div>
             <Card className="shadow-none border-none pt-2">
                 <CardContent className="p-0">
