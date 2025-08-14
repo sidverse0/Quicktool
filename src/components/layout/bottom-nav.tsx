@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -7,11 +8,11 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 const navItems = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/photo", label: "Photo", icon: ImageIcon },
-  { href: "/qr", label: "QR", icon: QrCode },
-  { href: "/text", label: "Text", icon: PenSquare },
-  { href: "/profile", label: "Profile", icon: User },
+  { href: "/", label: "Home", icon: Home, color: "text-primary" },
+  { href: "/photo", label: "Photo", icon: ImageIcon, color: "text-rose-500" },
+  { href: "/qr", label: "QR", icon: QrCode, color: "text-indigo-500" },
+  { href: "/text", label: "Text", icon: PenSquare, color: "text-teal-500" },
+  { href: "/profile", label: "Profile", icon: User, color: "text-amber-500" },
 ];
 
 export default function BottomNav() {
@@ -35,10 +36,11 @@ export default function BottomNav() {
             >
               <div
                 className={cn(
-                  "p-2 rounded-full transition-all",
+                  "p-2 rounded-full transition-all border-2",
                   isActive
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground group-hover:text-primary"
+                    ? "bg-primary/10 border-current"
+                    : "border-transparent text-muted-foreground group-hover:text-primary",
+                  isActive && item.color
                 )}
               >
                 <item.icon className="h-6 w-6" />
@@ -46,19 +48,11 @@ export default function BottomNav() {
               <span
                 className={cn(
                   "text-xs font-medium transition-colors",
-                  isActive ? "text-primary" : "text-muted-foreground"
+                  isActive ? item.color : "text-muted-foreground"
                 )}
               >
                 {item.label}
               </span>
-              {isActive && (
-                <motion.div
-                  className="absolute bottom-0 w-12 h-1 bg-primary rounded-full"
-                  layoutId="active-indicator"
-                  initial={false}
-                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                />
-              )}
             </Link>
           );
         })}
