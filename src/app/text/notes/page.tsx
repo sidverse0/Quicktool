@@ -69,6 +69,7 @@ export default function HandwrittenNotesPage() {
     paddingLeft: '20px',
     paddingRight: '20px',
     paddingBottom: '20px',
+    height: `${lineHeight * 22}px`,
   };
   
   const handleGenerate = () => {
@@ -86,6 +87,7 @@ export default function HandwrittenNotesPage() {
 
     setTimeout(() => {
         try {
+            const FULL_PAGE_LINES = 22;
             const paddingX = 20;
             const paddingTop = lineHeight * 0.25;
             const paddingBottom = 20;
@@ -99,9 +101,7 @@ export default function HandwrittenNotesPage() {
             tempDiv.style.left = '-9999px';
             tempDiv.style.paddingLeft = `${paddingX}px`;
             tempDiv.style.paddingRight = `${paddingX}px`;
-            tempDiv.style.paddingTop = `${paddingTop}px`;
-            tempDiv.style.paddingBottom = `${paddingBottom}px`;
-            tempDiv.innerText = text;
+            tempDiv.innerText = "A"; // for width calculation
             document.body.appendChild(tempDiv);
             
             const canvas = document.createElement('canvas');
@@ -109,25 +109,28 @@ export default function HandwrittenNotesPage() {
             if (!ctx) throw new Error("Canvas context not available");
 
             const dpr = window.devicePixelRatio || 1;
-            canvas.width = (tempDiv.offsetWidth) * dpr;
-            canvas.height = (tempDiv.offsetHeight) * dpr;
+            const canvasWidth = (previewRef.current?.offsetWidth || 300);
+            const canvasHeight = (lineHeight * FULL_PAGE_LINES) + paddingTop + paddingBottom;
+
+            canvas.width = canvasWidth * dpr;
+            canvas.height = canvasHeight * dpr;
             
             ctx.scale(dpr, dpr);
             
             ctx.fillStyle = bgColor;
-            ctx.fillRect(0, 0, canvas.width/dpr, canvas.height/dpr);
+            ctx.fillRect(0, 0, canvasWidth, canvasHeight);
             
             const lines = text.split('\n');
 
             if (showLines) {
                 ctx.strokeStyle = '#aab5f1';
                 ctx.lineWidth = 1;
-                for (let i = 0; i < lines.length; i++) {
+                for (let i = 0; i < FULL_PAGE_LINES; i++) {
                     const y = paddingTop + (i * lineHeight) + (fontSize);
-                     if (y < canvas.height/dpr - paddingBottom/2) {
+                     if (y < canvasHeight - paddingBottom/2) {
                         ctx.beginPath();
                         ctx.moveTo(paddingX, y);
-                        ctx.lineTo(canvas.width/dpr - paddingX, y);
+                        ctx.lineTo(canvasWidth - paddingX, y);
                         ctx.stroke();
                     }
                 }
