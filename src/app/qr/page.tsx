@@ -8,12 +8,20 @@ import { Link, CaseSensitive, UserSquare, ImageUp } from "lucide-react";
 
 const qrTools = [
   {
-    title: "Text/URL to QR",
+    title: "URL to QR",
     href: "/qr/maker",
     icon: Link,
     color: "#7a5de8",
     imgSrc: "https://placehold.co/600x400.png",
     imgHint: "qr code link"
+  },
+  {
+    title: "Text to QR",
+    href: "/qr/text",
+    icon: CaseSensitive,
+    color: "#e85d87",
+    imgSrc: "https://placehold.co/600x400.png",
+    imgHint: "text document"
   },
   {
     title: "vCard to QR",

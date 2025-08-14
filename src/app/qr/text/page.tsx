@@ -5,32 +5,33 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { QrCode } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
 
-const toolColor = "#7a5de8";
+const toolColor = "#e85d87";
 
-export default function QrMakerPage() {
-  const [url, setUrl] = useState("https://firebase.google.com/");
+export default function TextToQrPage() {
+  const [text, setText] = useState("Hello, World!");
   const [color, setColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#FFFFFF");
   const router = useRouter();
   const { toast } = useToast();
 
   const handleGenerate = () => {
-    if (!url.trim()) {
+    if (!text.trim()) {
       toast({
         variant: "destructive",
-        title: "URL is empty",
-        description: "Please enter a URL.",
+        title: "Text is empty",
+        description: "Please enter some text.",
       });
       return;
     }
     const params = new URLSearchParams({
-        text: url,
+        text,
         color,
         bgColor,
     });
@@ -40,17 +41,18 @@ export default function QrMakerPage() {
 
   return (
     <div className="flex flex-col h-full">
-      <PageHeader title="URL to QR Code" showBackButton />
+      <PageHeader title="Text to QR Code" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-6">
           <Card className="shadow-none border-none">
             <CardContent className="space-y-4 p-0">
               <div className="space-y-2">
-                <Label htmlFor="url">URL</Label>
-                <Input
-                  id="url"
-                  value={url}
-                  onChange={(e) => setUrl(e.target.value)}
-                  placeholder="https://example.com"
+                <Label htmlFor="text">Your Text</Label>
+                <Textarea
+                  id="text"
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  placeholder="Enter any text here"
+                  rows={4}
                 />
               </div>
             </CardContent>
