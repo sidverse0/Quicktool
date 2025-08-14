@@ -8,8 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Download, RefreshCw } from "lucide-react";
 import LoadingIndicator from "@/components/layout/loading-indicator";
 import { DownloadDialog } from "@/components/download-dialog";
-import QRCodeStyling from "qr-code-styling-react";
-import type { Options as QRCodeStylingOptions } from "qr-code-styling-react";
+import QRCodeStyling from "qr-code-styling";
+import type { Options as QRCodeStylingOptions } from "qr-code-styling";
 
 function QRResult() {
   const router = useRouter();
@@ -61,6 +61,7 @@ function QRResult() {
   }, [searchParams, router]);
 
   useEffect(() => {
+    if (isLoading || !qrValue) return;
     const qrCode = new QRCodeStyling(options);
     if(ref.current) {
         ref.current.innerHTML = "";
@@ -75,7 +76,7 @@ function QRResult() {
             }
         });
     }
-  }, [options, ref]);
+  }, [options, ref, isLoading, qrValue]);
 
   const handleStartOver = () => {
     sessionStorage.removeItem("toolColor");
