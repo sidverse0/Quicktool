@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -141,8 +142,8 @@ export default function ResizeSizePage() {
         ) : (
           <>
             <div className="flex-1 min-h-0 flex items-center justify-center">
-              <div className="relative w-full h-full">
-                <Image src={originalUrl} alt="Original Preview" layout="fill" className="rounded-lg object-contain" />
+              <div className="relative w-full h-full border-2 border-dashed rounded-lg">
+                <Image src={originalUrl} alt="Original Preview" layout="fill" className="rounded-lg object-contain p-2" />
                 <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7 rounded-full z-10" onClick={handleReset}>
                   <X className="h-4 w-4" />
                 </Button>
