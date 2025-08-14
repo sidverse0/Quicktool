@@ -3,7 +3,6 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import FileUploader from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
@@ -11,7 +10,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, X, ImageUp, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
-import { cn } from "@/lib/utils";
+import { PdfDownloadDialog } from "@/components/pdf-download-dialog";
 
 const toolColor = "#e88d5d";
 
@@ -26,6 +25,8 @@ export default function ImageToPdfPage() {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [pdfDataUrl, setPdfDataUrl] = useState<string | null>(null);
+  const [showDownloadDialog, setShowDownloadDialog] = useState(false);
 
   useEffect(() => {
     if (scrollContainerRef.current) {
@@ -103,13 +104,9 @@ export default function ImageToPdfPage() {
           });
         }
         
-        doc.save('converted.pdf');
-        
-        toast({
-          title: "Success!",
-          description: "Your PDF has been downloaded."
-        });
-
+        const dataUrl = doc.output('datauristring');
+        setPdfDataUrl(dataUrl);
+        setShowDownloadDialog(true);
       } catch (error) {
         console.error(error);
         toast({
@@ -176,9 +173,16 @@ export default function ImageToPdfPage() {
             </div>
             <Card className="shadow-none border-none shrink-0">
                 <CardContent className="p-0 pt-4">
-                    <Button className="w-full" onClick={handleConvert} disabled={isProcessing}>
-                    {isProcessing ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Converting...</> : <><ImageUp className="mr-2 h-4 w-4" />Convert to PDF</>}
-                    </Button>
+                    <PdfDownloadDialog
+                        isOpen={showDownloadDialog}
+                        onOpenChange={setShowDownloadDialog}
+                        pdfDataUrl={pdfDataUrl}
+                        fileName="converted"
+                    >
+                        <Button className="w-full" onClick={handleConvert} disabled={isProcessing}>
+                            {isProcessing ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Converting...</> : <><ImageUp className="mr-2 h-4 w-4" />Convert to PDF</>}
+                        </Button>
+                    </PdfDownloadDialog>
                 </CardContent>
             </Card>
           </>
