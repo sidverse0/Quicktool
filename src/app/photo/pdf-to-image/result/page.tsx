@@ -17,7 +17,7 @@ export default function PdfToImageResultPage() {
     const [convertedImages, setConvertedImages] = useState<ConvertedImage[]>([]);
     const [imageType, setImageType] = useState<string>("png");
     const [loading, setLoading] = useState(true);
-    const [borderColor, setBorderColor] = useState("hsl(var(--border))");
+    const [toolColor, setToolColor] = useState("hsl(var(--primary))");
     const router = useRouter();
 
     useEffect(() => {
@@ -29,7 +29,7 @@ export default function PdfToImageResultPage() {
             setConvertedImages(JSON.parse(imagesStr));
             setImageType(format);
             if (color) {
-                setBorderColor(color);
+                setToolColor(color);
             }
         } else {
             router.replace("/photo/pdf-to-image");
@@ -61,16 +61,16 @@ export default function PdfToImageResultPage() {
       <PageHeader title="Conversion Result" showBackButton />
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {convertedImages.map(image => (
-          <div key={image.page} className="space-y-4">
+          <div key={image.page} className="space-y-2">
               <p className="text-sm font-medium text-center">Page {image.page}</p>
-              <div className="relative w-full aspect-[8.5/11] border-2 border-dashed rounded-lg bg-secondary" style={{ borderColor }}>
+              <div className="relative w-full aspect-[8.5/11] border-2 border-dashed rounded-lg bg-secondary" style={{ borderColor: toolColor }}>
                   <Image src={image.url} alt={`Page ${image.page}`} layout="fill" className="object-contain p-2" />
+                  <a href={image.url} download={`page-${image.page}.${imageType}`} className="absolute top-2 right-2">
+                      <Button size="icon" className="h-9 w-9" style={{ backgroundColor: toolColor }}>
+                          <Download className="h-5 w-5" />
+                      </Button>
+                  </a>
               </div>
-              <a href={image.url} download={`page-${image.page}.${imageType}`}>
-                  <Button className="w-full">
-                      <Download className="mr-2 h-4 w-4" /> Download Page {image.page}
-                  </Button>
-              </a>
           </div>
         ))}
         <div className="pt-4">
