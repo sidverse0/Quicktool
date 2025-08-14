@@ -9,16 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { IndianRupee, Upload, QrCode } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { ColorPickerDialog } from "@/components/color-picker-dialog";
+import Image from "next/image";
 
 const toolColor = "#5de87a";
-
-const colorPresets = [
-    { name: "Black/White", fg: "#000000", bg: "#FFFFFF" },
-    { name: "Neon Green", fg: "#39FF14", bg: "#000000" },
-    { name: "Neon Blue", fg: "#00FFFF", bg: "#000000" },
-    { name: "Hot Pink", fg: "#FF007F", bg: "#FFFFFF" },
-    { name: "Purple/Yellow", fg: "#6f42c1", bg: "#f1e05a" },
-];
 
 export default function UpiPaymentPage() {
   const [payeeName, setPayeeName] = useState("Jane Doe");
@@ -27,6 +21,7 @@ export default function UpiPaymentPage() {
   const [color, setColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#FFFFFF");
   const [logo, setLogo] = useState<File | null>(null);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const { toast } = useToast();
@@ -39,6 +34,7 @@ export default function UpiPaymentPage() {
             return;
           }
           setLogo(file);
+          setLogoUrl(URL.createObjectURL(file));
       }
   }
 
@@ -60,8 +56,6 @@ export default function UpiPaymentPage() {
     } else if (phone.trim()) {
         // Simple validation for phone number
         if (/^\d{10}$/.test(phone.trim())) {
-             // This is a simplification. Real world might need provider detection.
-             // Using a common example format.
             upiUrl += `&pa=${encodeURIComponent(phone.trim())}@paytm`;
         } else {
             toast({
@@ -115,33 +109,26 @@ export default function UpiPaymentPage() {
               </div>
                <div className="text-center text-sm text-muted-foreground">OR</div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number</Label>
+                <Label htmlFor="phone">Phone Number (Optional)</Label>
                 <Input id="phone" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="10-digit number" />
               </div>
           </div>
           
           <div className="space-y-4">
             <Label>Colors</Label>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
                 <div className="flex flex-col items-center gap-2">
-                     <div className="relative w-12 h-12">
-                         <Input id="color" type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-full p-0 border-none rounded-full cursor-pointer"/>
-                     </div>
+                     <ColorPickerDialog value={color} onChange={setColor}>
+                        <button className="h-12 w-12 rounded-full border-2 border-muted" style={{ backgroundColor: color }} aria-label="Select dot color" />
+                     </ColorPickerDialog>
                      <span className="text-xs">Dots</span>
                 </div>
                  <div className="flex flex-col items-center gap-2">
-                     <div className="relative w-12 h-12">
-                        <Input id="bgColor" type="color" value={bgColor} onChange={e => setBgColor(e.target.value)} className="w-full h-full p-0 border-2 rounded-full cursor-pointer"/>
-                     </div>
+                     <ColorPickerDialog value={bgColor} onChange={setBgColor}>
+                        <button className="h-12 w-12 rounded-full border-2 border-muted" style={{ backgroundColor: bgColor }} aria-label="Select background color" />
+                     </ColorPickerDialog>
                      <span className="text-xs">Background</span>
                 </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-                {colorPresets.map(preset => (
-                    <Button key={preset.name} variant="outline" size="sm" onClick={() => { setColor(preset.fg); setBgColor(preset.bg); }}>
-                        {preset.name}
-                    </Button>
-                ))}
             </div>
           </div>
 
@@ -153,7 +140,11 @@ export default function UpiPaymentPage() {
                     <Upload className="mr-2 h-4 w-4"/>
                     {logo ? "Change Logo" : "Upload Logo"}
                 </Button>
-                {logo && <span className="text-sm text-muted-foreground truncate">{logo.name}</span>}
+                 {logoUrl && (
+                  <div className="relative h-10 w-10">
+                    <Image src={logoUrl} alt="Logo preview" className="rounded-md object-cover" layout="fill" />
+                  </div>
+                )}
             </div>
           </div>
 

@@ -5,27 +5,21 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { QrCode, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { ColorPickerDialog } from "@/components/color-picker-dialog";
+import Image from "next/image";
 
 const toolColor = "#e85d87";
-
-const colorPresets = [
-    { name: "Black/White", fg: "#000000", bg: "#FFFFFF" },
-    { name: "Neon Green", fg: "#39FF14", bg: "#000000" },
-    { name: "Neon Blue", fg: "#00FFFF", bg: "#000000" },
-    { name: "Hot Pink", fg: "#FF007F", bg: "#FFFFFF" },
-    { name: "Purple/Yellow", fg: "#6f42c1", bg: "#f1e05a" },
-]
 
 export default function TextToQrPage() {
   const [text, setText] = useState("Hello, World!");
   const [color, setColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#FFFFFF");
   const [logo, setLogo] = useState<File | null>(null);
+  const [logoUrl, setLogoUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const router = useRouter();
   const { toast } = useToast();
@@ -38,6 +32,7 @@ export default function TextToQrPage() {
             return;
           }
           setLogo(file);
+          setLogoUrl(URL.createObjectURL(file));
       }
   }
 
@@ -95,26 +90,19 @@ export default function TextToQrPage() {
 
         <div className="space-y-4">
             <Label>Colors</Label>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-6">
                 <div className="flex flex-col items-center gap-2">
-                     <div className="relative w-12 h-12">
-                         <Input id="color" type="color" value={color} onChange={e => setColor(e.target.value)} className="w-full h-full p-0 border-none rounded-full cursor-pointer"/>
-                     </div>
+                     <ColorPickerDialog value={color} onChange={setColor}>
+                        <button className="h-12 w-12 rounded-full border-2 border-muted" style={{ backgroundColor: color }} aria-label="Select dot color" />
+                     </ColorPickerDialog>
                      <span className="text-xs">Dots</span>
                 </div>
                  <div className="flex flex-col items-center gap-2">
-                     <div className="relative w-12 h-12">
-                        <Input id="bgColor" type="color" value={bgColor} onChange={e => setBgColor(e.target.value)} className="w-full h-full p-0 border-2 rounded-full cursor-pointer"/>
-                     </div>
+                     <ColorPickerDialog value={bgColor} onChange={setBgColor}>
+                        <button className="h-12 w-12 rounded-full border-2 border-muted" style={{ backgroundColor: bgColor }} aria-label="Select background color" />
+                     </ColorPickerDialog>
                      <span className="text-xs">Background</span>
                 </div>
-            </div>
-            <div className="flex flex-wrap gap-2">
-                {colorPresets.map(preset => (
-                    <Button key={preset.name} variant="outline" size="sm" onClick={() => { setColor(preset.fg); setBgColor(preset.bg); }}>
-                        {preset.name}
-                    </Button>
-                ))}
             </div>
         </div>
 
@@ -126,7 +114,11 @@ export default function TextToQrPage() {
                     <Upload className="mr-2 h-4 w-4"/>
                     {logo ? "Change Logo" : "Upload Logo"}
                 </Button>
-                {logo && <span className="text-sm text-muted-foreground truncate">{logo.name}</span>}
+                 {logoUrl && (
+                  <div className="relative h-10 w-10">
+                    <Image src={logoUrl} alt="Logo preview" className="rounded-md object-cover" layout="fill" />
+                  </div>
+                )}
             </div>
         </div>
            
