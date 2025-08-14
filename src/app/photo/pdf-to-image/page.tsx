@@ -1,7 +1,8 @@
+
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Loader2, X, FileImage, Download } from "lucide-react";
 import PageHeader from "@/components/layout/page-header";
 import FileUploader from "@/components/file-uploader";
@@ -28,17 +29,12 @@ import {
 // Set worker path
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
-interface ConvertedImage {
-  url: string;
-  page: number;
-}
-
 export default function PdfToImagePage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [convertedImages, setConvertedImages] = useState<ConvertedImage[]>([]);
   const [imageType, setImageType] = useState<"jpeg" | "png">("png");
   const { toast } = useToast();
+  const router = useRouter();
 
   const handleFileSelect = (file: File) => {
     if (file.type !== "application/pdf") {
@@ -50,12 +46,10 @@ export default function PdfToImagePage() {
       return;
     }
     setPdfFile(file);
-    setConvertedImages([]);
-    handleConvert(file, "png"); // Automatically convert on select
   };
 
-  const handleConvert = async (file: File | null, format: "jpeg" | "png") => {
-    if (!file) {
+  const handleConvert = async () => {
+    if (!pdfFile) {
       toast({
         variant: "destructive",
         title: "No PDF",
@@ -64,14 +58,13 @@ export default function PdfToImagePage() {
       return;
     }
     setIsProcessing(true);
-    setConvertedImages([]);
 
     try {
       const fileReader = new FileReader();
       fileReader.onload = async (event) => {
         const typedarray = new Uint8Array(event.target?.result as ArrayBuffer);
         const pdf = await pdfjs.getDocument(typedarray).promise;
-        const images: ConvertedImage[] = [];
+        const images: { url: string; page: number }[] = [];
 
         for (let i = 1; i <= pdf.numPages; i++) {
           const page = await pdf.getPage(i);
@@ -85,14 +78,16 @@ export default function PdfToImagePage() {
             await page.render({ canvasContext: context, viewport: viewport })
               .promise;
             images.push({
-              url: canvas.toDataURL(`image/${format}`),
+              url: canvas.toDataURL(`image/${imageType}`),
               page: i,
             });
           }
         }
-        setConvertedImages(images);
+        sessionStorage.setItem("convertedImages", JSON.stringify(images));
+        sessionStorage.setItem("imageType", imageType);
+        router.push("/photo/pdf-to-image/result");
       };
-      fileReader.readAsArrayBuffer(file);
+      fileReader.readAsArrayBuffer(pdfFile);
     } catch (error) {
       console.error("PDF conversion failed:", error);
       toast({
@@ -101,23 +96,18 @@ export default function PdfToImagePage() {
         description:
           "Failed to convert the PDF. Please try a different file.",
       });
-    } finally {
       setIsProcessing(false);
     }
   };
 
   const handleReset = () => {
     setPdfFile(null);
-    setConvertedImages([]);
     setIsProcessing(false);
   };
   
   const handleFormatChange = (value: string) => {
     const format = value as "jpeg" | "png";
     setImageType(format);
-    if(pdfFile) {
-        handleConvert(pdfFile, format);
-    }
   };
 
   return (
@@ -159,6 +149,7 @@ export default function PdfToImagePage() {
                 </Button>
               </div>
               <div className="space-y-2">
+                 <label className="text-sm font-medium">Image Format</label>
                 <Select value={imageType} onValueChange={handleFormatChange}>
                     <SelectTrigger>
                         <SelectValue placeholder="Select image format" />
@@ -166,43 +157,20 @@ export default function PdfToImagePage() {
                     <SelectContent>
                         <SelectItem value="png">PNG</SelectItem>
                         <SelectItem value="jpeg">JPEG</SelectItem>
+                        <SelectItem value="jpeg">JPG</SelectItem>
                     </SelectContent>
                 </Select>
               </div>
-              
+              <Button className="w-full" onClick={handleConvert} disabled={isProcessing}>
+                {isProcessing ? (
+                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Converting...</>
+                ) : (
+                  <>Convert to Image</>
+                )}
+              </Button>
             </CardContent>
           )}
         </Card>
-
-        {isProcessing && (
-          <div className="text-center p-10">
-            <Loader2 className="mx-auto h-12 w-12 animate-spin text-primary" />
-            <p className="mt-4 text-muted-foreground">Converting PDF...</p>
-          </div>
-        )}
-        
-        {convertedImages.length > 0 && (
-          <div className="mt-6 space-y-4">
-            <h2 className="text-xl font-semibold text-center">Conversion Results</h2>
-            {convertedImages.map(image => (
-              <Card key={image.page}>
-                <CardHeader>
-                  <CardTitle>Page {image.page}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="relative w-full aspect-[8.5/11] border rounded-lg bg-white">
-                     <Image src={image.url} alt={`Page ${image.page}`} layout="fill" className="object-contain p-2" />
-                  </div>
-                  <a href={image.url} download={`page-${image.page}.${imageType}`}>
-                    <Button className="w-full">
-                        <Download className="mr-2 h-4 w-4" /> Download Image
-                    </Button>
-                  </a>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );
