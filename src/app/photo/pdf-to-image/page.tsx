@@ -14,13 +14,6 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import * as pdfjs from "pdfjs-dist";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 
 // Set worker path
@@ -31,7 +24,7 @@ const toolColor = "#e85d5d";
 export default function PdfToImagePage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
-  const [imageType, setImageType] = useState<"jpeg" | "png">("png");
+  const imageType = "jpeg";
   const { toast } = useToast();
   const router = useRouter();
 
@@ -104,11 +97,6 @@ export default function PdfToImagePage() {
     setPdfFile(null);
     setIsProcessing(false);
   };
-  
-  const handleFormatChange = (value: string) => {
-    const format = value as "jpeg" | "png";
-    setImageType(format);
-  };
 
   return (
     <div className="flex flex-col h-full">
@@ -138,23 +126,11 @@ export default function PdfToImagePage() {
                   <X className="h-4 w-4" />
                 </Button>
               </div>
-              <div className="space-y-2">
-                 <label className="text-sm font-medium">Image Format</label>
-                <Select value={imageType} onValueChange={handleFormatChange}>
-                    <SelectTrigger>
-                        <SelectValue placeholder="Select image format" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="png">PNG</SelectItem>
-                        <SelectItem value="jpeg">JPEG</SelectItem>
-                    </SelectContent>
-                </Select>
-              </div>
               <Button className="w-full" onClick={handleConvert} disabled={isProcessing}>
                 {isProcessing ? (
                   <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Converting...</>
                 ) : (
-                  <>Convert to Image</>
+                  <>Convert to JPG</>
                 )}
               </Button>
             </CardContent>
