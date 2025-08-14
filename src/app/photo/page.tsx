@@ -7,27 +7,10 @@ import {
   FileImage,
   Maximize,
   Minimize,
-  Droplet,
   Palette,
-  Sparkles,
-  Scissors
 } from "lucide-react";
 
 const photoTools = [
-  {
-    title: "Enhance Photo",
-    href: "/photo/enhance",
-    icon: Sparkles,
-    imgSrc: "https://placehold.co/600x400.png",
-    imgHint: "galaxy stars"
-  },
-  {
-    title: "Remove BG",
-    href: "/photo/remove-background",
-    icon: Scissors,
-    imgSrc: "https://placehold.co/600x400.png",
-    imgHint: "person portrait"
-  },
   {
     title: "PDF to Image",
     href: "/photo/pdf-to-image",
@@ -48,13 +31,6 @@ const photoTools = [
     icon: Minimize,
     imgSrc: "https://placehold.co/600x400.png",
     imgHint: "compress quality"
-  },
-  {
-    title: "Image Watermarker",
-    href: "/photo/watermark",
-    icon: Droplet,
-    imgSrc: "https://placehold.co/600x400.png",
-    imgHint: "watermark brand"
   },
   {
     title: "Image Filters",

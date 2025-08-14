@@ -42,7 +42,7 @@ export default function ToolCard({
                     <div className="absolute inset-0 bg-black/50" />
                 </div>
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-                    <Icon className="h-10 w-10 text-white mb-2" />
+                    <Icon className="h-10 w-10 text-primary mb-2" />
                     <h3 className="font-semibold text-white font-headline text-base text-center">
                         {title}
                     </h3>
