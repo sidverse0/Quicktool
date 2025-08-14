@@ -33,8 +33,8 @@ export default function ProfilePage() {
       unlockPremium();
       toast({ title: "Success!", description: "Premium unlocked. All features are now unlimited." });
     } else {
-        const needed = PREMIUM_COST - userData.coins;
-        toast({ variant: "destructive", title: "Not Enough Coins", description: `You need ${needed} more coins to unlock premium.` });
+        const upiUrl = `upi://pay?pa=8521672813@ybl&pn=Quick%20Tool&am=100.00&cu=INR&tn=Unlock%20Premium`;
+        window.location.href = upiUrl;
     }
   }
 
@@ -110,7 +110,7 @@ export default function ProfilePage() {
               </CardHeader>
               <CardContent>
                   <Button className="w-full" onClick={handleUnlock}>
-                     Unlock for {PREMIUM_COST} Coins
+                     {userData.coins >= PREMIUM_COST ? `Unlock for ${PREMIUM_COST} Coins` : `Unlock for 100 INR`}
                   </Button>
               </CardContent>
             </Card>
