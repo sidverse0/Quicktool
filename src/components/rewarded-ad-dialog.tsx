@@ -57,20 +57,20 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
     onOpenChange(false);
   };
 
-  const videoSrc = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&mute=1&loop=1&playlist=${VIDEO_ID}`;
+  const videoSrc = `https://www.youtube.com/embed/${VIDEO_ID}?autoplay=1&controls=0&loop=1&playlist=${VIDEO_ID}`;
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="max-w-sm">
+      <AlertDialogContent className="max-w-md">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-center">Watch & Earn</AlertDialogTitle>
         </AlertDialogHeader>
-        <div className="aspect-w-9 aspect-h-16 relative">
+        <div className="aspect-w-9 aspect-h-16 relative w-full">
           <iframe
             src={videoSrc}
             title="YouTube video player"
             frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
             className="w-full h-full rounded-md"
           ></iframe>
