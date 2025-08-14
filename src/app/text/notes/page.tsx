@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
@@ -47,6 +47,13 @@ export default function HandwrittenNotesPage() {
   const router = useRouter();
   const { canUseTool, incrementToolUsage } = useUserData();
   const [showUsageLimitDialog, setShowUsageLimitDialog] = useState(false);
+  const previewRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (previewRef.current) {
+        previewRef.current.scrollTop = previewRef.current.scrollHeight;
+    }
+  }, [text]);
 
   const lineHeight = fontSize * 1.6;
   const noteStyle: React.CSSProperties = {
@@ -161,9 +168,10 @@ export default function HandwrittenNotesPage() {
     <div className="flex flex-col h-full">
       <UsageLimitDialog isOpen={showUsageLimitDialog} onOpenChange={setShowUsageLimitDialog} />
       <PageHeader title="Hand-written Notes" showBackButton />
-      <div className="flex-1 flex flex-col p-4 space-y-4">
+      <div className="flex-1 flex flex-col p-4 space-y-4 min-h-0">
         <div 
-            className="flex-1 min-h-[200px] w-full rounded-lg border shadow-inner overflow-y-auto"
+            ref={previewRef}
+            className="flex-1 min-h-0 w-full rounded-lg border shadow-inner overflow-y-auto"
             style={noteStyle}
         >
           {text}
@@ -224,7 +232,7 @@ export default function HandwrittenNotesPage() {
             </div>
         </div>
 
-        <Button className="w-full mt-4" onClick={handleGenerate} disabled={isProcessing}>
+        <Button className="w-full mt-4 shrink-0" onClick={handleGenerate} disabled={isProcessing}>
             {isProcessing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : "Generate Note"}
         </Button>
 
