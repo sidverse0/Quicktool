@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -16,15 +17,20 @@ export default function PdfToImageResultPage() {
     const [convertedImages, setConvertedImages] = useState<ConvertedImage[]>([]);
     const [imageType, setImageType] = useState<string>("png");
     const [loading, setLoading] = useState(true);
+    const [borderColor, setBorderColor] = useState("hsl(var(--border))");
     const router = useRouter();
 
     useEffect(() => {
         const imagesStr = sessionStorage.getItem("convertedImages");
         const format = sessionStorage.getItem("imageType");
+        const color = sessionStorage.getItem("toolColor");
 
         if (imagesStr && format) {
             setConvertedImages(JSON.parse(imagesStr));
             setImageType(format);
+            if (color) {
+                setBorderColor(color);
+            }
         } else {
             router.replace("/photo/pdf-to-image");
         }
@@ -34,6 +40,7 @@ export default function PdfToImageResultPage() {
     const handleStartOver = () => {
         sessionStorage.removeItem("convertedImages");
         sessionStorage.removeItem("imageType");
+        sessionStorage.removeItem("toolColor");
         router.push("/photo/pdf-to-image");
     }
 
@@ -56,7 +63,7 @@ export default function PdfToImageResultPage() {
         {convertedImages.map(image => (
           <div key={image.page} className="space-y-4">
               <p className="text-sm font-medium text-center">Page {image.page}</p>
-              <div className="relative w-full aspect-[8.5/11] rounded-lg overflow-hidden bg-secondary">
+              <div className="relative w-full aspect-[8.5/11] border-2 border-dashed rounded-lg bg-secondary" style={{ borderColor }}>
                   <Image src={image.url} alt={`Page ${image.page}`} layout="fill" className="object-contain p-2" />
               </div>
               <a href={image.url} download={`page-${image.page}.${imageType}`}>

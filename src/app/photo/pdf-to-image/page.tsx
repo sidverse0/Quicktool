@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -24,6 +25,8 @@ import {
 
 // Set worker path
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
+
+const toolColor = "#e85d5d";
 
 export default function PdfToImagePage() {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -81,6 +84,7 @@ export default function PdfToImagePage() {
         }
         sessionStorage.setItem("convertedImages", JSON.stringify(images));
         sessionStorage.setItem("imageType", imageType);
+        sessionStorage.setItem("toolColor", toolColor);
         router.push("/photo/pdf-to-image/result");
       };
       fileReader.readAsArrayBuffer(pdfFile);
@@ -112,21 +116,21 @@ export default function PdfToImagePage() {
       <div className="flex-1 flex flex-col items-center justify-center p-4">
         <Card className="w-full max-w-md shadow-none border-none">
           {!pdfFile ? (
-            <CardContent>
+            <CardContent className="p-0">
               <FileUploader
                 onFileSelect={handleFileSelect}
                 acceptedFileTypes="application/pdf"
                 label="Drag & drop a PDF here, or click to select"
-                color="#e85d5d"
+                color={toolColor}
               />
             </CardContent>
           ) : (
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 p-0">
               <div className={cn(
                 "relative w-full p-4 border-2 border-dashed rounded-lg flex flex-col items-center justify-center bg-secondary/50",
                 "transition-all duration-300 ease-in-out"
-              )}>
-                <FileImage className="h-16 w-16 text-primary" />
+              )} style={{ borderColor: toolColor }}>
+                <FileImage className="h-16 w-16 text-primary" style={{ color: toolColor }} />
                 <p className="mt-2 text-sm font-medium text-center">{pdfFile.name}</p>
                 <p className="text-xs text-muted-foreground">{ (pdfFile.size / 1024).toFixed(2) } KB</p>
 
@@ -143,7 +147,6 @@ export default function PdfToImagePage() {
                     <SelectContent>
                         <SelectItem value="png">PNG</SelectItem>
                         <SelectItem value="jpeg">JPEG</SelectItem>
-                        <SelectItem value="jpeg">JPG</SelectItem>
                     </SelectContent>
                 </Select>
               </div>
