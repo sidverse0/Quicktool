@@ -109,7 +109,6 @@ function QRResult() {
                         logoWidth={60}
                         logoHeight={60}
                         logoOpacity={1}
-                        removeQrCodeBehindLogo={true}
                     />
                 ) : (
                     <LoadingIndicator />
