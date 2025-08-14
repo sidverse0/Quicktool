@@ -1,0 +1,55 @@
+'use server';
+
+/**
+ * @fileOverview Enhances a photo using AI.
+ *
+ * - enhancePhoto - A function that handles enhancing a photo.
+ * - EnhancePhotoInput - The input type for the enhancePhoto function.
+ * - EnhancePhotoOutput - The return type for the enhancePhoto function.
+ */
+
+import {ai} from '@/ai/genkit';
+import {z} from 'genkit';
+
+const EnhancePhotoInputSchema = z.object({
+  photoDataUri: z
+    .string()
+    .describe(
+      'A photo to enhance, as a data URI that must include a MIME type and use Base64 encoding. Expected format: \'data:<mimetype>;base64,<encoded_data>\'.'
+    ),
+});
+export type EnhancePhotoInput = z.infer<typeof EnhancePhotoInputSchema>;
+
+const EnhancePhotoOutputSchema = z.object({
+  photoDataUri: z
+    .string()
+    .describe(
+      'The enhanced photo, as a data URI that must include a MIME type and use Base64 encoding. Expected format: \'data:<mimetype>;base64,<encoded_data>\'.'
+    ),
+});
+export type EnhancePhotoOutput = z.infer<typeof EnhancePhotoOutputSchema>;
+
+export async function enhancePhoto(input: EnhancePhotoInput): Promise<EnhancePhotoOutput> {
+  return enhancePhotoFlow(input);
+}
+
+const prompt = ai.definePrompt({
+  name: 'enhancePhotoPrompt',
+  input: {schema: EnhancePhotoInputSchema},
+  output: {schema: EnhancePhotoOutputSchema},
+  prompt: `You are an expert photo editor. Enhance the following photo by improving its lighting, colors, and sharpness. Return the enhanced image as a data URI. Only return the data URI, do not include any other text.
+
+{{media url=photoDataUri}}`,
+});
+
+const enhancePhotoFlow = ai.defineFlow(
+  {
+    name: 'enhancePhotoFlow',
+    inputSchema: EnhancePhotoInputSchema,
+    outputSchema: EnhancePhotoOutputSchema,
+  },
+  async input => {
+    const {output} = await prompt(input);
+    return { photoDataUri: output!.photoDataUri };
+  }
+);

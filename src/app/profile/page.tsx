@@ -9,12 +9,12 @@ const stats = [
   {
     icon: <Image className="h-6 w-6 text-primary" />,
     label: "Photos Edited",
-    value: "42",
+    value: "0",
   },
   {
     icon: <QrCode className="h-6 w-6 text-primary" />,
     label: "QRs Generated",
-    value: "15",
+    value: "0",
   },
 ];
 
@@ -31,8 +31,8 @@ export default function ProfilePage() {
                 <UserIcon className="h-10 w-10 text-muted-foreground" />
               </AvatarFallback>
             </Avatar>
-            <h2 className="text-2xl font-bold font-headline">Demo User</h2>
-            <p className="text-muted-foreground">user@example.com</p>
+            <h2 className="text-2xl font-bold font-headline">App User</h2>
+            <p className="text-muted-foreground">user@appsuite.com</p>
           </CardContent>
         </Card>
 

@@ -72,13 +72,13 @@ export default function Home() {
             <CardContent className="p-6 flex flex-col md:flex-row items-center justify-between gap-4">
               <div>
                 <h2 className="font-headline text-xl font-semibold text-primary">
-                  AI Background Remover
+                  AI Photo Enhancer
                 </h2>
                 <p className="text-primary/80 mt-1">
-                  Instantly remove the background from any photo with a single click.
+                  Instantly improve your photos with a single click.
                 </p>
               </div>
-              <Link href="/photo/remove-background">
+              <Link href="/photo/enhance">
                 <Button>
                   Try Now <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

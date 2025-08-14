@@ -6,9 +6,8 @@ import PageHeader from "@/components/layout/page-header";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Paintbrush, Languages, Moon, Sun } from "lucide-react";
+import { Languages, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
 
 export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
@@ -56,27 +55,7 @@ export default function SettingsPage() {
             </div>
           </CardContent>
         </Card>
-
-        <Card>
-           <CardHeader>
-            <CardTitle className="flex items-center">
-                <Paintbrush className="mr-2 h-4 w-4 text-muted-foreground" />
-                Theme Color
-            </CardTitle>
-            <CardDescription>
-              This feature is coming soon.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-             <div className="flex gap-2">
-                <Button variant="outline" className="h-8 w-8 rounded-full bg-primary" disabled />
-                <Button variant="outline" className="h-8 w-8 rounded-full bg-red-500" disabled />
-                <Button variant="outline" className="h-8 w-8 rounded-full bg-blue-500" disabled />
-                <Button variant="outline" className="h-8 w-8 rounded-full bg-green-500" disabled />
-             </div>
-          </CardContent>
-        </Card>
-
+        
         <Card>
            <CardHeader>
             <CardTitle className="flex items-center">
@@ -84,13 +63,12 @@ export default function SettingsPage() {
                 Language
             </CardTitle>
             <CardDescription>
-              This feature is coming soon.
+              Change the application language.
             </CardDescription>
           </CardHeader>
           <CardContent>
              <div className="flex gap-2">
-                <Button variant="secondary" disabled>English</Button>
-                <Button variant="ghost" disabled>Hindi</Button>
+                <p className="text-sm text-muted-foreground">Language selection is not yet available.</p>
              </div>
           </CardContent>
         </Card>
