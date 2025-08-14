@@ -6,8 +6,8 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Download, RefreshCw, Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
+import { Download, RefreshCw } from "lucide-react";
+import LoadingIndicator from "@/components/layout/loading-indicator";
 
 function QRResult() {
   const router = useRouter();
@@ -36,7 +36,6 @@ function QRResult() {
           setBorderColor(toolColor);
       }
     } else {
-      // If no text from either source, go back.
       router.replace('/qr/maker');
     }
   }, [searchParams, router]);
@@ -78,18 +77,7 @@ function QRResult() {
         <div className="relative flex items-center justify-center aspect-square rounded-lg border-2 border-dashed" style={{ borderColor }}>
             {isLoading && (
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="relative w-24 h-24 flex items-center justify-center">
-                  <motion.div
-                    animate={{ rotate: 360 }}
-                    transition={{
-                      repeat: Infinity,
-                      duration: 1.5,
-                      ease: "linear",
-                    }}
-                    className="absolute inset-0 border-4 border-primary/50 border-t-primary rounded-full"
-                  />
-                  <Image src="https://i.postimg.cc/kXnSKfgf/wrench.png" alt="Quick Tool Logo" width={48} height={48} />
-                </div>
+                  <LoadingIndicator />
               </div>
             )}
             <div className="w-full h-full p-2 flex items-center justify-center">
@@ -132,7 +120,7 @@ export default function QrMakerResultPage() {
             <div className="flex flex-col h-full">
                 <PageHeader title="QR Code Result" showBackButton />
                 <div className="flex-1 flex items-center justify-center">
-                    <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                    <LoadingIndicator />
                 </div>
             </div>
         }>

@@ -6,8 +6,9 @@ import NextImage from "next/image";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Download, RefreshCw, Loader2 } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Download, RefreshCw } from "lucide-react";
+import LoadingIndicator from "@/components/layout/loading-indicator";
 
 export default function ResizeSizeResultPage() {
     const [originalUrl, setOriginalUrl] = useState<string | null>(null);
@@ -64,7 +65,7 @@ export default function ResizeSizeResultPage() {
              <div className="flex flex-col h-full">
                 <PageHeader title="Compression Result" showBackButton />
                 <div className="flex-1 flex items-center justify-center">
-                    <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                    <LoadingIndicator />
                 </div>
             </div>
         )

@@ -6,8 +6,9 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, Loader2, Copy } from "lucide-react";
+import { RefreshCw, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import LoadingIndicator from "@/components/layout/loading-indicator";
 
 type ColorPalette = string[];
 
@@ -53,7 +54,7 @@ export default function PaletteResultPage() {
              <div className="flex flex-col h-full">
                 <PageHeader title="Result" showBackButton />
                 <div className="flex-1 flex items-center justify-center">
-                    <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                    <LoadingIndicator />
                 </div>
             </div>
         )
