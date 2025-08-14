@@ -24,9 +24,16 @@ const presetColors = [
   "#FF851B", // Orange
   "#39CCCC", // Teal
   "#F012BE", // Pink
+  "#7FDBFF", // Sky Blue
+  "#3D9970", // Olive
+  "#01FF70", // Lime
+  "#85144b", // Maroon
+  "#AAAAAA", // Gray
+  "#DDDDDD", // Light Gray
   "#000000", // Black
   "#FFFFFF", // White
 ];
+
 
 interface ColorPickerDialogProps {
   children: React.ReactNode;
@@ -66,19 +73,6 @@ export function ColorPickerDialog({ children, value, onChange }: ColorPickerDial
               onClick={() => setSelectedColor(color)}
             />
           ))}
-        </div>
-        <div className="flex items-center gap-4">
-          <label htmlFor="custom-color" className="text-sm font-medium">Custom</label>
-          <div className="relative w-16 h-10">
-            <Input
-              id="custom-color"
-              type="color"
-              value={selectedColor}
-              onChange={(e) => setSelectedColor(e.target.value)}
-              className="w-full h-full p-0 border-none cursor-pointer"
-            />
-          </div>
-          <div className="w-10 h-10 rounded-md border" style={{ backgroundColor: selectedColor }} />
         </div>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
