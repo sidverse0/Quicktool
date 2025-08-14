@@ -63,7 +63,7 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
     setHasStarted(true);
   }
   
-  const videoSrc = "https://apgy.in/yt/ebV9x7xktLg";
+  const videoSrc = "https://video-link-generator.replit.app/v/opxigdj1cabi2d52epmm6g";
 
   return (
     <>
