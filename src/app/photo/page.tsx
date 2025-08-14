@@ -1,3 +1,4 @@
+
 "use client";
 
 import MainLayout from "@/components/layout/main-layout";
@@ -8,6 +9,7 @@ import {
   Maximize,
   Minimize,
   Palette,
+  ImageUp,
 } from "lucide-react";
 
 const photoTools = [
@@ -18,6 +20,14 @@ const photoTools = [
     color: "#e85d5d",
     imgSrc: "https://placehold.co/600x400.png",
     imgHint: "file document"
+  },
+  {
+    title: "Image to PDF",
+    href: "/photo/image-to-pdf",
+    icon: ImageUp,
+    color: "#e88d5d",
+    imgSrc: "https://placehold.co/600x400.png",
+    imgHint: "image file"
   },
   {
     title: "Dimension Resizer",
