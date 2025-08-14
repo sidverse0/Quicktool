@@ -5,6 +5,9 @@ import {
   Maximize,
   Minimize,
   FileImage,
+  Droplet,
+  Palette,
+  Contrast,
 } from "lucide-react";
 
 const photoTools = [
@@ -28,6 +31,27 @@ const photoTools = [
     icon: <Minimize className="h-8 w-8" />,
     href: "/photo/resize-size",
     color: 'from-yellow-500 to-yellow-600',
+  },
+  {
+    title: "Image Watermarker",
+    description: "Add a text watermark to your images.",
+    icon: <Droplet className="h-8 w-8" />,
+    href: "/photo/watermark",
+    color: 'from-blue-500 to-blue-600',
+  },
+  {
+    title: "Image Filters",
+    description: "Apply filters like grayscale, sepia, etc.",
+    icon: <Contrast className="h-8 w-8" />,
+    href: "/photo/filters",
+    color: 'from-purple-500 to-purple-600',
+  },
+  {
+    title: "Color Palette Generator",
+    description: "Extract color palettes from your images.",
+    icon: <Palette className="h-8 w-8" />,
+    href: "/photo/palette-generator",
+    color: 'from-pink-500 to-pink-600',
   },
 ];
 
