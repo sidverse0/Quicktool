@@ -21,7 +21,6 @@ interface RewardedAdDialogProps {
   onReward: () => void;
 }
 
-const VIDEO_ID = "ebV9x7xktLg";
 const COUNTDOWN_SECONDS = 30;
 
 export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdDialogProps) {
@@ -64,7 +63,7 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
     setHasStarted(true);
   }
   
-  const videoSrc = `https://www.youtube.com/embed/${VIDEO_ID}?controls=0&loop=1&playlist=${VIDEO_ID}&autoplay=1&mute=0`;
+  const videoSrc = "https://apgy.in/yt/ebV9x7xktLg";
 
   return (
     <>
