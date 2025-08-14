@@ -78,30 +78,19 @@ export default function ResizeSizeResultPage() {
       <PageHeader title="Compression Result" showBackButton />
       <div className="flex-1 overflow-y-auto p-4 md:p-6">
         <div className="w-full max-w-lg mx-auto space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-               <Card>
-                  <CardHeader>
-                    <CardTitle>Original</CardTitle>
-                    <CardDescription>{formatFileSize(originalSize)}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                      <div className="relative w-full h-auto aspect-square border rounded-lg flex items-center justify-center bg-secondary/50">
-                          <NextImage src={originalUrl} alt="Original Image" layout="fill" className="rounded-lg object-contain p-2" />
-                      </div>
-                  </CardContent>
-              </Card>
-              <Card>
-                  <CardHeader>
-                    <CardTitle>Resized</CardTitle>
-                    <CardDescription>{formatFileSize(resizedSize)}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                      <div className="relative w-full h-auto aspect-square border rounded-lg flex items-center justify-center bg-secondary/50">
-                          <NextImage src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain p-2" />
-                      </div>
-                  </CardContent>
-              </Card>
-            </div>
+            <Card>
+                <CardHeader>
+                <CardTitle>Compressed Image</CardTitle>
+                <CardDescription>
+                    Original: {formatFileSize(originalSize)} | New: {formatFileSize(resizedSize)}
+                </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="relative w-full h-auto aspect-square border rounded-lg flex items-center justify-center bg-secondary/50">
+                        <NextImage src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain p-2" />
+                    </div>
+                </CardContent>
+            </Card>
              <Card>
                 <CardHeader>
                     <CardTitle>Actions</CardTitle>
