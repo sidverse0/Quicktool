@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -95,10 +94,10 @@ export default function ResizeDimensionsPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 dark:from-gray-900 dark:via-blue-950 dark:to-purple-950">
+    <div className="flex flex-col min-h-screen">
       <PageHeader title="Resize by Dimensions" showBackButton />
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 flex items-center justify-center">
-        <Card className="w-full max-w-md shadow-lg">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6">
+        <Card className="w-full max-w-lg mx-auto">
             <CardHeader>
             <CardTitle className="flex items-center">
                 <Maximize className="mr-2 h-5 w-5 text-primary" />
@@ -128,7 +127,7 @@ export default function ResizeDimensionsPage() {
                                 <Input id="height" type="number" placeholder="e.g., 1080" value={height} onChange={e => setHeight(e.target.value === '' ? '' : Number(e.target.value))} />
                             </div>
                         </div>
-                        <Button className="w-full bg-gradient-to-r from-green-500 to-blue-500 hover:from-green-600 hover:to-blue-600 text-white" onClick={handleResize} disabled={isProcessing}>
+                        <Button className="w-full" onClick={handleResize} disabled={isProcessing}>
                             {isProcessing ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Resizing...</> : <><Maximize className="mr-2"/>Resize Image</>}
                         </Button>
                     </div>

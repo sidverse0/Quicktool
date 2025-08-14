@@ -25,21 +25,26 @@ export default function QrMakerPage() {
     return () => {
       clearTimeout(handler);
     };
-  }, [text, color, bgColor]);
+  }, [text]);
 
   useEffect(() => {
     if (debouncedText) {
-      setIsLoading(true);
-      const colorHex = color.substring(1);
-      const bgColorHex = bgColor.substring(1);
-      const url = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
-        debouncedText
-      )}&size=512x512&margin=20&format=png&color=${colorHex}&bgcolor=${bgColorHex}`;
-      setQrCodeUrl(url);
+      generateQrCode();
     } else {
       setQrCodeUrl("");
     }
   }, [debouncedText, color, bgColor]);
+
+  const generateQrCode = () => {
+    setIsLoading(true);
+    const colorHex = color.substring(1);
+    const bgColorHex = bgColor.substring(1);
+    const url = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
+      debouncedText
+    )}&size=512x512&margin=20&format=png&color=${colorHex}&bgcolor=${bgColorHex}`;
+    setQrCodeUrl(url);
+  };
+
 
   const handleDownload = async () => {
     if (!qrCodeUrl) return;
@@ -60,10 +65,40 @@ export default function QrMakerPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col min-h-screen">
       <PageHeader title="QR Code Maker" showBackButton />
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-6">
+      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
+        <Card>
+            <CardHeader>
+              <CardTitle>Your QR Code</CardTitle>
+            </CardHeader>
+            <CardContent className="flex items-center justify-center aspect-square bg-gray-100 rounded-lg">
+              {isLoading && (
+                <div className="flex flex-col items-center text-muted-foreground">
+                  <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                  <p className="mt-2">Generating...</p>
+                </div>
+              )}
+              {qrCodeUrl && (
+                <Image
+                  src={qrCodeUrl}
+                  alt="Generated QR Code"
+                  width={512}
+                  height={512}
+                  className={`transition-opacity duration-300 ${
+                    isLoading ? "opacity-0" : "opacity-100"
+                  }`}
+                  onLoad={() => setIsLoading(false)}
+                  unoptimized
+                />
+              )}
+              {!qrCodeUrl && !text && (
+                <div className="text-center text-muted-foreground">
+                  <p>Enter some text to generate a QR code.</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -118,38 +153,6 @@ export default function QrMakerPage() {
                 </Button>
              </CardContent>
            </Card>
-        </div>
-        <Card>
-          <CardHeader>
-            <CardTitle>Your QR Code</CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-center justify-center aspect-square bg-gray-100 rounded-lg">
-            {isLoading && (
-              <div className="flex flex-col items-center text-muted-foreground">
-                <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                <p className="mt-2">Generating...</p>
-              </div>
-            )}
-            {qrCodeUrl && (
-              <Image
-                src={qrCodeUrl}
-                alt="Generated QR Code"
-                width={512}
-                height={512}
-                className={`transition-opacity duration-300 ${
-                  isLoading ? "opacity-0" : "opacity-100"
-                }`}
-                onLoad={() => setIsLoading(false)}
-                unoptimized
-              />
-            )}
-            {!qrCodeUrl && !text && (
-              <div className="text-center text-muted-foreground">
-                <p>Enter some text to generate a QR code.</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

@@ -20,14 +20,14 @@ export default function SettingsPage() {
   if (!mounted) {
     return (
       <MainLayout>
-        <PageHeader title="Settings" />
+        <PageHeader title="Settings" showBackButton/>
       </MainLayout>
     );
   }
 
   return (
     <MainLayout>
-      <PageHeader title="Settings" />
+      <PageHeader title="Settings" showBackButton/>
       <div className="p-4 md:p-6 space-y-6">
         <Card>
           <CardHeader>

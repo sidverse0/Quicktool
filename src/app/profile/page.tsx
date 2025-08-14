@@ -3,7 +3,8 @@ import PageHeader from "@/components/layout/page-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { QrCode, Image, LifeBuoy, User as UserIcon } from "lucide-react";
+import { QrCode, Image, LifeBuoy, User as UserIcon, Settings } from "lucide-react";
+import Link from "next/link";
 
 const stats = [
   {
@@ -21,7 +22,13 @@ const stats = [
 export default function ProfilePage() {
   return (
     <MainLayout>
-      <PageHeader title="Profile" />
+      <PageHeader title="Profile" actions={
+          <Link href="/settings">
+            <Button variant="ghost" size="icon">
+              <Settings className="h-5 w-5" />
+            </Button>
+          </Link>
+        }/>
       <div className="p-4 md:p-6 space-y-6">
         <Card>
           <CardContent className="pt-6 flex flex-col items-center text-center">

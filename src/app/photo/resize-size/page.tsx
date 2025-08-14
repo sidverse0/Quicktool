@@ -130,7 +130,7 @@ export default function ResizeSizePage() {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col min-h-screen">
       <PageHeader title="Resize by File Size" showBackButton />
       <div className="flex-1 overflow-y-auto p-4 md:p-6">
         {!originalFile ? (
