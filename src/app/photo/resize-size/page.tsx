@@ -17,7 +17,10 @@ import {
 import { Minimize, Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { useUserData } from "@/hooks/use-user-data";
+import { UsageLimitDialog } from "@/components/usage-limit-dialog";
 
+const toolName = "resizeSize";
 const toolColor = "#5de899";
 
 export default function ResizeSizePage() {
@@ -28,8 +31,15 @@ export default function ResizeSizePage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const { canUseTool, incrementToolUsage } = useUserData();
+  const [showUsageLimitDialog, setShowUsageLimitDialog] = useState(false);
 
   const handleFileSelect = (file: File) => {
+     if (!canUseTool(toolName)) {
+      setShowUsageLimitDialog(true);
+      return;
+    }
+
     if (!file.type.startsWith("image/")) {
        toast({
         variant: "destructive",
@@ -55,6 +65,11 @@ export default function ResizeSizePage() {
             description: "Please upload an image and specify a target size.",
         });
         return;
+    }
+
+    if (!canUseTool(toolName)) {
+      setShowUsageLimitDialog(true);
+      return;
     }
 
     setIsProcessing(true);
@@ -90,6 +105,7 @@ export default function ResizeSizePage() {
         }
         
         if (result) {
+            incrementToolUsage(toolName);
             sessionStorage.setItem("toolColor", toolColor);
             sessionStorage.setItem("resizedImageDataUrl", result.url);
             sessionStorage.setItem("originalImageDataUrl", originalUrl);
@@ -132,6 +148,7 @@ export default function ResizeSizePage() {
 
   return (
     <div className="flex flex-col h-full">
+      <UsageLimitDialog isOpen={showUsageLimitDialog} onOpenChange={setShowUsageLimitDialog} />
       <PageHeader title="Resize by File Size" showBackButton />
       <div className="flex-1 flex flex-col p-4 space-y-4">
         {!originalUrl ? (

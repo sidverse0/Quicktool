@@ -13,6 +13,8 @@ import { Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { Slider } from "@/components/ui/slider";
+import { useUserData } from "@/hooks/use-user-data";
+import { UsageLimitDialog } from "@/components/usage-limit-dialog";
 
 type Filters = {
   grayscale: number;
@@ -22,6 +24,7 @@ type Filters = {
   invert: number;
 };
 
+const toolName = "imageFilters";
 const toolColor = "#e85dd5";
 
 export default function FiltersPage() {
@@ -38,8 +41,15 @@ export default function FiltersPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const { canUseTool, incrementToolUsage } = useUserData();
+  const [showUsageLimitDialog, setShowUsageLimitDialog] = useState(false);
+
 
   const handleFileSelect = (file: File) => {
+    if (!canUseTool(toolName)) {
+      setShowUsageLimitDialog(true);
+      return;
+    }
     setOriginalFile(file);
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -54,6 +64,11 @@ export default function FiltersPage() {
       return;
     }
     
+    if (!canUseTool(toolName)) {
+      setShowUsageLimitDialog(true);
+      return;
+    }
+
     setIsProcessing(true);
 
     setTimeout(() => {
@@ -72,6 +87,7 @@ export default function FiltersPage() {
 
                 const filteredDataUrl = canvas.toDataURL(originalFile.type);
                 
+                incrementToolUsage(toolName);
                 sessionStorage.setItem("toolColor", toolColor);
                 sessionStorage.setItem("filteredImageDataUrl", filteredDataUrl);
                 sessionStorage.setItem("filteredImageFileName", `filtered-${originalFile.name}`);
@@ -112,6 +128,7 @@ export default function FiltersPage() {
 
   return (
     <div className="flex flex-col h-full">
+      <UsageLimitDialog isOpen={showUsageLimitDialog} onOpenChange={setShowUsageLimitDialog} />
       <PageHeader title="Image Filters" showBackButton />
       <div className="flex-1 flex flex-col p-4 space-y-4">
         {!originalUrl ? (

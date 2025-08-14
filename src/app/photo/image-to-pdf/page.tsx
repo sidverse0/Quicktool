@@ -11,7 +11,10 @@ import { Loader2, X, ImageUp, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import jsPDF from 'jspdf';
 import { PdfDownloadDialog } from "@/components/pdf-download-dialog";
+import { useUserData } from "@/hooks/use-user-data";
+import { UsageLimitDialog } from "@/components/usage-limit-dialog";
 
+const toolName = "imageToPdf";
 const toolColor = "#e88d5d";
 
 interface ImageFile {
@@ -27,6 +30,8 @@ export default function ImageToPdfPage() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [pdfDataUrl, setPdfDataUrl] = useState<string | null>(null);
   const [showDownloadDialog, setShowDownloadDialog] = useState(false);
+  const { canUseTool, incrementToolUsage } = useUserData();
+  const [showUsageLimitDialog, setShowUsageLimitDialog] = useState(false);
 
   useEffect(() => {
     if (scrollContainerRef.current) {
@@ -35,6 +40,10 @@ export default function ImageToPdfPage() {
   }, [imageFiles]);
 
   const handleFileSelect = (file: File) => {
+    if (!canUseTool(toolName)) {
+        setShowUsageLimitDialog(true);
+        return;
+    }
     if (!file.type.startsWith("image/")) {
         toast({
             variant: "destructive",
@@ -68,6 +77,11 @@ export default function ImageToPdfPage() {
         });
         return;
     };
+
+    if (!canUseTool(toolName)) {
+      setShowUsageLimitDialog(true);
+      return;
+    }
     
     setIsProcessing(true);
 
@@ -104,6 +118,7 @@ export default function ImageToPdfPage() {
           });
         }
         
+        incrementToolUsage(toolName);
         const dataUrl = doc.output('datauristring');
         setPdfDataUrl(dataUrl);
         setShowDownloadDialog(true);
@@ -130,6 +145,7 @@ export default function ImageToPdfPage() {
 
   return (
     <div className="flex flex-col h-full">
+      <UsageLimitDialog isOpen={showUsageLimitDialog} onOpenChange={setShowUsageLimitDialog} />
       <PageHeader title="Image to PDF" showBackButton />
       <div className="flex-1 flex flex-col p-4 space-y-4 min-h-0">
         {imageFiles.length === 0 ? (

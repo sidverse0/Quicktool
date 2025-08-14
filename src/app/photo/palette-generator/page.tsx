@@ -10,7 +10,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Palette, Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useUserData } from "@/hooks/use-user-data";
+import { UsageLimitDialog } from "@/components/usage-limit-dialog";
 
+const toolName = "paletteGenerator";
 const toolColor = "#e8a05d";
 
 export default function PaletteGeneratorPage() {
@@ -19,8 +22,14 @@ export default function PaletteGeneratorPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const { canUseTool, incrementToolUsage } = useUserData();
+  const [showUsageLimitDialog, setShowUsageLimitDialog] = useState(false);
 
   const handleFileSelect = (file: File) => {
+    if (!canUseTool(toolName)) {
+      setShowUsageLimitDialog(true);
+      return;
+    }
     setOriginalFile(file);
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -31,6 +40,11 @@ export default function PaletteGeneratorPage() {
   
   const handleGeneratePalette = () => {
     if (!originalUrl || !originalFile) return;
+
+    if (!canUseTool(toolName)) {
+      setShowUsageLimitDialog(true);
+      return;
+    }
     
     setIsProcessing(true);
 
@@ -66,6 +80,7 @@ export default function PaletteGeneratorPage() {
         const sortedColors = Object.keys(colorCounts).sort((a, b) => colorCounts[b] - colorCounts[a]);
         const palette = sortedColors.slice(0, 6);
         
+        incrementToolUsage(toolName);
         sessionStorage.setItem("toolColor", toolColor);
         sessionStorage.setItem("paletteOriginalUrl", originalUrl);
         sessionStorage.setItem("paletteResult", JSON.stringify(palette));
@@ -94,6 +109,7 @@ export default function PaletteGeneratorPage() {
 
   return (
     <div className="flex flex-col h-full">
+      <UsageLimitDialog isOpen={showUsageLimitDialog} onOpenChange={setShowUsageLimitDialog} />
       <PageHeader title="Color Palette Generator" showBackButton />
       <div className="flex-1 flex flex-col p-4 space-y-4 justify-center">
         {!originalUrl ? (

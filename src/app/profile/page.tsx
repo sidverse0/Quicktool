@@ -8,32 +8,41 @@ import PageHeader from "@/components/layout/page-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { QrCode, Image, LifeBuoy, User as UserIcon, Moon, Sun, Languages, Wrench } from "lucide-react";
+import { QrCode, Image, LifeBuoy, User as UserIcon, Moon, Sun, Languages, Wrench, Coins, Gem, Video, Star } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import { useUserData } from "@/hooks/use-user-data";
+import { useToast } from "@/hooks/use-toast";
 
-const stats = [
-  {
-    icon: <Image className="h-6 w-6 text-primary" />,
-    label: "Photos Edited",
-    value: "0",
-  },
-  {
-    icon: <QrCode className="h-6 w-6 text-primary" />,
-    label: "QRs Generated",
-    value: "0",
-  },
-];
+const PREMIUM_COST = 499;
 
 export default function ProfilePage() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [language, setLanguage] = useState("en");
+  const { userData, addCoins, unlockPremium } = useUserData();
+  const { toast } = useToast();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleUnlock = () => {
+    if (userData.coins >= PREMIUM_COST) {
+      unlockPremium();
+      toast({ title: "Success!", description: "Premium unlocked. All features are now unlimited." });
+    } else {
+        const needed = PREMIUM_COST - userData.coins;
+        toast({ variant: "destructive", title: "Not Enough Coins", description: `You need ${needed} more coins to unlock premium.` });
+    }
+  }
+
+  const handleEarnCoins = () => {
+      // This is a placeholder for watching a rewarded ad.
+      addCoins(25);
+      toast({ title: "Coins Added!", description: "You earned 25 coins." });
+  }
 
   if (!mounted) {
     return (
@@ -67,7 +76,58 @@ export default function ProfilePage() {
               <p className="text-muted-foreground">quicktool@sid.com</p>
             </CardContent>
           </Card>
-          
+
+          <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                    <Coins className="mr-2 h-5 w-5 text-amber-500" />
+                    My Coins
+                </CardTitle>
+                <CardDescription>Earn coins to unlock premium features.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                 <div className="p-4 bg-secondary rounded-lg flex justify-between items-center">
+                    <p className="text-lg font-semibold">Your Balance:</p>
+                    <div className="flex items-center gap-2">
+                        <Coins className="h-6 w-6 text-amber-500" />
+                        <p className="text-2xl font-bold">{userData.coins}</p>
+                    </div>
+                 </div>
+                 <Button className="w-full" onClick={handleEarnCoins}>
+                    <Video className="mr-2" /> Earn 25 Coins
+                 </Button>
+              </CardContent>
+          </Card>
+
+          {!userData.isPremium && (
+            <Card className="border-primary/50">
+              <CardHeader>
+                  <CardTitle className="flex items-center text-primary">
+                      <Gem className="mr-2 h-5 w-5" />
+                      Unlock Premium
+                  </CardTitle>
+                  <CardDescription>Get unlimited access to all tools forever.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                  <Button className="w-full" onClick={handleUnlock}>
+                     Unlock for {PREMIUM_COST} Coins
+                  </Button>
+              </CardContent>
+            </Card>
+          )}
+
+          {userData.isPremium && (
+             <Card className="bg-gradient-to-tr from-amber-400 to-yellow-500 text-black">
+                <CardContent className="pt-6 flex items-center gap-4">
+                    <Star className="h-10 w-10 text-white" fill="white" />
+                    <div>
+                        <CardTitle>Premium Member</CardTitle>
+                        <CardDescription className="text-black/80">You have unlimited access to all tools.</CardDescription>
+                    </div>
+                </CardContent>
+             </Card>
+          )}
+
           <Card>
             <CardHeader>
                 <CardTitle>Appearance</CardTitle>
@@ -100,26 +160,6 @@ export default function ProfilePage() {
             <CardContent className="flex gap-2">
                 <Button onClick={() => setLanguage('en')} variant={language === 'en' ? 'default' : 'outline'} className="w-full">English</Button>
                 <Button onClick={() => setLanguage('hi')} variant={language === 'hi' ? 'default' : 'outline'} className="w-full">Hindi</Button>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Usage Statistics</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                {stats.map((stat, index) => (
-                  <div
-                    key={index}
-                    className="p-4 bg-secondary rounded-lg flex flex-col items-center text-center"
-                  >
-                    {stat.icon}
-                    <p className="text-2xl font-bold mt-2">{stat.value}</p>
-                    <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  </div>
-                ))}
-              </div>
             </CardContent>
           </Card>
 

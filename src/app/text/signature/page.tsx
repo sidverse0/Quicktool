@@ -11,7 +11,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Slider } from "@/components/ui/slider";
+import { useUserData } from "@/hooks/use-user-data";
+import { UsageLimitDialog } from "@/components/usage-limit-dialog";
 
+const toolName = "calligraphySignature";
 const toolColor = "#5de8e2";
 
 export default function SignaturePage() {
@@ -21,6 +24,8 @@ export default function SignaturePage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const { canUseTool, incrementToolUsage } = useUserData();
+  const [showUsageLimitDialog, setShowUsageLimitDialog] = useState(false);
 
   const signatureStyle: React.CSSProperties = {
     fontFamily: "'Great Vibes', cursive",
@@ -33,6 +38,11 @@ export default function SignaturePage() {
     if (!text) {
         toast({ variant: "destructive", title: "Text is empty!" });
         return;
+    }
+
+    if (!canUseTool(toolName)) {
+      setShowUsageLimitDialog(true);
+      return;
     }
     
     setIsProcessing(true);
@@ -70,6 +80,8 @@ export default function SignaturePage() {
             document.body.removeChild(tempSpan);
 
             const dataUrl = canvas.toDataURL("image/png");
+
+            incrementToolUsage(toolName);
             sessionStorage.setItem("toolColor", toolColor);
             sessionStorage.setItem("signatureImageDataUrl", dataUrl);
             router.push('/text/signature/result');
@@ -89,6 +101,7 @@ export default function SignaturePage() {
 
   return (
     <div className="flex flex-col h-full">
+      <UsageLimitDialog isOpen={showUsageLimitDialog} onOpenChange={setShowUsageLimitDialog} />
       <PageHeader title="Calligraphy Signature" showBackButton />
       <div className="flex-1 flex flex-col p-4 space-y-4">
         <div className="flex-1 flex items-center justify-center bg-secondary rounded-lg">

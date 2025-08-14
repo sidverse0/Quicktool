@@ -14,11 +14,14 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import * as pdfjs from "pdfjs-dist";
+import { useUserData } from "@/hooks/use-user-data";
+import { UsageLimitDialog } from "@/components/usage-limit-dialog";
 
 
 // Set worker path
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
+const toolName = "pdfToImage";
 const toolColor = "#e85d5d";
 
 export default function PdfToImagePage() {
@@ -27,8 +30,15 @@ export default function PdfToImagePage() {
   const imageType = "jpeg";
   const { toast } = useToast();
   const router = useRouter();
+  const { canUseTool, incrementToolUsage } = useUserData();
+  const [showUsageLimitDialog, setShowUsageLimitDialog] = useState(false);
 
   const handleFileSelect = (file: File) => {
+    if (!canUseTool(toolName)) {
+      setShowUsageLimitDialog(true);
+      return;
+    }
+
     if (file.type !== "application/pdf") {
       toast({
         variant: "destructive",
@@ -49,6 +59,12 @@ export default function PdfToImagePage() {
       });
       return;
     }
+
+    if (!canUseTool(toolName)) {
+      setShowUsageLimitDialog(true);
+      return;
+    }
+
     setIsProcessing(true);
 
     try {
@@ -75,6 +91,7 @@ export default function PdfToImagePage() {
             });
           }
         }
+        incrementToolUsage(toolName);
         sessionStorage.setItem("convertedImages", JSON.stringify(images));
         sessionStorage.setItem("imageType", imageType);
         sessionStorage.setItem("toolColor", toolColor);
@@ -100,6 +117,7 @@ export default function PdfToImagePage() {
 
   return (
     <div className="flex flex-col h-full">
+      <UsageLimitDialog isOpen={showUsageLimitDialog} onOpenChange={setShowUsageLimitDialog} />
       <PageHeader title="PDF to Image Converter" showBackButton />
       <div className="flex-1 flex flex-col items-center justify-center p-4">
         <Card className="w-full max-w-md shadow-none border-none">

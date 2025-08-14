@@ -13,7 +13,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Maximize, Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { useUserData } from "@/hooks/use-user-data";
+import { UsageLimitDialog } from "@/components/usage-limit-dialog";
 
+const toolName = "resizeDimensions";
 const toolColor = "#5d87e8";
 
 export default function ResizeDimensionsPage() {
@@ -24,8 +27,14 @@ export default function ResizeDimensionsPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const { canUseTool, incrementToolUsage } = useUserData();
+  const [showUsageLimitDialog, setShowUsageLimitDialog] = useState(false);
 
   const handleFileSelect = (file: File) => {
+    if (!canUseTool(toolName)) {
+      setShowUsageLimitDialog(true);
+      return;
+    }
     setOriginalFile(file);
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -51,6 +60,11 @@ export default function ResizeDimensionsPage() {
       return;
     }
     
+    if (!canUseTool(toolName)) {
+      setShowUsageLimitDialog(true);
+      return;
+    }
+
     setIsProcessing(true);
 
     const img = document.createElement("img");
@@ -64,6 +78,7 @@ export default function ResizeDimensionsPage() {
         ctx?.drawImage(img, 0, 0, Number(width), Number(height));
         const resizedDataUrl = canvas.toDataURL(originalFile?.type || "image/png");
         
+        incrementToolUsage(toolName);
         sessionStorage.setItem("toolColor", toolColor);
         sessionStorage.setItem("resizedImageDataUrl", resizedDataUrl);
         sessionStorage.setItem("originalImageDataUrl", originalUrl);
@@ -99,6 +114,7 @@ export default function ResizeDimensionsPage() {
 
   return (
     <div className="flex flex-col h-full">
+      <UsageLimitDialog isOpen={showUsageLimitDialog} onOpenChange={setShowUsageLimitDialog} />
       <PageHeader title="Resize by Dimensions" showBackButton />
       <div className="flex-1 flex flex-col p-4 space-y-4">
         {!originalUrl ? (

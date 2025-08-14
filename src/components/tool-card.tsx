@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
 import { LucideIcon } from "lucide-react";
+import { Badge } from "./ui/badge";
 
 type ToolCardProps = {
   href: string;
@@ -12,6 +13,7 @@ type ToolCardProps = {
   icon: LucideIcon;
   color?: string;
   gradient?: string;
+  isTrial?: boolean;
 };
 
 export default function ToolCard({
@@ -20,6 +22,7 @@ export default function ToolCard({
   icon: Icon,
   color,
   gradient,
+  isTrial = false,
 }: ToolCardProps) {
   return (
     <Link href={href} className="group">
@@ -40,6 +43,9 @@ export default function ToolCard({
                         {title}
                     </h3>
                 </div>
+                {isTrial && (
+                  <Badge variant="destructive" className="absolute top-2 right-2">Trial</Badge>
+                )}
             </CardContent>
         </Card>
       </motion.div>

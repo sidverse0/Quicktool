@@ -11,7 +11,10 @@ import { QrCode, Square, Circle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ColorPickerDialog } from "@/components/color-picker-dialog";
 import { cn } from "@/lib/utils";
+import { useUserData } from "@/hooks/use-user-data";
+import { UsageLimitDialog } from "@/components/usage-limit-dialog";
 
+const toolName = "qrUrl";
 const toolColor = "#7a5de8";
 
 export default function QrMakerPage() {
@@ -21,6 +24,8 @@ export default function QrMakerPage() {
   const [style, setStyle] = useState<"squares" | "dots">("squares");
   const router = useRouter();
   const { toast } = useToast();
+  const { canUseTool, incrementToolUsage } = useUserData();
+  const [showUsageLimitDialog, setShowUsageLimitDialog] = useState(false);
 
   const handleGenerate = () => {
     if (!url.trim()) {
@@ -32,19 +37,26 @@ export default function QrMakerPage() {
       return;
     }
 
+    if (!canUseTool(toolName)) {
+        setShowUsageLimitDialog(true);
+        return;
+    }
+
     const params = new URLSearchParams({
         text: url,
         color,
         bgColor,
         style,
     });
-
+    
+    incrementToolUsage(toolName);
     sessionStorage.setItem("toolColor", toolColor);
     router.push(`/qr/maker/result?${params.toString()}`);
   };
 
   return (
     <div className="flex flex-col h-full">
+      <UsageLimitDialog isOpen={showUsageLimitDialog} onOpenChange={setShowUsageLimitDialog} />
       <PageHeader title="URL to QR Code" showBackButton />
       <div className="flex-1 flex flex-col p-4 space-y-6 overflow-y-auto">
           <div className="space-y-2">

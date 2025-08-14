@@ -31,7 +31,7 @@ export default function TextPage() {
         <div className="flex-1 overflow-y-auto p-4">
           <div className="grid grid-cols-2 gap-4">
             {textTools.map((tool) => (
-              <ToolCard key={tool.href} {...tool} />
+              <ToolCard key={tool.href} {...tool} isTrial />
             ))}
           </div>
         </div>

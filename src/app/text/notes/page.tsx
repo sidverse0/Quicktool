@@ -12,7 +12,10 @@ import { FileText, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
+import { useUserData } from "@/hooks/use-user-data";
+import { UsageLimitDialog } from "@/components/usage-limit-dialog";
 
+const toolName = "handwrittenNotes";
 const toolColor = "#e8d55d";
 
 export default function HandwrittenNotesPage() {
@@ -22,6 +25,8 @@ export default function HandwrittenNotesPage() {
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const { canUseTool, incrementToolUsage } = useUserData();
+  const [showUsageLimitDialog, setShowUsageLimitDialog] = useState(false);
 
   const noteStyle: React.CSSProperties = {
     fontFamily: "'Kalam', cursive",
@@ -37,6 +42,11 @@ export default function HandwrittenNotesPage() {
         return;
     }
     
+    if (!canUseTool(toolName)) {
+      setShowUsageLimitDialog(true);
+      return;
+    }
+
     setIsProcessing(true);
 
     setTimeout(() => {
@@ -79,6 +89,8 @@ export default function HandwrittenNotesPage() {
             document.body.removeChild(tempDiv);
 
             const dataUrl = canvas.toDataURL("image/png");
+            
+            incrementToolUsage(toolName);
             sessionStorage.setItem("toolColor", toolColor);
             sessionStorage.setItem("noteImageDataUrl", dataUrl);
             router.push('/text/notes/result');
@@ -98,6 +110,7 @@ export default function HandwrittenNotesPage() {
 
   return (
     <div className="flex flex-col h-full">
+      <UsageLimitDialog isOpen={showUsageLimitDialog} onOpenChange={setShowUsageLimitDialog} />
       <PageHeader title="Hand-written Notes" showBackButton />
       <div className="flex-1 flex flex-col p-4 space-y-4">
         <div 
