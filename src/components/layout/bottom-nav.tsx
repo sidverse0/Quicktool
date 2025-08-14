@@ -29,7 +29,7 @@ export default function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "relative flex flex-col items-center justify-center text-muted-foreground hover:text-primary transition-colors w-1/4",
+                "relative flex flex-col items-center justify-center text-muted-foreground hover:text-primary transition-colors w-1/4 pt-1",
                 isActive ? "text-primary" : ""
               )}
             >
@@ -37,7 +37,7 @@ export default function BottomNav() {
               <span className="text-xs font-medium">{item.label}</span>
               {isActive && (
                 <motion.div
-                  className="absolute bottom-1 w-6 h-1 bg-primary rounded-full"
+                  className="absolute bottom-0 w-12 h-1 bg-primary rounded-full"
                   layoutId="active-indicator"
                   initial={false}
                   transition={{ type: "spring", stiffness: 500, damping: 30 }}
