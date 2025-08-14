@@ -56,7 +56,7 @@ export default function ProfilePage() {
         <RewardedAdDialog
           isOpen={showAdDialog}
           onOpenChange={setShowAdDialog}
-          onReward={() => addCoins(25)}
+          onReward={() => addCoins(10)}
         />
         <PageHeader title="Profile" />
         <div className="flex-1 overflow-y-auto p-4 space-y-6">
@@ -95,7 +95,7 @@ export default function ProfilePage() {
                     </div>
                  </div>
                  <Button className="w-full" onClick={() => setShowAdDialog(true)}>
-                    <Video className="mr-2" /> Earn 25 Coins
+                    <Video className="mr-2" /> Earn 10 Coins
                  </Button>
               </CardContent>
           </Card>

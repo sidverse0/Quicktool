@@ -20,7 +20,7 @@ interface RewardedAdDialogProps {
 }
 
 const VIDEO_ID = "ebV9x7xktLg";
-const COUNTDOWN_SECONDS = 22;
+const COUNTDOWN_SECONDS = 30;
 
 export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdDialogProps) {
   const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS);
@@ -52,7 +52,7 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
     onReward();
     toast({
         title: "Reward Claimed!",
-        description: "You've earned 25 coins.",
+        description: "You've earned 10 coins.",
     })
     onOpenChange(false);
   };
@@ -78,7 +78,7 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
         <AlertDialogFooter>
           <Button onClick={handleClaim} disabled={!canClaim} className="w-full">
             {canClaim ? (
-                <><Coins className="mr-2 h-4 w-4" /> Claim 25 Coins</>
+                <><Coins className="mr-2 h-4 w-4" /> Claim 10 Coins</>
             ) : (
                 `Claim in ${countdown}s`
             )}
