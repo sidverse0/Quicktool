@@ -75,34 +75,38 @@ function QRResult() {
     <div className="flex flex-col h-full">
       <PageHeader title="QR Code Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
-        <div className="flex items-center justify-center aspect-square rounded-lg border-2 border-dashed" style={{ borderColor }}>
+        <div className="relative flex items-center justify-center aspect-square rounded-lg border-2 border-dashed" style={{ borderColor }}>
             {isLoading && (
-              <div className="relative w-24 h-24 flex items-center justify-center">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{
-                    repeat: Infinity,
-                    duration: 1.5,
-                    ease: "linear",
-                  }}
-                  className="absolute inset-0 border-4 border-primary/50 border-t-primary rounded-full"
-                />
-                <Image src="https://i.postimg.cc/kXnSKfgf/wrench.png" alt="Quick Tool Logo" width={48} height={48} />
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="relative w-24 h-24 flex items-center justify-center">
+                  <motion.div
+                    animate={{ rotate: 360 }}
+                    transition={{
+                      repeat: Infinity,
+                      duration: 1.5,
+                      ease: "linear",
+                    }}
+                    className="absolute inset-0 border-4 border-primary/50 border-t-primary rounded-full"
+                  />
+                  <Image src="https://i.postimg.cc/kXnSKfgf/wrench.png" alt="Quick Tool Logo" width={48} height={48} />
+                </div>
               </div>
             )}
-            {qrCodeUrl && (
-            <Image
-                src={qrCodeUrl}
-                alt="Generated QR Code"
-                width={512}
-                height={512}
-                className={`transition-opacity duration-300 rounded-lg p-2 ${
-                isLoading ? "opacity-0" : "opacity-100"
-                }`}
-                onLoad={() => setIsLoading(false)}
-                unoptimized
-            />
-            )}
+            <div className="w-full h-full p-2 flex items-center justify-center">
+              {qrCodeUrl && (
+              <Image
+                  src={qrCodeUrl}
+                  alt="Generated QR Code"
+                  width={512}
+                  height={512}
+                  className={`transition-opacity duration-300 rounded-lg max-w-full max-h-full ${
+                  isLoading ? "opacity-0" : "opacity-100"
+                  }`}
+                  onLoad={() => setIsLoading(false)}
+                  unoptimized
+              />
+              )}
+            </div>
         </div>
         <div className="space-y-2">
             <Button
