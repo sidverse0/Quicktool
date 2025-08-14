@@ -134,7 +134,7 @@ export default function ResizeSizePage() {
           <div className="flex-1 flex items-center justify-center">
              <Card className="w-full max-w-md shadow-none border-none">
               <CardContent className="p-0">
-                <FileUploader onFileSelect={handleFileSelect} />
+                <FileUploader onFileSelect={handleFileSelect} color="#5de899" />
               </CardContent>
             </Card>
           </div>

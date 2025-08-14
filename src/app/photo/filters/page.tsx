@@ -114,7 +114,7 @@ export default function FiltersPage() {
           <div className="flex-1 flex items-center justify-center">
             <Card className="w-full max-w-md shadow-none border-none">
               <CardContent className="p-0">
-                <FileUploader onFileSelect={handleFileSelect} />
+                <FileUploader onFileSelect={handleFileSelect} color="#e85dd5" />
               </CardContent>
             </Card>
           </div>

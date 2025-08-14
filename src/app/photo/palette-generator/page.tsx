@@ -96,7 +96,7 @@ export default function PaletteGeneratorPage() {
           <div className="flex-1 flex items-center justify-center">
             <Card className="w-full max-w-md shadow-none border-none">
                 <CardContent className="p-0">
-                    <FileUploader onFileSelect={handleFileSelect} />
+                    <FileUploader onFileSelect={handleFileSelect} color="#e8a05d" />
                 </CardContent>
             </Card>
           </div>

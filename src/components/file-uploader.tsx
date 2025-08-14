@@ -8,12 +8,14 @@ type FileUploaderProps = {
   onFileSelect: (file: File) => void;
   acceptedFileTypes?: string;
   label?: string;
+  color?: string;
 };
 
 export default function FileUploader({
   onFileSelect,
   acceptedFileTypes = "image/*",
   label = "Drag & drop an image here, or click to select",
+  color = "hsl(var(--primary))",
 }: FileUploaderProps) {
   const [isDragOver, setIsDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -51,17 +53,22 @@ export default function FileUploader({
     fileInputRef.current?.click();
   };
 
+  const uploaderStyle = {
+    '--uploader-color': color,
+    '--uploader-color-fg': isDragOver ? '#fff' : color,
+  } as React.CSSProperties;
+
   return (
     <div
       onClick={handleClick}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
+      style={uploaderStyle}
       className={cn(
         "flex flex-col items-center justify-center p-8 border-2 border-dashed rounded-lg cursor-pointer transition-colors",
-        isDragOver
-          ? "border-primary bg-primary/10"
-          : "border-border hover:border-primary/50 hover:bg-secondary"
+        "border-[var(--uploader-color)] text-[var(--uploader-color-fg)]",
+        isDragOver && "bg-[var(--uploader-color)]",
       )}
     >
       <input
@@ -73,11 +80,11 @@ export default function FileUploader({
       />
       <UploadCloud
         className={cn(
-          "w-12 h-12 text-muted-foreground mb-4 transition-colors",
-          isDragOver && "text-primary"
+          "w-12 h-12 mb-4 transition-colors",
         )}
+        style={{ color: 'var(--uploader-color-fg)' }}
       />
-      <p className="text-center text-muted-foreground">{label}</p>
+      <p className="text-center" style={{ color: 'var(--uploader-color-fg)' }}>{label}</p>
     </div>
   );
 }

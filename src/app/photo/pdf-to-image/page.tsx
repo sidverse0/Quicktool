@@ -117,6 +117,7 @@ export default function PdfToImagePage() {
                 onFileSelect={handleFileSelect}
                 acceptedFileTypes="application/pdf"
                 label="Drag & drop a PDF here, or click to select"
+                color="#e85d5d"
               />
             </CardContent>
           ) : (
