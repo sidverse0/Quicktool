@@ -26,18 +26,14 @@ const COUNTDOWN_SECONDS = 30;
 export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdDialogProps) {
   const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS);
   const [canClaim, setCanClaim] = useState(false);
-  const [isAdStarted, setIsAdStarted] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     if (!isOpen) {
       setCountdown(COUNTDOWN_SECONDS);
       setCanClaim(false);
-      setIsAdStarted(false);
       return;
     }
-
-    if (!isAdStarted) return;
 
     const timer = setInterval(() => {
       setCountdown((prev) => {
@@ -51,7 +47,7 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isOpen, isAdStarted]);
+  }, [isOpen]);
 
   const handleClaim = () => {
     onReward();
@@ -62,47 +58,30 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
     onOpenChange(false);
   };
   
-  const handlePlay = () => {
-      setIsAdStarted(true);
-  }
-
-  const videoSrc = `https://www.youtube.com/embed/${VIDEO_ID}?controls=0&loop=1&playlist=${VIDEO_ID}`;
+  const videoSrc = `https://www.youtube.com/embed/${VIDEO_ID}?controls=0&loop=1&playlist=${VIDEO_ID}&autoplay=1`;
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="max-w-lg">
+      <AlertDialogContent className="max-w-xl">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-center">Watch & Earn</AlertDialogTitle>
         </AlertDialogHeader>
-        <div className="aspect-w-9 aspect-h-16 relative w-full bg-black rounded-md">
+        <div className="aspect-video relative w-full bg-black rounded-md overflow-hidden">
           <iframe
             src={videoSrc}
             title="YouTube video player"
             frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
-            className={cn("w-full h-full rounded-md transition-opacity", isAdStarted ? 'opacity-100' : 'opacity-0')}
+            className="w-full h-full"
           ></iframe>
-          {!isAdStarted && (
-            <div 
-                className="absolute inset-0 flex flex-col items-center justify-center cursor-pointer bg-black/50"
-                onClick={handlePlay}
-            >
-                <PlayCircle className="h-20 w-20 text-white/80 hover:text-white transition-colors" />
-                <p className="text-white font-semibold mt-2">Tap to Play</p>
-            </div>
-          )}
         </div>
         <AlertDialogFooter>
-          <Button onClick={handleClaim} disabled={!canClaim || !isAdStarted} className="w-full">
-            {isAdStarted ? (
-              canClaim ? (
-                  <><Coins className="mr-2 h-4 w-4" /> Claim 10 Coins</>
-              ) : (
-                  `Claim in ${countdown}s`
-              )
+          <Button onClick={handleClaim} disabled={!canClaim} className="w-full">
+            {canClaim ? (
+                <><Coins className="mr-2 h-4 w-4" /> Claim 10 Coins</>
             ) : (
-                'Watch the video to claim'
+                `Claim in ${countdown}s`
             )}
           </Button>
         </AlertDialogFooter>
