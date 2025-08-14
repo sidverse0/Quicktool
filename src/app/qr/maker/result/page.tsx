@@ -101,16 +101,10 @@ function QRResult() {
                         fgColor={qrColor}
                         bgColor={qrBgColor}
                         style={{ height: "auto", maxWidth: "100%", width: "100%" }}
-                        // @ts-ignore
-                        qrStyle="squares"
-                        eyeRadius={5}
-                        eyeColor={qrColor}
                         logoImage={qrLogo || undefined}
-                        logoWidth={qrLogo ? 80: undefined}
-                        logoHeight={qrLogo ? 80: undefined}
+                        logoWidth={qrLogo ? 60: undefined}
+                        logoHeight={qrLogo ? 60: undefined}
                         logoOpacity={1}
-                        logoPadding={qrLogo ? 5 : 0}
-                        logoPaddingStyle="circle"
                     />
                 ) : (
                     <LoadingIndicator />
