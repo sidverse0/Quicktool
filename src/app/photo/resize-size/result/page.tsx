@@ -75,8 +75,8 @@ export default function ResizeSizeResultPage() {
                     Original: {formatFileSize(originalSize)} | New: {formatFileSize(resizedSize)}
                 </CardDescription>
             </CardHeader>
-            <div className="relative w-full aspect-square">
-                <NextImage src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain" />
+            <div className="relative w-full aspect-square border-2 border-dashed rounded-lg">
+                <NextImage src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain p-2" />
             </div>
         </div>
         <div className="space-y-2">

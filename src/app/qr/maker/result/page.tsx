@@ -55,7 +55,7 @@ function QRResult() {
     <div className="flex flex-col h-full">
       <PageHeader title="QR Code Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
-        <div className="flex items-center justify-center aspect-square bg-gray-100 rounded-lg">
+        <div className="flex items-center justify-center aspect-square rounded-lg border-2 border-dashed">
             {(isLoading || !qrCodeUrl) && (
             <div className="flex flex-col items-center text-muted-foreground">
                 <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -67,7 +67,7 @@ function QRResult() {
                 alt="Generated QR Code"
                 width={512}
                 height={512}
-                className={`transition-opacity duration-300 rounded-lg ${
+                className={`transition-opacity duration-300 rounded-lg p-2 ${
                 isLoading ? "opacity-0" : "opacity-100"
                 }`}
                 onLoad={() => setIsLoading(false)}

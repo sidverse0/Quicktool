@@ -45,7 +45,7 @@ export default function NoteResultPage() {
     <div className="flex flex-col h-full">
       <PageHeader title="Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
-        <div className="relative w-full aspect-[4/5] border-2 border-dashed border-muted rounded-lg bg-white">
+        <div className="relative w-full aspect-[4/5] border-2 border-dashed rounded-lg bg-white">
             <Image src={noteUrl} alt="Generated Note" layout="fill" className="object-contain p-4" />
         </div>
         <div className="space-y-2">

@@ -45,7 +45,7 @@ export default function SignatureResultPage() {
     <div className="flex flex-col h-full">
       <PageHeader title="Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
-        <div className="relative w-full h-48 flex items-center justify-center bg-secondary rounded-lg border-2 border-dashed border-muted">
+        <div className="relative w-full h-48 flex items-center justify-center bg-secondary rounded-lg border-2 border-dashed">
             <Image src={signatureUrl} alt="Generated Signature" layout="fill" className="object-contain p-4" />
         </div>
         <div className="space-y-2">

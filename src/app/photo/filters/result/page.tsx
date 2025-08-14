@@ -48,7 +48,7 @@ export default function FilterResultPage() {
     <div className="flex flex-col h-full">
       <PageHeader title="Result" showBackButton />
       <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
-        <div className="relative w-full aspect-square">
+        <div className="relative w-full aspect-square border-2 border-dashed rounded-lg">
             <Image src={filteredUrl} alt="Filtered Image" layout="fill" className="rounded-lg object-contain p-2" />
         </div>
         <div className="space-y-2">

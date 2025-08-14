@@ -49,8 +49,8 @@ export default function ResizeResultPage() {
     <div className="flex flex-col h-full">
       <PageHeader title="Resizing Result" showBackButton />
       <div className="flex-1 flex flex-col p-4 space-y-4 justify-center">
-        <div className="relative w-full aspect-square">
-            <Image src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain" />
+        <div className="relative w-full aspect-square border-2 border-dashed rounded-lg">
+            <Image src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain p-2" />
         </div>
         <div className="space-y-2">
             <a href={resizedUrl} download={fileName}>
