@@ -126,7 +126,7 @@ export default function HandwrittenNotesPage() {
             
             ctx.font = `400 ${fontSize}px ${fontFamily.split(',')[0].replace(/'/g, "")}`;
             ctx.fillStyle = inkColor;
-            ctx.textBaseline = 'top';
+            ctx.textBaseline = 'alphabetic';
 
             function wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
                 const paragraphs = text.split('\n');
@@ -153,7 +153,8 @@ export default function HandwrittenNotesPage() {
                 }
             }
             
-            wrapText(ctx, text, paddingX, paddingTop + (fontSize * 0.4), maxWidth, lineHeight);
+            const firstLineY = paddingTop + (fontSize * 0.9);
+            wrapText(ctx, text, paddingX, firstLineY, maxWidth, lineHeight);
             
             const dataUrl = canvas.toDataURL("image/png");
             
