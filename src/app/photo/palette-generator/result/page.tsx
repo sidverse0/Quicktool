@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { RefreshCw, Loader2, Copy } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -44,7 +44,7 @@ export default function PaletteResultPage() {
 
     if (loading || !originalUrl || !palette) {
         return (
-             <div className="flex flex-col min-h-screen">
+             <div className="flex flex-col h-full">
                 <PageHeader title="Result" showBackButton />
                 <div className="flex-1 flex items-center justify-center">
                     <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -55,47 +55,39 @@ export default function PaletteResultPage() {
 
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-full">
       <PageHeader title="Result" showBackButton />
-      <div className="flex-1 overflow-y-auto p-4 md:p-6">
-        <div className="w-full max-w-lg mx-auto space-y-4">
-            <Card>
-                <CardHeader><CardTitle>Original Image</CardTitle></CardHeader>
-                <CardContent>
-                    <div className="relative w-full h-auto aspect-square border rounded-lg flex items-center justify-center bg-secondary/50">
-                        <Image src={originalUrl} alt="Original Image" layout="fill" className="rounded-lg object-contain p-2" />
-                    </div>
-                </CardContent>
-            </Card>
+      <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
+        <Card className="shadow-none border-none">
+            <CardContent className="p-0">
+                <div className="relative w-full aspect-square">
+                    <Image src={originalUrl} alt="Original Image" layout="fill" className="rounded-lg object-contain" />
+                </div>
+            </CardContent>
+        </Card>
 
-            <Card>
-                <CardHeader><CardTitle>Generated Palette</CardTitle></CardHeader>
-                <CardContent>
-                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {palette.map(color => (
-                            <div key={color} onClick={() => handleCopy(color)} className="cursor-pointer group">
-                                <div style={{ backgroundColor: color }} className="h-20 w-full rounded-md border" />
-                                <div className="flex items-center justify-between p-2 bg-muted rounded-b-md">
-                                    <span className="font-mono text-sm">{color}</span>
-                                    <Copy className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </div>
+        <Card className="shadow-none border-none">
+            <CardContent className="p-0">
+                    <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                    {palette.map(color => (
+                        <div key={color} onClick={() => handleCopy(color)} className="cursor-pointer group relative aspect-square">
+                            <div style={{ backgroundColor: color }} className="h-full w-full rounded-md border" />
+                             <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <Copy className="h-6 w-6 text-white" />
                             </div>
-                        ))}
-                    </div>
-                </CardContent>
-            </Card>
+                        </div>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
 
-             <Card>
-                <CardHeader>
-                    <CardTitle>Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                    <Button variant="secondary" className="w-full" onClick={handleStartOver}>
-                        <RefreshCw className="mr-2 h-4 w-4" /> Generate Another
-                    </Button>
-                </CardContent>
-            </Card>
-        </div>
+        <Card className="shadow-none border-none">
+            <CardContent className="p-0">
+                <Button variant="secondary" className="w-full" onClick={handleStartOver}>
+                    <RefreshCw className="mr-2 h-4 w-4" /> Generate Another
+                </Button>
+            </CardContent>
+        </Card>
       </div>
     </div>
   );

@@ -11,9 +11,7 @@ import { Label } from "@/components/ui/label";
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
+  CardDescription
 } from "@/components/ui/card";
 import { Minimize, Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -129,51 +127,47 @@ export default function ResizeSizePage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-full">
       <PageHeader title="Resize by File Size" showBackButton />
-      <div className="flex-1 overflow-y-auto p-4 md:p-6">
-        <Card className="w-full max-w-lg mx-auto">
-            {!originalUrl ? (
-              <>
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Minimize className="mr-2 h-5 w-5 text-primary" />
-                    Upload and Compress
-                  </CardTitle>
-                  <CardDescription>Reduce image file size while maintaining quality.</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <FileUploader onFileSelect={handleFileSelect} />
-                </CardContent>
-              </>
-            ) : (
-                <CardContent className="pt-6 space-y-4">
-                  <div className={cn(
-                      "relative w-full h-64 border-2 border-dashed rounded-lg flex items-center justify-center bg-secondary/50",
-                      "transition-all duration-300 ease-in-out"
-                    )}>
-                    <Image src={originalUrl} alt="Original Preview" layout="fill" className="rounded-lg object-contain p-2" />
-                    <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7 rounded-full z-10" onClick={handleReset}>
-                      <X className="h-4 w-4" />
-                    </Button>
-                  </div>
-                  <CardDescription className="text-center">Original size: {formatFileSize(originalSize)}</CardDescription>
+      <div className="flex-1 flex flex-col p-4 space-y-4">
+        {!originalUrl ? (
+          <div className="flex-1 flex items-center justify-center">
+             <Card className="w-full max-w-md shadow-none border-none">
+              <CardContent className="p-0">
+                <FileUploader onFileSelect={handleFileSelect} />
+              </CardContent>
+            </Card>
+          </div>
+        ) : (
+          <>
+            <div className="flex-1 min-h-0 flex items-center justify-center">
+              <div className="relative w-full h-full">
+                <Image src={originalUrl} alt="Original Preview" layout="fill" className="rounded-lg object-contain" />
+                <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7 rounded-full z-10" onClick={handleReset}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+            <Card className="shadow-none border-none">
+                <CardContent className="p-0 space-y-4">
+                    <CardDescription className="text-center">Original size: {formatFileSize(originalSize)}</CardDescription>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="size">Target Size (KB)</Label>
-                    <Input id="size" type="number" placeholder="e.g., 100" value={targetSize} onChange={(e) => setTargetSize(Number(e.target.value))} />
-                  </div>
-                  
-                  <Button className="w-full" onClick={handleCompress} disabled={isProcessing}>
-                    {isProcessing ? (
-                      <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Compressing...</>
-                    ) : (
-                      <><Minimize className="mr-2 h-4 w-4" />Compress Image</>
-                    )}
-                  </Button>
+                    <div className="space-y-2">
+                        <Label htmlFor="size">Target Size (KB)</Label>
+                        <Input id="size" type="number" placeholder="e.g., 100" value={targetSize} onChange={(e) => setTargetSize(Number(e.target.value))} />
+                    </div>
+                    
+                    <Button className="w-full" onClick={handleCompress} disabled={isProcessing}>
+                        {isProcessing ? (
+                        <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Compressing...</>
+                        ) : (
+                        <><Minimize className="mr-2 h-4 w-4" />Compress Image</>
+                        )}
+                    </Button>
                 </CardContent>
-            )}
-        </Card>
+            </Card>
+          </>
+        )}
       </div>
     </div>
   );

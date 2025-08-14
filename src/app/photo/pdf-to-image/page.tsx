@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -10,9 +9,6 @@ import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
 } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -111,31 +107,20 @@ export default function PdfToImagePage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-full">
       <PageHeader title="PDF to Image Converter" showBackButton />
-      <div className="flex-1 overflow-y-auto p-4 md:p-6">
-        <Card className="w-full max-w-lg mx-auto">
+      <div className="flex-1 flex flex-col items-center justify-center p-4">
+        <Card className="w-full max-w-md shadow-none border-none">
           {!pdfFile ? (
-            <>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <FileImage className="mr-2 h-5 w-5 text-primary" />
-                  Upload your PDF
-                </CardTitle>
-                <CardDescription>
-                  Convert each page of your PDF into an image.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <FileUploader
-                  onFileSelect={handleFileSelect}
-                  acceptedFileTypes="application/pdf"
-                  label="Drag & drop a PDF here, or click to select"
-                />
-              </CardContent>
-            </>
+            <CardContent>
+              <FileUploader
+                onFileSelect={handleFileSelect}
+                acceptedFileTypes="application/pdf"
+                label="Drag & drop a PDF here, or click to select"
+              />
+            </CardContent>
           ) : (
-            <CardContent className="pt-6 space-y-4">
+            <CardContent className="space-y-4">
               <div className={cn(
                 "relative w-full p-4 border-2 border-dashed rounded-lg flex flex-col items-center justify-center bg-secondary/50",
                 "transition-all duration-300 ease-in-out"

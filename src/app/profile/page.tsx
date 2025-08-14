@@ -22,58 +22,60 @@ const stats = [
 export default function ProfilePage() {
   return (
     <MainLayout>
-      <PageHeader title="Profile" actions={
-          <Link href="/settings">
-            <Button variant="ghost" size="icon">
-              <Settings className="h-5 w-5" />
-            </Button>
-          </Link>
-        }/>
-      <div className="p-4 md:p-6 space-y-6">
-        <Card>
-          <CardContent className="pt-6 flex flex-col items-center text-center">
-            <Avatar className="h-24 w-24 mb-4 border-4 border-primary/20">
-              <AvatarImage src="https://placehold.co/100x100.png" alt="User" data-ai-hint="profile picture" />
-              <AvatarFallback>
-                <UserIcon className="h-10 w-10 text-muted-foreground" />
-              </AvatarFallback>
-            </Avatar>
-            <h2 className="text-2xl font-bold font-headline">App User</h2>
-            <p className="text-muted-foreground">user@appsuite.com</p>
-          </CardContent>
-        </Card>
+      <div className="flex flex-col h-full">
+        <PageHeader title="Profile" actions={
+            <Link href="/settings">
+              <Button variant="ghost" size="icon">
+                <Settings className="h-5 w-5" />
+              </Button>
+            </Link>
+          }/>
+        <div className="flex-1 overflow-y-auto p-4 space-y-6">
+          <Card>
+            <CardContent className="pt-6 flex flex-col items-center text-center">
+              <Avatar className="h-24 w-24 mb-4 border-4 border-primary/20">
+                <AvatarImage src="https://placehold.co/100x100.png" alt="User" data-ai-hint="profile picture" />
+                <AvatarFallback>
+                  <UserIcon className="h-10 w-10 text-muted-foreground" />
+                </AvatarFallback>
+              </Avatar>
+              <h2 className="text-2xl font-bold font-headline">App User</h2>
+              <p className="text-muted-foreground">user@appsuite.com</p>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Usage Statistics</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-2 gap-4">
-              {stats.map((stat, index) => (
-                <div
-                  key={index}
-                  className="p-4 bg-secondary rounded-lg flex flex-col items-center text-center"
-                >
-                  {stat.icon}
-                  <p className="text-2xl font-bold mt-2">{stat.value}</p>
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Usage Statistics</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                {stats.map((stat, index) => (
+                  <div
+                    key={index}
+                    className="p-4 bg-secondary rounded-lg flex flex-col items-center text-center"
+                  >
+                    {stat.icon}
+                    <p className="text-2xl font-bold mt-2">{stat.value}</p>
+                    <p className="text-sm text-muted-foreground">{stat.label}</p>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
-        <Card>
-           <CardHeader>
-            <CardTitle>Support</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Button className="w-full" variant="outline">
-                <LifeBuoy className="mr-2 h-4 w-4"/>
-                Contact Support
-            </Button>
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader>
+              <CardTitle>Support</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Button className="w-full" variant="outline">
+                  <LifeBuoy className="mr-2 h-4 w-4"/>
+                  Contact Support
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </MainLayout>
   );

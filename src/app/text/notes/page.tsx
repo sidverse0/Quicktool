@@ -6,7 +6,7 @@ import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { FileText, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Slider } from "@/components/ui/slider";
@@ -93,65 +93,42 @@ export default function HandwrittenNotesPage() {
 
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-full">
       <PageHeader title="Hand-written Notes" showBackButton />
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
-          <Card>
-            <CardHeader>
-                <CardTitle>Live Preview</CardTitle>
-                <CardDescription>A preview of your note.</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <div 
-                    className="w-full aspect-[4/5] max-h-[500px] p-5 bg-white rounded-lg border shadow-inner overflow-y-auto bg-[linear-gradient(to_bottom,transparent_29px,hsl(var(--primary))_30px),linear-gradient(to_right,transparent_29px,hsl(var(--primary))_30px)] bg-size-[30px_30px]"
-                    style={{ backgroundPosition: "-1px -1px", backgroundOrigin: "content-box", backgroundColor: "#fff" }}
-                >
-                    <div style={noteStyle}>{text || "Start typing..."}</div>
-                </div>
-            </CardContent>
-          </Card>
+      <div className="flex-1 flex flex-col p-4 space-y-4">
+        <div 
+            className="flex-1 min-h-0 w-full p-5 bg-white rounded-lg border shadow-inner overflow-y-auto bg-[linear-gradient(to_bottom,transparent_29px,hsl(var(--primary))_30px),linear-gradient(to_right,transparent_29px,hsl(var(--primary))_30px)] bg-size-[30px_30px]"
+            style={{ backgroundPosition: "-1px -1px", backgroundOrigin: "content-box", backgroundColor: "#fff" }}
+        >
+            <div style={noteStyle}>{text || "Start typing..."}</div>
+        </div>
           
-          <Card>
-              <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <FileText className="mr-2 h-5 w-5 text-primary"/>
-                    Customize
-                  </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-6">
+        <div className="space-y-6">
+            <div className="space-y-2">
+                <Label htmlFor="noteText">Text</Label>
+                <Textarea 
+                    id="noteText"
+                    value={text} 
+                    onChange={e => setText(e.target.value)} 
+                    placeholder="Write your notes here..."
+                    rows={3}
+                />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
-                    <Label htmlFor="noteText">Text</Label>
-                    <Textarea 
-                        id="noteText"
-                        value={text} 
-                        onChange={e => setText(e.target.value)} 
-                        placeholder="Write your notes here..."
-                        rows={5}
-                    />
+                    <Label htmlFor="color">Ink Color</Label>
+                    <Input id="color" type="color" value={color} onChange={e => setColor(e.target.value)} className="p-1 h-10 w-full" />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                        <Label htmlFor="color">Ink Color</Label>
-                        <Input id="color" type="color" value={color} onChange={e => setColor(e.target.value)} className="p-1 h-10 w-full" />
-                    </div>
-                     <div className="space-y-2">
-                        <Label>Font Size: {fontSize}px</Label>
-                        <Slider value={[fontSize]} onValueChange={([val]) => setFontSize(val)} min={12} max={48} step={1} />
-                    </div>
+                    <Label>Font Size: {fontSize}px</Label>
+                    <Slider value={[fontSize]} onValueChange={([val]) => setFontSize(val)} min={12} max={48} step={1} />
                 </div>
-              </CardContent>
-          </Card>
+            </div>
+        </div>
 
-          <Card>
-             <CardHeader>
-                <CardTitle>Generate</CardTitle>
-             </CardHeader>
-             <CardContent>
-                <Button className="w-full" onClick={handleGenerate} disabled={isProcessing}>
-                    {isProcessing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : "Generate Note"}
-                </Button>
-             </CardContent>
-          </Card>
+        <Button className="w-full" onClick={handleGenerate} disabled={isProcessing}>
+            {isProcessing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : "Generate Note"}
+        </Button>
 
       </div>
     </div>

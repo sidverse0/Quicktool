@@ -36,7 +36,7 @@ export default function ResizeResultPage() {
 
     if (loading || !resizedUrl) {
         return (
-             <div className="flex flex-col min-h-screen">
+             <div className="flex flex-col h-full">
                 <PageHeader title="Resizing Result" showBackButton />
                 <div className="flex-1 flex items-center justify-center">
                     <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -47,34 +47,28 @@ export default function ResizeResultPage() {
 
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-full">
       <PageHeader title="Resizing Result" showBackButton />
-      <div className="flex-1 overflow-y-auto p-4 md:p-6">
-        <div className="w-full max-w-lg mx-auto space-y-4">
-            <Card>
-                <CardHeader><CardTitle>Resized Image</CardTitle></CardHeader>
-                <CardContent>
-                    <div className="relative w-full h-auto aspect-square border rounded-lg flex items-center justify-center bg-secondary/50">
-                        <Image src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain p-2" />
-                    </div>
-                </CardContent>
-            </Card>
-             <Card>
-                <CardHeader>
-                    <CardTitle>Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                    <a href={resizedUrl} download={fileName}>
-                        <Button className="w-full">
-                            <Download className="mr-2 h-4 w-4" /> Download
-                        </Button>
-                    </a>
-                    <Button variant="secondary" className="w-full" onClick={handleStartOver}>
-                        <RefreshCw className="mr-2 h-4 w-4" /> Resize Another
+      <div className="flex-1 flex flex-col p-4 space-y-4 justify-center">
+          <Card className="shadow-none border-none">
+            <CardContent className="p-0">
+                <div className="relative w-full aspect-square">
+                    <Image src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain" />
+                </div>
+            </CardContent>
+          </Card>
+           <Card className="shadow-none border-none">
+            <CardContent className="p-0 space-y-2">
+                <a href={resizedUrl} download={fileName}>
+                    <Button className="w-full">
+                        <Download className="mr-2 h-4 w-4" /> Download
                     </Button>
-                </CardContent>
-            </Card>
-        </div>
+                </a>
+                <Button variant="secondary" className="w-full" onClick={handleStartOver}>
+                    <RefreshCw className="mr-2 h-4 w-4" /> Resize Another
+                </Button>
+            </CardContent>
+          </Card>
       </div>
     </div>
   );

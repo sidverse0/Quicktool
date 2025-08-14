@@ -8,7 +8,7 @@ import FileUploader from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Droplet, Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -55,7 +55,6 @@ export default function WatermarkPage() {
     
     setIsProcessing(true);
 
-    // Use a timeout to ensure the state updates and the loader shows
     setTimeout(() => {
         const img = document.createElement("img");
         img.src = originalUrl;
@@ -70,7 +69,6 @@ export default function WatermarkPage() {
             canvas.height = img.naturalHeight;
             ctx.drawImage(img, 0, 0);
 
-            // Watermark styles
             const scaledFontSize = (fontSize / 800) * canvas.width;
             ctx.font = `bold ${scaledFontSize}px Arial`;
             ctx.fillStyle = color;
@@ -79,10 +77,9 @@ export default function WatermarkPage() {
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
-            // Position
             let x = canvas.width / 2;
             let y = canvas.height / 2;
-            const margin = Math.max(20, canvas.width * 0.02);
+            const margin = Math.max(20, canvas.width * 0.05);
 
             switch (position) {
                 case "top-left": x = margin; y = margin; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; break;
@@ -130,83 +127,74 @@ export default function WatermarkPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-full">
       <PageHeader title="Image Watermarker" showBackButton />
-      <div className="flex-1 overflow-y-auto p-4 md:p-6">
-        <Card className="w-full max-w-lg mx-auto">
-          {!originalUrl ? (
-            <>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Droplet className="mr-2 h-5 w-5 text-primary" />
-                  Upload an Image
-                </CardTitle>
-                <CardDescription>Select an image to add a text watermark.</CardDescription>
-              </CardHeader>
-              <CardContent>
+      <div className="flex-1 flex flex-col p-4 space-y-4">
+        {!originalUrl ? (
+          <div className="flex-1 flex items-center justify-center">
+             <Card className="w-full max-w-md shadow-none border-none">
+              <CardContent className="p-0">
                 <FileUploader onFileSelect={handleFileSelect} />
               </CardContent>
-            </>
-          ) : (
-            <CardContent className="pt-6">
-              <div className="space-y-4">
-                <div className={cn(
-                    "relative w-full h-64 border-2 border-dashed rounded-lg flex items-center justify-center bg-secondary/50",
-                    "transition-all duration-300 ease-in-out"
-                  )}>
-                  <Image src={originalUrl} alt="Original" layout="fill" className="rounded-lg object-contain p-2" />
-                  <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7 rounded-full z-10" onClick={handleReset}>
-                    <X className="h-4 w-4" />
-                  </Button>
+            </Card>
+          </div>
+        ) : (
+          <>
+            <div className="flex-1 min-h-0 flex items-center justify-center">
+                <div className="relative w-full h-full">
+                    <Image src={originalUrl} alt="Original" layout="fill" className="rounded-lg object-contain" />
+                    <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7 rounded-full z-10" onClick={handleReset}>
+                        <X className="h-4 w-4" />
+                    </Button>
                 </div>
-                
-                <div className="space-y-2">
-                    <Label htmlFor="watermarkText">Watermark Text</Label>
-                    <Input id="watermarkText" value={watermarkText} onChange={e => setWatermarkText(e.target.value)} />
-                </div>
-                
-                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                        <Label>Position</Label>
-                        <Select value={position} onValueChange={setPosition}>
-                            <SelectTrigger><SelectValue /></SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="top-left">Top Left</SelectItem>
-                                <SelectItem value="top-center">Top Center</SelectItem>
-                                <SelectItem value="top-right">Top Right</SelectItem>
-                                <SelectItem value="center-left">Center Left</SelectItem>
-                                <SelectItem value="center">Center</SelectItem>
-                                <SelectItem value="center-right">Center Right</SelectItem>
-                                <SelectItem value="bottom-left">Bottom Left</SelectItem>
-                                <SelectItem value="bottom-center">Bottom Center</SelectItem>
-                                <SelectItem value="bottom-right">Bottom Right</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                     <div className="space-y-2">
-                        <Label htmlFor="color">Text Color</Label>
-                        <Input id="color" type="color" value={color} onChange={e => setColor(e.target.value)} className="p-1 h-10 w-full" />
-                    </div>
-                 </div>
-
-                 <div className="space-y-2">
-                    <Label>Font Size: {fontSize}px (relative)</Label>
-                    <Slider value={[fontSize]} onValueChange={([val]) => setFontSize(val)} min={8} max={128} step={1} />
-                </div>
-
-                <div className="space-y-2">
-                    <Label>Opacity: {opacity}%</Label>
-                    <Slider value={[opacity]} onValueChange={([val]) => setOpacity(val)} min={0} max={100} step={1} />
-                </div>
-
-
-                <Button className="w-full" onClick={handleWatermark} disabled={isProcessing}>
-                  {isProcessing ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Applying...</> : <><Droplet className="mr-2 h-4 w-4" />Add Watermark</>}
-                </Button>
+            </div>
+            <div className="space-y-4 overflow-y-auto">
+              <div className="space-y-2">
+                  <Label htmlFor="watermarkText">Watermark Text</Label>
+                  <Input id="watermarkText" value={watermarkText} onChange={e => setWatermarkText(e.target.value)} />
               </div>
-            </CardContent>
-          )}
-        </Card>
+              
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                      <Label>Position</Label>
+                      <Select value={position} onValueChange={setPosition}>
+                          <SelectTrigger><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                              <SelectItem value="top-left">Top Left</SelectItem>
+                              <SelectItem value="top-center">Top Center</SelectItem>
+                              <SelectItem value="top-right">Top Right</SelectItem>
+                              <SelectItem value="center-left">Center Left</SelectItem>
+                              <SelectItem value="center">Center</SelectItem>
+                              <SelectItem value="center-right">Center Right</SelectItem>
+                              <SelectItem value="bottom-left">Bottom Left</SelectItem>
+                              <SelectItem value="bottom-center">Bottom Center</SelectItem>
+                              <SelectItem value="bottom-right">Bottom Right</SelectItem>
+                          </SelectContent>
+                      </Select>
+                  </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="color">Text Color</Label>
+                      <Input id="color" type="color" value={color} onChange={e => setColor(e.target.value)} className="p-1 h-10 w-full" />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Font Size: {fontSize}px (relative)</Label>
+                  <Slider value={[fontSize]} onValueChange={([val]) => setFontSize(val)} min={8} max={128} step={1} />
+              </div>
+
+              <div className="space-y-2">
+                  <Label>Opacity: {opacity}%</Label>
+                  <Slider value={[opacity]} onValueChange={([val]) => setOpacity(val)} min={0} max={100} step={1} />
+              </div>
+
+
+              <Button className="w-full" onClick={handleWatermark} disabled={isProcessing}>
+                {isProcessing ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Applying...</> : <><Droplet className="mr-2 h-4 w-4" />Add Watermark</>}
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

@@ -6,22 +6,23 @@ import { QrCode } from "lucide-react";
 const qrTools = [
   {
     title: "QR Code Maker",
-    description: "Generate QR codes for links, text & more.",
-    icon: <QrCode className="h-8 w-8" />,
     href: "/qr/maker",
-    color: 'from-red-500 to-red-600',
+    imgSrc: "https://placehold.co/600x400.png",
+    imgHint: "qr code"
   },
 ];
 
 export default function QrPage() {
   return (
     <MainLayout>
-      <PageHeader title="QR Tools" showBackButton/>
-      <div className="p-4 md:p-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {qrTools.map((tool) => (
-            <ToolCard key={tool.href} {...tool} />
-          ))}
+       <div className="flex flex-col h-full">
+        <PageHeader title="QR Tools" showBackButton/>
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="grid grid-cols-2 gap-4">
+            {qrTools.map((tool) => (
+              <ToolCard key={tool.href} {...tool} />
+            ))}
+          </div>
         </div>
       </div>
     </MainLayout>

@@ -7,10 +7,9 @@ import { Scissors, Loader2, X } from "lucide-react";
 import PageHeader from "@/components/layout/page-header";
 import FileUploader from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { removePhotoBackground } from "@/ai/flows/remove-photo-background";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
 
 export default function RemoveBackgroundPage() {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -67,47 +66,34 @@ export default function RemoveBackgroundPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-full">
       <PageHeader title="Background Remover" showBackButton />
-      <div className="flex-1 overflow-y-auto p-4 md:p-6">
-        <Card className="w-full max-w-lg mx-auto">
-          {!originalPhoto ? (
-            <>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Scissors className="mr-2 h-5 w-5 text-primary" />
-                  Upload an Image
-                </CardTitle>
-                <CardDescription>
-                  Our AI will automatically remove the background for you.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <FileUploader onFileSelect={handleFileSelect} />
-              </CardContent>
-            </>
-          ) : (
-            <CardContent className="pt-6 space-y-4">
-               <div className={cn(
-                  "relative w-full h-64 border-2 border-dashed rounded-lg flex items-center justify-center bg-secondary/50",
-                  "transition-all duration-300 ease-in-out"
-                )}>
-                <Image src={originalPhoto} alt="Original Preview" layout="fill" className="rounded-lg object-contain p-2" />
-                <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7 rounded-full z-10" onClick={handleReset}>
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-
-              <Button className="w-full" onClick={handleRemoveBackground} disabled={isProcessing}>
-                {isProcessing ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Removing Background...</>
-                ) : (
-                  <><Scissors className="mr-2 h-4 w-4" />Remove Background</>
-                )}
-              </Button>
-            </CardContent>
-          )}
-        </Card>
+      <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
+        {!originalPhoto ? (
+            <Card className="shadow-none border-none">
+                <CardContent className="p-0">
+                    <FileUploader onFileSelect={handleFileSelect} />
+                </CardContent>
+            </Card>
+        ) : (
+        <>
+            <div className="flex-1 min-h-0 flex items-center justify-center">
+                <div className="relative w-full h-full">
+                    <Image src={originalPhoto} alt="Original Preview" layout="fill" className="rounded-lg object-contain" />
+                    <Button variant="destructive" size="icon" className="absolute top-2 right-2 h-7 w-7 rounded-full z-10" onClick={handleReset}>
+                        <X className="h-4 w-4" />
+                    </Button>
+                </div>
+            </div>
+            <Button className="w-full" onClick={handleRemoveBackground} disabled={isProcessing}>
+            {isProcessing ? (
+                <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Removing Background...</>
+            ) : (
+                <><Scissors className="mr-2 h-4 w-4" />Remove Background</>
+            )}
+            </Button>
+        </>
+        )}
       </div>
     </div>
   );

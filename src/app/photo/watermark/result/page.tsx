@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Download, RefreshCw, Loader2 } from "lucide-react";
 
 export default function WatermarkResultPage() {
@@ -35,7 +35,7 @@ export default function WatermarkResultPage() {
 
     if (loading || !watermarkedUrl) {
         return (
-             <div className="flex flex-col min-h-screen">
+             <div className="flex flex-col h-full">
                 <PageHeader title="Result" showBackButton />
                 <div className="flex-1 flex items-center justify-center">
                     <Loader2 className="h-10 w-10 animate-spin text-primary" />
@@ -46,34 +46,28 @@ export default function WatermarkResultPage() {
 
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-full">
       <PageHeader title="Result" showBackButton />
-      <div className="flex-1 overflow-y-auto p-4 md:p-6">
-        <div className="w-full max-w-lg mx-auto space-y-4">
-            <Card>
-                <CardHeader><CardTitle>Watermarked Image</CardTitle></CardHeader>
-                <CardContent>
-                    <div className="relative w-full h-auto aspect-square border rounded-lg flex items-center justify-center bg-secondary/50">
-                        <Image src={watermarkedUrl} alt="Watermarked Image" layout="fill" className="rounded-lg object-contain p-2" />
-                    </div>
-                </CardContent>
-            </Card>
-             <Card>
-                <CardHeader>
-                    <CardTitle>Actions</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-2">
-                    <a href={watermarkedUrl} download={fileName}>
-                        <Button className="w-full">
-                            <Download className="mr-2 h-4 w-4" /> Download
-                        </Button>
-                    </a>
-                    <Button variant="secondary" className="w-full" onClick={handleStartOver}>
-                        <RefreshCw className="mr-2 h-4 w-4" /> Watermark Another
+      <div className="flex-1 flex flex-col justify-center p-4 space-y-4">
+        <Card className="shadow-none border-none">
+            <CardContent className="p-0">
+                <div className="relative w-full aspect-square">
+                    <Image src={watermarkedUrl} alt="Watermarked Image" layout="fill" className="rounded-lg object-contain" />
+                </div>
+            </CardContent>
+        </Card>
+        <Card className="shadow-none border-none">
+            <CardContent className="p-0 space-y-2">
+                <a href={watermarkedUrl} download={fileName}>
+                    <Button className="w-full">
+                        <Download className="mr-2 h-4 w-4" /> Download
                     </Button>
-                </CardContent>
-            </Card>
-        </div>
+                </a>
+                <Button variant="secondary" className="w-full" onClick={handleStartOver}>
+                    <RefreshCw className="mr-2 h-4 w-4" /> Watermark Another
+                </Button>
+            </CardContent>
+        </Card>
       </div>
     </div>
   );

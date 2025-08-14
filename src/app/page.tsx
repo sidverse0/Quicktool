@@ -4,7 +4,7 @@ import MainLayout from '@/components/layout/main-layout';
 export default function Home() {
   return (
     <MainLayout>
-      <div className="flex flex-col h-[calc(100vh-8rem)] p-4">
+      <div className="flex flex-col h-full p-4">
         <div className="flex flex-col items-center justify-center text-center flex-grow">
           <div className="rounded-full overflow-hidden h-24 w-24 flex items-center justify-center bg-primary/10 mb-4 border-4 border-primary/20 shadow-lg">
             <Image src="https://i.postimg.cc/kXnSKfgf/wrench.png" alt="Quick Tool Logo" width={64} height={64} className="object-contain" />
