@@ -1,3 +1,5 @@
+"use client";
+
 import MainLayout from "@/components/layout/main-layout";
 import PageHeader from "@/components/layout/page-header";
 import ToolCard from "@/components/tool-card";
