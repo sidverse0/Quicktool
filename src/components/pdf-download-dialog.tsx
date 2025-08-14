@@ -89,9 +89,3 @@ export function PdfDownloadDialog({
     </AlertDialog>
   );
 }
-
-declare module 'react' {
-    interface InputHTMLAttributes<T> extends HTMLAttributes<T> {
-        addonAfter?: string;
-    }
-}
