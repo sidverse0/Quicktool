@@ -17,12 +17,16 @@ function QRResult() {
   const [borderColor, setBorderColor] = useState("hsl(var(--border))");
 
   useEffect(() => {
-    const text = searchParams.get('text');
-    const colorParam = searchParams.get('color')?.substring(1); // remove #
-    const bgColor = searchParams.get('bgColor')?.substring(1); // remove #
-    const toolColor = sessionStorage.getItem("toolColor");
+    const textFromUrl = searchParams.get('text');
+    const colorParam = searchParams.get('color')?.substring(1) || '000000';
+    const bgColor = searchParams.get('bgColor')?.substring(1) || 'FFFFFF';
     
-    if (text && colorParam && bgColor) {
+    const textFromSession = sessionStorage.getItem("qrImageDataUrl");
+    const toolColor = sessionStorage.getItem("toolColor");
+
+    const text = textFromSession || textFromUrl;
+
+    if (text) {
       const url = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
         text
       )}&size=512x512&margin=20&format=png&color=${colorParam}&bgcolor=${bgColor}`;
@@ -31,6 +35,7 @@ function QRResult() {
           setBorderColor(toolColor);
       }
     } else {
+      // If no text from either source, go back.
       router.replace('/qr/maker');
     }
   }, [searchParams, router]);
@@ -55,7 +60,15 @@ function QRResult() {
 
   const handleStartOver = () => {
     sessionStorage.removeItem("toolColor");
-    router.push('/qr/maker');
+    sessionStorage.removeItem("qrImageDataUrl");
+    // A bit of a guess here, but usually the user wants to go back to the start page
+    // for that tool. Since this result page is shared, we can't be 100% sure.
+    // A simple router.back() or a more specific path might be needed depending on UX.
+    if (sessionStorage.getItem("qrImageDataUrl")) {
+        router.push('/qr/image');
+    } else {
+        router.push('/qr/maker');
+    }
   };
 
   return (

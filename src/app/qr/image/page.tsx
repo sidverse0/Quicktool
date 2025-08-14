@@ -51,13 +51,9 @@ export default function ImageToQrPage() {
     // The image data URL can be very long, which might create a QR code
     // that is too dense to be scanned by some readers. This is a limitation
     // of storing image data directly in a QR code.
-    const params = new URLSearchParams({
-        text: imageUrl,
-        color: '000000',
-        bgColor: 'FFFFFF',
-    });
+    sessionStorage.setItem("qrImageDataUrl", imageUrl);
     sessionStorage.setItem("toolColor", toolColor);
-    router.push(`/qr/maker/result?${params.toString()}`);
+    router.push(`/qr/maker/result`);
   };
 
   const handleReset = () => {
