@@ -110,7 +110,7 @@ export default function ProfilePage() {
               </CardHeader>
               <CardContent>
                   <Button className="w-full" onClick={handleUnlock}>
-                     {userData.coins >= PREMIUM_COST ? `Unlock for ${PREMIUM_COST} Coins` : `Unlock for 100 INR`}
+                     {userData.coins >= PREMIUM_COST ? `Unlock for ${PREMIUM_COST} Coins` : `Unlock for 100 INR or ${PREMIUM_COST} Coins`}
                   </Button>
               </CardContent>
             </Card>
