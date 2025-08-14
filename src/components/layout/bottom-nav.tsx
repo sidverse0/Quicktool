@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Image, QrCode, Settings, User } from "lucide-react";
+import { Home, Image, QrCode, User } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 const navItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/photo", label: "Photo", icon: Image },
   { href: "/qr", label: "QR", icon: QrCode },
-  { href: "/settings", label: "Settings", icon: Settings },
   { href: "/profile", label: "Profile", icon: User },
 ];
 
@@ -17,8 +17,8 @@ export default function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-t">
-      <div className="flex justify-around items-center h-16 max-w-md mx-auto">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-t">
+      <div className="flex justify-around items-stretch h-16 max-w-md mx-auto">
         {navItems.map((item) => {
           const isActive =
             item.href === "/"
@@ -29,19 +29,20 @@ export default function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex flex-col items-center justify-center text-muted-foreground hover:text-primary transition-colors w-16",
-                isActive && "text-primary"
+                "relative flex flex-col items-center justify-center text-muted-foreground hover:text-primary transition-colors w-1/4",
+                isActive ? "text-primary" : ""
               )}
             >
               <item.icon className="h-6 w-6" />
-              <span
-                className={cn(
-                  "text-xs font-medium transition-all duration-200",
-                  isActive ? "opacity-100" : "opacity-0"
-                )}
-              >
-                {item.label}
-              </span>
+              <span className="text-xs font-medium">{item.label}</span>
+              {isActive && (
+                <motion.div
+                  className="absolute bottom-1 w-6 h-1 bg-primary rounded-full"
+                  layoutId="active-indicator"
+                  initial={false}
+                  transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                />
+              )}
             </Link>
           );
         })}
