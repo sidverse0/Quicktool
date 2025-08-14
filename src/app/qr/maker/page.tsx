@@ -1,104 +1,43 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Text, Download, Loader2, Palette } from "lucide-react";
+import { Text, Palette, QrCode } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 export default function QrMakerPage() {
   const [text, setText] = useState("https://firebase.google.com/");
-  const [qrCodeUrl, setQrCodeUrl] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [debouncedText, setDebouncedText] = useState(text);
   const [color, setColor] = useState("#000000");
   const [bgColor, setBgColor] = useState("#FFFFFF");
+  const router = useRouter();
+  const { toast } = useToast();
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedText(text);
-    }, 500);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [text]);
-
-  useEffect(() => {
-    if (debouncedText) {
-      generateQrCode();
-    } else {
-      setQrCodeUrl("");
+  const handleGenerate = () => {
+    if (!text.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Input is empty",
+        description: "Please enter some text or a URL.",
+      });
+      return;
     }
-  }, [debouncedText, color, bgColor]);
-
-  const generateQrCode = () => {
-    setIsLoading(true);
-    const colorHex = color.substring(1);
-    const bgColorHex = bgColor.substring(1);
-    const url = `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
-      debouncedText
-    )}&size=512x512&margin=20&format=png&color=${colorHex}&bgcolor=${bgColorHex}`;
-    setQrCodeUrl(url);
-  };
-
-
-  const handleDownload = async () => {
-    if (!qrCodeUrl) return;
-    try {
-      const response = await fetch(qrCodeUrl);
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "qrcode.png";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Failed to download QR code", error);
-    }
+    const params = new URLSearchParams({
+        text,
+        color,
+        bgColor,
+    });
+    router.push(`/qr/maker/result?${params.toString()}`);
   };
 
   return (
     <div className="flex flex-col min-h-screen">
       <PageHeader title="QR Code Maker" showBackButton />
       <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
-        <Card>
-            <CardHeader>
-              <CardTitle>Your QR Code</CardTitle>
-            </CardHeader>
-            <CardContent className="flex items-center justify-center aspect-square bg-gray-100 rounded-lg">
-              {isLoading && (
-                <div className="flex flex-col items-center text-muted-foreground">
-                  <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                  <p className="mt-2">Generating...</p>
-                </div>
-              )}
-              {qrCodeUrl && (
-                <Image
-                  src={qrCodeUrl}
-                  alt="Generated QR Code"
-                  width={512}
-                  height={512}
-                  className={`transition-opacity duration-300 ${
-                    isLoading ? "opacity-0" : "opacity-100"
-                  }`}
-                  onLoad={() => setIsLoading(false)}
-                  unoptimized
-                />
-              )}
-              {!qrCodeUrl && !text && (
-                <div className="text-center text-muted-foreground">
-                  <p>Enter some text to generate a QR code.</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -140,16 +79,15 @@ export default function QrMakerPage() {
           </Card>
            <Card>
              <CardHeader>
-                <CardTitle>Download</CardTitle>
+                <CardTitle>Generate</CardTitle>
              </CardHeader>
              <CardContent>
                 <Button
                   className="w-full"
-                  onClick={handleDownload}
-                  disabled={!qrCodeUrl || isLoading}
+                  onClick={handleGenerate}
                 >
-                  <Download className="mr-2 h-4 w-4" />
-                  Download QR Code
+                  <QrCode className="mr-2 h-4 w-4" />
+                  Generate QR Code
                 </Button>
              </CardContent>
            </Card>

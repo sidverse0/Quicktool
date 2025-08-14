@@ -2,36 +2,35 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from 'next/navigation';
 import PageHeader from "@/components/layout/page-header";
 import FileUploader from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Palette, Loader2, X, Copy } from "lucide-react";
+import { Palette, Loader2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
-type ColorPalette = string[];
-
 export default function PaletteGeneratorPage() {
+  const [originalFile, setOriginalFile] = useState<File | null>(null);
   const [originalUrl, setOriginalUrl] = useState<string | null>(null);
-  const [palette, setPalette] = useState<ColorPalette | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
+  const router = useRouter();
 
   const handleFileSelect = (file: File) => {
+    setOriginalFile(file);
     const reader = new FileReader();
     reader.onload = (e) => {
       setOriginalUrl(e.target?.result as string);
-      setPalette(null); // Reset palette on new image
     };
     reader.readAsDataURL(file);
   };
   
   const handleGeneratePalette = () => {
-    if (!originalUrl) return;
+    if (!originalUrl || !originalFile) return;
     
     setIsProcessing(true);
-    setPalette(null);
 
     const img = document.createElement("img");
     img.src = originalUrl;
@@ -52,19 +51,22 @@ export default function PaletteGeneratorPage() {
         const colorCounts: { [key: string]: number } = {};
         
         for (let i = 0; i < imageData.length; i += 4) {
-            // Quantize colors to reduce the number of unique colors
             const r = Math.round(imageData[i] / 32) * 32;
             const g = Math.round(imageData[i + 1] / 32) * 32;
             const b = Math.round(imageData[i + 2] / 32) * 32;
 
-            if (imageData[i+3] < 128) continue; // ignore transparent pixels
+            if (imageData[i+3] < 128) continue;
             
             const hex = `#${(r).toString(16).padStart(2, '0')}${(g).toString(16).padStart(2, '0')}${(b).toString(16).padStart(2, '0')}`;
             colorCounts[hex] = (colorCounts[hex] || 0) + 1;
         }
 
         const sortedColors = Object.keys(colorCounts).sort((a, b) => colorCounts[b] - colorCounts[a]);
-        setPalette(sortedColors.slice(0, 6));
+        const palette = sortedColors.slice(0, 6);
+        
+        sessionStorage.setItem("paletteOriginalUrl", originalUrl);
+        sessionStorage.setItem("paletteResult", JSON.stringify(palette));
+        router.push('/photo/palette-generator/result');
 
       } catch (error) {
         toast({
@@ -72,7 +74,6 @@ export default function PaletteGeneratorPage() {
             title: "Error",
             description: "Could not generate palette. The image might be from a restricted source.",
         });
-      } finally {
         setIsProcessing(false);
       }
     };
@@ -84,14 +85,9 @@ export default function PaletteGeneratorPage() {
 
   const handleReset = () => {
     setOriginalUrl(null);
-    setPalette(null);
+    setOriginalFile(null);
     setIsProcessing(false);
   };
-  
-  const handleCopy = (color: string) => {
-    navigator.clipboard.writeText(color);
-    toast({ title: "Copied!", description: `${color} copied to clipboard.` });
-  }
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -127,23 +123,6 @@ export default function PaletteGeneratorPage() {
                 <Button className="w-full" onClick={handleGeneratePalette} disabled={isProcessing}>
                   {isProcessing ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating...</> : <><Palette className="mr-2 h-4 w-4" />Generate Palette</>}
                 </Button>
-                
-                {palette && (
-                    <div className="pt-4">
-                        <h3 className="text-lg font-semibold mb-2 text-center">Generated Palette</h3>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                            {palette.map(color => (
-                                <div key={color} onClick={() => handleCopy(color)} className="cursor-pointer group">
-                                    <div style={{ backgroundColor: color }} className="h-20 w-full rounded-md border" />
-                                    <div className="flex items-center justify-between p-2 bg-muted rounded-b-md">
-                                        <span className="font-mono text-sm">{color}</span>
-                                        <Copy className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                )}
               </div>
             </CardContent>
           )}

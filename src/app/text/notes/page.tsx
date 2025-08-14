@@ -1,24 +1,24 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { FileText, Download, Loader2 } from "lucide-react";
+import { FileText, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 
 export default function HandwrittenNotesPage() {
   const [text, setText] = useState("This is a sample note.\nYou can write multiple lines here.");
   const [color, setColor] = useState("#1E40AF"); // A nice blue ink color
   const [fontSize, setFontSize] = useState(24);
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const previewRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const noteStyle: React.CSSProperties = {
     fontFamily: "'Kalam', cursive",
@@ -28,26 +28,34 @@ export default function HandwrittenNotesPage() {
     whiteSpace: 'pre-wrap',
   };
   
-  const handleDownload = () => {
+  const handleGenerate = () => {
     if (!text) {
         toast({ variant: "destructive", title: "Text is empty!" });
         return;
     }
     
-    setIsDownloading(true);
+    setIsProcessing(true);
 
     setTimeout(() => {
         try {
-            const canvas = canvasRef.current;
-            const preview = previewRef.current;
-            if (!canvas || !preview) throw new Error("Elements not found");
+            const tempDiv = document.createElement('div');
+            tempDiv.style.fontFamily = "'Kalam', cursive";
+            tempDiv.style.fontSize = `${fontSize}px`;
+            tempDiv.style.lineHeight = '1.6';
+            tempDiv.style.whiteSpace = 'pre-wrap';
+            tempDiv.style.position = 'absolute';
+            tempDiv.style.left = '-9999px';
+            tempDiv.style.padding = '20px';
+            tempDiv.innerText = text;
+            document.body.appendChild(tempDiv);
             
+            const canvas = document.createElement('canvas');
             const ctx = canvas.getContext("2d");
             if (!ctx) throw new Error("Canvas context not available");
 
             const dpr = window.devicePixelRatio || 1;
-            canvas.width = preview.offsetWidth * dpr;
-            canvas.height = preview.offsetHeight * dpr;
+            canvas.width = tempDiv.offsetWidth * dpr;
+            canvas.height = tempDiv.offsetHeight * dpr;
             
             ctx.scale(dpr, dpr);
             ctx.fillStyle = "#FFFFFF"; // White paper background
@@ -64,20 +72,21 @@ export default function HandwrittenNotesPage() {
             for (let i = 0; i < lines.length; i++) {
                 ctx.fillText(lines[i], padding, padding + (i * lineHeight));
             }
+            
+            document.body.removeChild(tempDiv);
 
-            const link = document.createElement("a");
-            link.download = "handwritten-note.png";
-            link.href = canvas.toDataURL("image/png");
-            link.click();
+            const dataUrl = canvas.toDataURL("image/png");
+            sessionStorage.setItem("noteImageDataUrl", dataUrl);
+            router.push('/text/notes/result');
             
         } catch (error) {
             toast({
                 variant: "destructive",
-                title: "Download Failed",
+                title: "Generation Failed",
                 description: "Could not generate the note image.",
             });
         } finally {
-            setIsDownloading(false);
+            setIsProcessing(false);
         }
     }, 100);
   };
@@ -89,18 +98,16 @@ export default function HandwrittenNotesPage() {
       <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6">
           <Card>
             <CardHeader>
-                <CardTitle>Your Note</CardTitle>
-                <CardDescription>This is a preview of your note.</CardDescription>
+                <CardTitle>Live Preview</CardTitle>
+                <CardDescription>A preview of your note.</CardDescription>
             </CardHeader>
             <CardContent>
                 <div 
-                    ref={previewRef} 
                     className="w-full aspect-[4/5] max-h-[500px] p-5 bg-white rounded-lg border shadow-inner overflow-y-auto bg-[linear-gradient(to_bottom,transparent_29px,hsl(var(--primary))_30px),linear-gradient(to_right,transparent_29px,hsl(var(--primary))_30px)] bg-size-[30px_30px]"
                     style={{ backgroundPosition: "-1px -1px", backgroundOrigin: "content-box", backgroundColor: "#fff" }}
                 >
                     <div style={noteStyle}>{text || "Start typing..."}</div>
                 </div>
-                 <canvas ref={canvasRef} className="hidden" />
             </CardContent>
           </Card>
           
@@ -137,12 +144,11 @@ export default function HandwrittenNotesPage() {
 
           <Card>
              <CardHeader>
-                <CardTitle>Download</CardTitle>
+                <CardTitle>Generate</CardTitle>
              </CardHeader>
              <CardContent>
-                <Button className="w-full" onClick={handleDownload} disabled={isDownloading}>
-                    {isDownloading ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : <Download className="mr-2 h-4 w-4" />}
-                    Download as PNG
+                <Button className="w-full" onClick={handleGenerate} disabled={isProcessing}>
+                    {isProcessing ? <Loader2 className="mr-2 h-4 w-4 animate-spin"/> : "Generate Note"}
                 </Button>
              </CardContent>
           </Card>
