@@ -9,6 +9,7 @@ import { FileText, Download, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 
 export default function HandwrittenNotesPage() {
   const [text, setText] = useState("This is a sample note.\nYou can write multiple lines here.");
