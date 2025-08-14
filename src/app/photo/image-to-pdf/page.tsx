@@ -24,7 +24,6 @@ export default function ImageToPdfPage() {
   const [imageFiles, setImageFiles] = useState<ImageFile[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const { toast } = useToast();
-  const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -82,7 +81,7 @@ export default function ImageToPdfPage() {
           const img = new (window as any).Image();
           img.src = imgData;
 
-          await new Promise<void>((resolve) => {
+          await new Promise<void>((resolve, reject) => {
             img.onload = () => {
               const imgWidth = img.width;
               const imgHeight = img.height;
@@ -100,15 +99,17 @@ export default function ImageToPdfPage() {
               doc.addImage(imgData, imageFiles[i].file.type.split('/')[1].toUpperCase(), x, y, newImgWidth, newImgHeight);
               resolve();
             }
+            img.onerror = reject;
           });
         }
         
-        const pdfDataUrl = doc.output('datauristring');
+        doc.save('converted.pdf');
         
-        sessionStorage.setItem("toolColor", toolColor);
-        sessionStorage.setItem("pdfDataUrl", pdfDataUrl);
-        sessionStorage.setItem("pdfFileName", `converted.pdf`);
-        router.push('/photo/image-to-pdf/result');
+        toast({
+          title: "Success!",
+          description: "Your PDF has been downloaded."
+        });
+
       } catch (error) {
         console.error(error);
         toast({
@@ -116,6 +117,7 @@ export default function ImageToPdfPage() {
             title: "Error",
             description: "Could not convert images to PDF.",
         });
+      } finally {
         setIsProcessing(false);
       }
     })();
