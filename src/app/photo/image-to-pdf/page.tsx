@@ -132,7 +132,7 @@ export default function ImageToPdfPage() {
   return (
     <div className="flex flex-col h-full">
       <PageHeader title="Image to PDF" showBackButton />
-      <div className="flex-1 flex flex-col p-4 space-y-4">
+      <div className="flex-1 flex flex-col p-4 space-y-4 min-h-0">
         {imageFiles.length === 0 ? (
           <div className="flex-1 flex items-center justify-center">
             <Card className="w-full max-w-md shadow-none border-none">
@@ -143,9 +143,9 @@ export default function ImageToPdfPage() {
           </div>
         ) : (
           <>
-            <div ref={scrollContainerRef} className="flex-1 min-h-0 p-2 border-2 border-dashed rounded-lg flex flex-wrap gap-2 overflow-y-auto content-start" style={{ borderColor: toolColor }}>
+            <div ref={scrollContainerRef} className="flex-1 min-h-0 p-2 border-2 border-dashed rounded-lg grid grid-cols-4 gap-2 overflow-y-auto content-start" style={{ borderColor: toolColor }}>
                 {imageFiles.map((imgFile, index) => (
-                    <div key={index} className="relative aspect-square w-20 h-20 flex-shrink-0">
+                    <div key={index} className="relative aspect-square w-full h-auto flex-shrink-0">
                         <Image src={imgFile.url} alt={`Preview ${index + 1}`} layout="fill" className="object-cover rounded-md" />
                         <Button
                             variant="destructive"
@@ -167,13 +167,13 @@ export default function ImageToPdfPage() {
                  />
                 <button 
                     onClick={handleAddMoreClick}
-                    className="flex-shrink-0 flex items-center justify-center aspect-square w-20 h-20 rounded-md border-2 border-dashed border-muted-foreground/50 hover:border-primary transition-colors group"
+                    className="flex-shrink-0 flex items-center justify-center aspect-square w-full h-auto rounded-md border-2 border-dashed border-muted-foreground/50 hover:border-primary transition-colors group"
                 >
                     <Plus className="h-8 w-8 text-muted-foreground/50 group-hover:text-primary"/>
                 </button>
             </div>
-            <Card className="shadow-none border-none pt-2">
-                <CardContent className="p-0">
+            <Card className="shadow-none border-none shrink-0">
+                <CardContent className="p-0 pt-4">
                     <Button className="w-full" onClick={handleConvert} disabled={isProcessing}>
                     {isProcessing ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Converting...</> : <><ImageUp className="mr-2 h-4 w-4" />Convert to PDF</>}
                     </Button>
