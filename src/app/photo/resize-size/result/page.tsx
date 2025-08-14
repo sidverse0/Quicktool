@@ -9,11 +9,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Download, RefreshCw } from "lucide-react";
 import LoadingIndicator from "@/components/layout/loading-indicator";
+import { DownloadDialog } from "@/components/download-dialog";
 
 export default function ResizeSizeResultPage() {
     const [originalUrl, setOriginalUrl] = useState<string | null>(null);
     const [resizedUrl, setResizedUrl] = useState<string | null>(null);
-    const [fileName, setFileName] = useState("resized-image.png");
+    const [fileName, setFileName] = useState("resized-image");
     const [originalSize, setOriginalSize] = useState<number | null>(null);
     const [resizedSize, setResizedSize] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
@@ -29,7 +30,7 @@ export default function ResizeSizeResultPage() {
         if (resized && original && name) {
             setOriginalUrl(original);
             setResizedUrl(resized);
-            setFileName(name);
+            setFileName(name.split('.')[0]);
             if(color) {
                 setBorderColor(color);
             }
@@ -88,11 +89,11 @@ export default function ResizeSizeResultPage() {
             </div>
         </div>
         <div className="space-y-2">
-            <a href={resizedUrl} download={fileName}>
+            <DownloadDialog dataUrl={resizedUrl} fileName={fileName}>
                 <Button className="w-full">
                     <Download className="mr-2 h-4 w-4" /> Download
                 </Button>
-            </a>
+            </DownloadDialog>
             <Button variant="secondary" className="w-full" onClick={handleStartOver}>
                 <RefreshCw className="mr-2 h-4 w-4" /> Compress Another
             </Button>

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Download, RefreshCw } from "lucide-react";
 import LoadingIndicator from "@/components/layout/loading-indicator";
 import QRCode from "react-qr-code";
+import { DownloadDialog } from "@/components/download-dialog";
 
 function QRResult() {
   const router = useRouter();
@@ -19,6 +20,7 @@ function QRResult() {
   const [qrBgColor, setQrBgColor] = useState("#FFFFFF");
   const [isLoading, setIsLoading] = useState(true);
   const [borderColor, setBorderColor] = useState("hsl(var(--border))");
+  const [dataUrl, setDataUrl] = useState<string | null>(null);
 
   useEffect(() => {
     const textFromUrl = searchParams.get('text');
@@ -38,35 +40,16 @@ function QRResult() {
     }
     setIsLoading(false);
   }, [searchParams, router]);
-
-  const handleDownload = () => {
-    if (!qrCodeRef.current) return;
-    
-    const svg = qrCodeRef.current.querySelector('svg');
-    if (!svg) return;
-
-    const svgData = new XMLSerializer().serializeToString(svg);
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    
-    const img = new Image();
-    img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
-        const pngFile = canvas.toDataURL("image/png");
-        
-        const link = document.createElement("a");
-        link.href = pngFile;
-        link.download = "qrcode.png";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
-    img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
-  };
-
+  
+   useEffect(() => {
+    if (qrCodeRef.current) {
+        const svg = qrCodeRef.current.querySelector('svg');
+        if (svg) {
+            const svgData = new XMLSerializer().serializeToString(svg);
+            setDataUrl(`data:image/svg+xml;base64,${btoa(svgData)}`);
+        }
+    }
+  }, [qrValue, qrColor, qrBgColor]);
 
   const handleStartOver = () => {
     sessionStorage.removeItem("toolColor");
@@ -104,15 +87,16 @@ function QRResult() {
             </div>
         </div>
         <div className="space-y-2">
-            <Button
-                className="w-full"
-                onClick={handleDownload}
-                disabled={!qrValue}
-            >
-                <Download className="mr-2 h-4 w-4" />
-                Download QR Code
-            </Button>
-                <Button variant="secondary" className="w-full" onClick={handleStartOver}>
+            <DownloadDialog dataUrl={dataUrl} fileName="qrcode">
+                <Button
+                    className="w-full"
+                    disabled={!qrValue}
+                >
+                    <Download className="mr-2 h-4 w-4" />
+                    Download QR Code
+                </Button>
+            </DownloadDialog>
+            <Button variant="secondary" className="w-full" onClick={handleStartOver}>
                 <RefreshCw className="mr-2 h-4 w-4" /> Create Another
             </Button>
         </div>

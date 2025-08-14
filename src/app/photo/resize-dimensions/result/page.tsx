@@ -8,10 +8,11 @@ import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Download, RefreshCw } from "lucide-react";
 import LoadingIndicator from "@/components/layout/loading-indicator";
+import { DownloadDialog } from "@/components/download-dialog";
 
 export default function ResizeResultPage() {
     const [resizedUrl, setResizedUrl] = useState<string | null>(null);
-    const [fileName, setFileName] = useState("resized-image.png");
+    const [fileName, setFileName] = useState("resized-image");
     const [loading, setLoading] = useState(true);
     const [borderColor, setBorderColor] = useState("hsl(var(--border))");
     const router = useRouter();
@@ -23,7 +24,7 @@ export default function ResizeResultPage() {
 
         if (resized && name) {
             setResizedUrl(resized);
-            setFileName(name);
+            setFileName(name.split('.')[0]);
             if (color) {
                 setBorderColor(color);
             }
@@ -61,11 +62,11 @@ export default function ResizeResultPage() {
             <Image src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain p-2" />
         </div>
         <div className="space-y-2">
-            <a href={resizedUrl} download={fileName}>
+            <DownloadDialog dataUrl={resizedUrl} fileName={fileName}>
                 <Button className="w-full">
                     <Download className="mr-2 h-4 w-4" /> Download
                 </Button>
-            </a>
+            </DownloadDialog>
             <Button variant="secondary" className="w-full" onClick={handleStartOver}>
                 <RefreshCw className="mr-2 h-4 w-4" /> Resize Another
             </Button>

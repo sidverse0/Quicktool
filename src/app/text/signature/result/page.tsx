@@ -8,6 +8,7 @@ import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Download, RefreshCw } from "lucide-react";
 import LoadingIndicator from "@/components/layout/loading-indicator";
+import { DownloadDialog } from "@/components/download-dialog";
 
 export default function SignatureResultPage() {
     const [signatureUrl, setSignatureUrl] = useState<string | null>(null);
@@ -56,11 +57,11 @@ export default function SignatureResultPage() {
             <Image src={signatureUrl} alt="Generated Signature" layout="fill" className="object-contain p-4" />
         </div>
         <div className="space-y-2">
-            <a href={signatureUrl} download="signature.png">
+            <DownloadDialog dataUrl={signatureUrl} fileName="signature">
                 <Button className="w-full">
                     <Download className="mr-2 h-4 w-4" /> Download
                 </Button>
-            </a>
+            </DownloadDialog>
             <Button variant="secondary" className="w-full" onClick={handleStartOver}>
                 <RefreshCw className="mr-2 h-4 w-4" /> Create Another
             </Button>

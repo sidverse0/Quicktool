@@ -8,6 +8,7 @@ import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Download, RefreshCw } from "lucide-react";
 import LoadingIndicator from "@/components/layout/loading-indicator";
+import { DownloadDialog } from "@/components/download-dialog";
 
 interface ConvertedImage {
   url: string;
@@ -66,11 +67,13 @@ export default function PdfToImageResultPage() {
               <p className="text-sm font-medium text-center">Page {image.page}</p>
               <div className="relative w-full aspect-[8.5/11] border-2 border-dashed rounded-lg bg-secondary" style={{ borderColor: toolColor }}>
                   <Image src={image.url} alt={`Page ${image.page}`} layout="fill" className="object-contain p-2" />
-                  <a href={image.url} download={`page-${image.page}.${imageType}`} className="absolute top-2 right-2">
+                  <div className="absolute top-2 right-2">
+                    <DownloadDialog dataUrl={image.url} fileName={`page-${image.page}`}>
                       <Button size="icon" className="h-9 w-9" style={{ backgroundColor: toolColor }}>
                           <Download className="h-5 w-5" />
                       </Button>
-                  </a>
+                    </DownloadDialog>
+                  </div>
               </div>
           </div>
         ))}
