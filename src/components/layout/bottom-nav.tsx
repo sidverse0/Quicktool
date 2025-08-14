@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Image as ImageIcon, QrCode, User } from "lucide-react";
+import { Home, Image as ImageIcon, QrCode, User, PenSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
@@ -10,6 +10,7 @@ const navItems = [
   { href: "/", label: "Home", icon: Home },
   { href: "/photo", label: "Photo", icon: ImageIcon },
   { href: "/qr", label: "QR", icon: QrCode },
+  { href: "/text", label: "Text", icon: PenSquare },
   { href: "/profile", label: "Profile", icon: User },
 ];
 
@@ -29,7 +30,7 @@ export default function BottomNav() {
               key={item.href}
               href={item.href}
               className={cn(
-                "relative flex flex-col items-center justify-center text-muted-foreground hover:text-primary transition-colors w-1/4 pt-1 group"
+                "relative flex flex-col items-center justify-center text-muted-foreground hover:text-primary transition-colors w-1/5 pt-1 group"
               )}
             >
               <div
