@@ -55,69 +55,72 @@ export default function WatermarkPage() {
     
     setIsProcessing(true);
 
-    const img = document.createElement("img");
-    img.src = originalUrl;
-    img.onload = () => {
-      try {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        if (!ctx) {
-            throw new Error("Could not get canvas context");
+    // Use a timeout to ensure the state updates and the loader shows
+    setTimeout(() => {
+        const img = document.createElement("img");
+        img.src = originalUrl;
+        img.onload = () => {
+        try {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+            if (!ctx) {
+                throw new Error("Could not get canvas context");
+            }
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            ctx.drawImage(img, 0, 0);
+
+            // Watermark styles
+            const scaledFontSize = (fontSize / 800) * canvas.width;
+            ctx.font = `bold ${scaledFontSize}px Arial`;
+            ctx.fillStyle = color;
+            ctx.globalAlpha = opacity / 100;
+            
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            // Position
+            let x = canvas.width / 2;
+            let y = canvas.height / 2;
+            const margin = Math.max(20, canvas.width * 0.02);
+
+            switch (position) {
+                case "top-left": x = margin; y = margin; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; break;
+                case "top-center": y = margin; ctx.textBaseline = 'top'; break;
+                case "top-right": x = canvas.width - margin; y = margin; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; break;
+                case "center-left": x = margin; ctx.textAlign = 'left'; break;
+                case "center-right": x = canvas.width - margin; ctx.textAlign = 'right'; break;
+                case "bottom-left": x = margin; y = canvas.height - margin; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; break;
+                case "bottom-center": y = canvas.height - margin; ctx.textBaseline = 'bottom'; break;
+                case "bottom-right": x = canvas.width - margin; y = canvas.height - margin; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; break;
+            }
+
+            ctx.fillText(watermarkText, x, y);
+
+            const watermarkedDataUrl = canvas.toDataURL(originalFile.type);
+            
+            sessionStorage.setItem("watermarkedImageDataUrl", watermarkedDataUrl);
+            sessionStorage.setItem("watermarkedImageFileName", `watermarked-${originalFile.name}`);
+            router.push('/photo/watermark/result');
+
+        } catch (error) {
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Could not add watermark.",
+            });
+            setIsProcessing(false);
         }
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
-        ctx.drawImage(img, 0, 0);
-
-        // Watermark styles
-        ctx.font = `bold ${fontSize}px Arial`;
-        ctx.fillStyle = color;
-        ctx.globalAlpha = opacity / 100;
-        
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-
-        // Position
-        let x = canvas.width / 2;
-        let y = canvas.height / 2;
-
-        const margin = 20;
-
-        switch (position) {
-            case "top-left": x = margin; y = margin; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; break;
-            case "top-center": y = margin; ctx.textBaseline = 'top'; break;
-            case "top-right": x = canvas.width - margin; y = margin; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; break;
-            case "center-left": x = margin; ctx.textAlign = 'left'; break;
-            case "center-right": x = canvas.width - margin; ctx.textAlign = 'right'; break;
-            case "bottom-left": x = margin; y = canvas.height - margin; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; break;
-            case "bottom-center": y = canvas.height - margin; ctx.textBaseline = 'bottom'; break;
-            case "bottom-right": x = canvas.width - margin; y = canvas.height - margin; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; break;
+        };
+        img.onerror = () => {
+            setIsProcessing(false);
+            toast({
+                variant: "destructive",
+                title: "Error",
+                description: "Could not load image.",
+            });
         }
-
-        ctx.fillText(watermarkText, x, y);
-
-        const watermarkedDataUrl = canvas.toDataURL(originalFile.type);
-        
-        sessionStorage.setItem("watermarkedImageDataUrl", watermarkedDataUrl);
-        sessionStorage.setItem("watermarkedImageFileName", `watermarked-${originalFile.name}`);
-        router.push('/photo/watermark/result');
-
-      } catch (error) {
-        toast({
-            variant: "destructive",
-            title: "Error",
-            description: "Could not add watermark.",
-        });
-        setIsProcessing(false);
-      }
-    };
-    img.onerror = () => {
-        setIsProcessing(false);
-        toast({
-            variant: "destructive",
-            title: "Error",
-            description: "Could not load image.",
-        });
-    }
+    }, 100);
   };
 
   const handleReset = () => {
@@ -187,7 +190,7 @@ export default function WatermarkPage() {
                  </div>
 
                  <div className="space-y-2">
-                    <Label>Font Size: {fontSize}px</Label>
+                    <Label>Font Size: {fontSize}px (relative)</Label>
                     <Slider value={[fontSize]} onValueChange={([val]) => setFontSize(val)} min={8} max={128} step={1} />
                 </div>
 
