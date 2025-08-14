@@ -8,11 +8,11 @@ import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
 const navItems = [
-  { href: "/", label: "Home", icon: Home, color: "text-primary" },
-  { href: "/photo", label: "Photo", icon: ImageIcon, color: "text-rose-500" },
-  { href: "/qr", label: "QR", icon: QrCode, color: "text-indigo-500" },
-  { href: "/text", label: "Text", icon: PenSquare, color: "text-teal-500" },
-  { href: "/profile", label: "Profile", icon: User, color: "text-amber-500" },
+  { href: "/", label: "Home", icon: Home, color: "text-primary", borderColor: "border-primary" },
+  { href: "/photo", label: "Photo", icon: ImageIcon, color: "text-rose-500", borderColor: "border-rose-500" },
+  { href: "/qr", label: "QR", icon: QrCode, color: "text-indigo-500", borderColor: "border-indigo-500" },
+  { href: "/text", label: "Text", icon: PenSquare, color: "text-teal-500", borderColor: "border-teal-500" },
+  { href: "/profile", label: "Profile", icon: User, color: "text-amber-500", borderColor: "border-amber-500" },
 ];
 
 export default function BottomNav() {
@@ -38,7 +38,7 @@ export default function BottomNav() {
                 className={cn(
                   "p-2 rounded-full transition-all border-2",
                   isActive
-                    ? "bg-primary/10 border-current"
+                    ? `bg-primary/10 ${item.borderColor}`
                     : "border-transparent text-muted-foreground group-hover:text-primary",
                   isActive && item.color
                 )}
