@@ -45,6 +45,13 @@ export default function ImageToPdfPage() {
     reader.readAsDataURL(file);
   };
   
+  const handleAdditionalFileSelect = (files: FileList | null) => {
+    if (!files) return;
+    for (let i = 0; i < files.length; i++) {
+        handleFileSelect(files[i]);
+    }
+  }
+
   const handleConvert = () => {
     if (imageFiles.length === 0) {
         toast({
@@ -130,7 +137,7 @@ export default function ImageToPdfPage() {
         ) : (
           <>
             <div className="flex-1 min-h-0 p-2 border-2 border-dashed rounded-lg" style={{ borderColor: toolColor }}>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2 overflow-y-auto h-full">
+                <div className="grid grid-cols-4 gap-2 overflow-y-auto h-full">
                     {imageFiles.map((imgFile, index) => (
                         <div key={index} className="relative aspect-square">
                             <Image src={imgFile.url} alt={`Preview ${index + 1}`} layout="fill" className="object-cover rounded-md" />
@@ -147,13 +154,14 @@ export default function ImageToPdfPage() {
                      <input 
                         type="file" 
                         ref={fileInputRef} 
-                        onChange={(e) => e.target.files && handleFileSelect(e.target.files[0])}
+                        onChange={(e) => handleAdditionalFileSelect(e.target.files)}
                         className="hidden"
                         accept="image/*"
+                        multiple
                      />
                     <button 
                         onClick={handleAddMoreClick}
-                        className="flex items-center justify-center aspect-square rounded-md border-2 border-dashed border-muted-foreground/50 hover:border-primary transition-colors"
+                        className="flex items-center justify-center aspect-square rounded-md border-2 border-dashed border-muted-foreground/50 hover:border-primary transition-colors group"
                     >
                         <Plus className="h-8 w-8 text-muted-foreground/50 group-hover:text-primary"/>
                     </button>
