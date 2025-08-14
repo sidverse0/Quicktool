@@ -4,17 +4,16 @@ import ToolCard from "@/components/tool-card";
 import {
   Maximize,
   Minimize,
-  Sparkles,
-  Scissors,
+  FileImage,
 } from "lucide-react";
 
 const photoTools = [
   {
-    title: "Background Remover",
-    description: "Erase backgrounds with AI precision.",
-    icon: <Scissors className="h-8 w-8" />,
-    href: "/photo/remove-background",
-    color: 'from-blue-500 to-blue-600',
+    title: "PDF to Image",
+    description: "Convert PDF pages to JPG/PNG images.",
+    icon: <FileImage className="h-8 w-8" />,
+    href: "/photo/pdf-to-image",
+    color: 'from-red-500 to-orange-500',
   },
   {
     title: "Dimension Resizer",
@@ -29,13 +28,6 @@ const photoTools = [
     icon: <Minimize className="h-8 w-8" />,
     href: "/photo/resize-size",
     color: 'from-yellow-500 to-yellow-600',
-  },
-  {
-    title: "Auto Enhancer",
-    description: "Improve photos with a single click.",
-    icon: <Sparkles className="h-8 w-8" />,
-    href: "/photo/enhance",
-    color: 'from-purple-500 to-purple-600',
   },
 ];
 
