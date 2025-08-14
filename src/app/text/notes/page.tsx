@@ -36,7 +36,7 @@ const fontOptions = [
 ];
 
 export default function HandwrittenNotesPage() {
-  const [text, setText] = useState("This is a sample note.\nYou can write multiple lines here.");
+  const [text, setText] = useState("This is a sample note. You can write multiple lines here and the text will automatically wrap to the next line when it reaches the end of the page.");
   const [inkColor, setInkColor] = useState("#1E40AF");
   const [bgColor, setBgColor] = useState("#FFFFFF");
   const [showLines, setShowLines] = useState(true);
@@ -62,6 +62,7 @@ export default function HandwrittenNotesPage() {
     color: inkColor,
     lineHeight: `${lineHeight}px`,
     whiteSpace: 'pre-wrap',
+    overflowWrap: 'break-word',
     backgroundColor: bgColor,
     backgroundSize: showLines ? `auto ${lineHeight}px` : undefined,
     backgroundImage: showLines ? `linear-gradient(to bottom, transparent ${lineHeight - 1}px, #aab5f1 1px)` : undefined,
@@ -92,18 +93,6 @@ export default function HandwrittenNotesPage() {
             const paddingTop = lineHeight * 0.25;
             const paddingBottom = 20;
 
-            const tempDiv = document.createElement('div');
-            tempDiv.style.fontFamily = fontFamily;
-            tempDiv.style.fontSize = `${fontSize}px`;
-            tempDiv.style.lineHeight = `${lineHeight}px`;
-            tempDiv.style.whiteSpace = 'pre-wrap';
-            tempDiv.style.position = 'absolute';
-            tempDiv.style.left = '-9999px';
-            tempDiv.style.paddingLeft = `${paddingX}px`;
-            tempDiv.style.paddingRight = `${paddingX}px`;
-            tempDiv.innerText = "A"; // for width calculation
-            document.body.appendChild(tempDiv);
-            
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext("2d");
             if (!ctx) throw new Error("Canvas context not available");
@@ -111,6 +100,7 @@ export default function HandwrittenNotesPage() {
             const dpr = window.devicePixelRatio || 1;
             const canvasWidth = (previewRef.current?.offsetWidth || 300);
             const canvasHeight = (lineHeight * FULL_PAGE_LINES) + paddingTop + paddingBottom;
+            const maxWidth = canvasWidth - (paddingX * 2);
 
             canvas.width = canvasWidth * dpr;
             canvas.height = canvasHeight * dpr;
@@ -120,8 +110,6 @@ export default function HandwrittenNotesPage() {
             ctx.fillStyle = bgColor;
             ctx.fillRect(0, 0, canvasWidth, canvasHeight);
             
-            const lines = text.split('\n');
-
             if (showLines) {
                 ctx.strokeStyle = '#aab5f1';
                 ctx.lineWidth = 1;
@@ -140,12 +128,28 @@ export default function HandwrittenNotesPage() {
             ctx.fillStyle = inkColor;
             ctx.textBaseline = 'top';
 
-            for (let i = 0; i < lines.length; i++) {
-                ctx.fillText(lines[i], paddingX, paddingTop + (i * lineHeight) - (fontSize * 0.2));
+            function wrapText(context: CanvasRenderingContext2D, text: string, x: number, y: number, maxWidth: number, lineHeight: number) {
+                const words = text.split(' ');
+                let line = '';
+                let lineIndex = 0;
+
+                for (let n = 0; n < words.length; n++) {
+                    const testLine = line + words[n] + ' ';
+                    const metrics = context.measureText(testLine);
+                    const testWidth = metrics.width;
+                    if (testWidth > maxWidth && n > 0) {
+                        context.fillText(line, x, y + (lineIndex * lineHeight) - (fontSize * 0.2));
+                        line = words[n] + ' ';
+                        lineIndex++;
+                    } else {
+                        line = testLine;
+                    }
+                }
+                context.fillText(line, x, y + (lineIndex * lineHeight) - (fontSize * 0.2));
             }
             
-            document.body.removeChild(tempDiv);
-
+            wrapText(ctx, text, paddingX, paddingTop, maxWidth, lineHeight);
+            
             const dataUrl = canvas.toDataURL("image/png");
             
             incrementToolUsage(toolName);
