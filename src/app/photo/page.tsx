@@ -15,6 +15,7 @@ const photoTools = [
     title: "PDF to Image",
     href: "/photo/pdf-to-image",
     icon: FileImage,
+    color: "#e85d5d",
     imgSrc: "https://placehold.co/600x400.png",
     imgHint: "file document"
   },
@@ -22,6 +23,7 @@ const photoTools = [
     title: "Dimension Resizer",
     href: "/photo/resize-dimensions",
     icon: Maximize,
+    color: "#5d87e8",
     imgSrc: "https://placehold.co/600x400.png",
     imgHint: "landscape resize"
   },
@@ -29,6 +31,7 @@ const photoTools = [
     title: "File Size Resizer",
     href: "/photo/resize-size",
     icon: Minimize,
+    color: "#5de899",
     imgSrc: "https://placehold.co/600x400.png",
     imgHint: "compress quality"
   },
@@ -36,6 +39,7 @@ const photoTools = [
     title: "Image Filters",
     href: "/photo/filters",
     icon: Palette,
+    color: "#e85dd5",
     imgSrc: "https://placehold.co/600x400.png",
     imgHint: "camera filters"
   },
@@ -43,6 +47,7 @@ const photoTools = [
     title: "Color Palette",
     href: "/photo/palette-generator",
     icon: Palette,
+    color: "#e8a05d",
     imgSrc: "https://placehold.co/600x400.png",
     imgHint: "color palette"
   },

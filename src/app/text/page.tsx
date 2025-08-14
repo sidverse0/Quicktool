@@ -10,6 +10,7 @@ const textTools = [
     title: "Calligraphy Signature",
     href: "/text/signature",
     icon: PenSquare,
+    color: "#5de8e2",
     imgSrc: "https://placehold.co/600x400.png",
     imgHint: "signature calligraphy"
   },
@@ -17,6 +18,7 @@ const textTools = [
     title: "Hand-written Notes",
     href: "/text/notes",
     icon: FileText,
+    color: "#e8d55d",
     imgSrc: "https://placehold.co/600x400.png",
     imgHint: "notebook paper"
   },

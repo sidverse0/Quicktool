@@ -10,6 +10,7 @@ const qrTools = [
     title: "QR Code Maker",
     href: "/qr/maker",
     icon: QrCode,
+    color: "#7a5de8",
     imgSrc: "https://placehold.co/600x400.png",
     imgHint: "qr code"
   },

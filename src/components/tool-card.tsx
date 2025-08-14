@@ -13,6 +13,7 @@ type ToolCardProps = {
   imgSrc: string;
   imgHint?: string;
   icon: LucideIcon;
+  color?: string;
 };
 
 export default function ToolCard({
@@ -21,6 +22,7 @@ export default function ToolCard({
   imgSrc,
   imgHint,
   icon: Icon,
+  color,
 }: ToolCardProps) {
   return (
     <Link href={href} className="group">
@@ -42,7 +44,7 @@ export default function ToolCard({
                     <div className="absolute inset-0 bg-black/50" />
                 </div>
                 <div className="absolute inset-0 flex flex-col items-center justify-center p-4">
-                    <Icon className="h-10 w-10 text-primary mb-2" />
+                    <Icon className="h-10 w-10 mb-2" style={{ color: color || 'hsl(var(--primary))' }} />
                     <h3 className="font-semibold text-white font-headline text-base text-center">
                         {title}
                     </h3>
