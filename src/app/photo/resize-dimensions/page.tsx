@@ -1,3 +1,5 @@
+"use client";
+
 import PageHeader from "@/components/layout/page-header";
 import FileUploader from "@/components/file-uploader";
 import { Button } from "@/components/ui/button";
