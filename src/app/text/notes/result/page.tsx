@@ -8,13 +8,14 @@ import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Download, RefreshCw } from "lucide-react";
 import LoadingIndicator from "@/components/layout/loading-indicator";
-import { DownloadDialog } from "@/components/download-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 export default function NoteResultPage() {
     const [noteUrl, setNoteUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [borderColor, setBorderColor] = useState("hsl(var(--border))");
     const router = useRouter();
+    const { toast } = useToast();
 
     useEffect(() => {
         const url = sessionStorage.getItem("noteImageDataUrl");
@@ -37,6 +38,20 @@ export default function NoteResultPage() {
         router.push("/text/notes");
     }
 
+    const handleDownload = () => {
+        if (!noteUrl) return;
+        const link = document.createElement("a");
+        link.href = noteUrl;
+        link.download = "handwritten-note.png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast({
+            title: "Download Started",
+            description: "Your note is downloading.",
+        });
+    }
+
     if (loading || !noteUrl) {
         return (
              <div className="flex flex-col h-full">
@@ -57,11 +72,9 @@ export default function NoteResultPage() {
             <Image src={noteUrl} alt="Generated Note" layout="fill" className="object-contain p-4" />
         </div>
         <div className="space-y-2">
-            <DownloadDialog dataUrl={noteUrl} fileName="handwritten-note">
-                <Button className="w-full">
-                    <Download className="mr-2 h-4 w-4" /> Download
-                </Button>
-            </DownloadDialog>
+            <Button className="w-full" onClick={handleDownload}>
+                <Download className="mr-2 h-4 w-4" /> Download
+            </Button>
             <Button variant="secondary" className="w-full" onClick={handleStartOver}>
                 <RefreshCw className="mr-2 h-4 w-4" /> Create Another
             </Button>

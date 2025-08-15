@@ -8,7 +8,7 @@ import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Download, RefreshCw } from "lucide-react";
 import LoadingIndicator from "@/components/layout/loading-indicator";
-import { DownloadDialog } from "@/components/download-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 interface ConvertedImage {
   url: string;
@@ -21,6 +21,7 @@ export default function PdfToImageResultPage() {
     const [loading, setLoading] = useState(true);
     const [toolColor, setToolColor] = useState("hsl(var(--primary))");
     const router = useRouter();
+    const { toast } = useToast();
 
     useEffect(() => {
         const imagesStr = sessionStorage.getItem("convertedImages");
@@ -46,6 +47,18 @@ export default function PdfToImageResultPage() {
         router.push("/photo/pdf-to-image");
     }
 
+    const handleDownload = (url: string, page: number) => {
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `page-${page}.${imageType}`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast({
+            title: `Page ${page} Download Started`,
+        });
+    }
+
     if (loading) {
         return (
              <div className="flex flex-col h-full">
@@ -68,11 +81,9 @@ export default function PdfToImageResultPage() {
               <div className="relative w-full aspect-[8.5/11] border-2 border-dashed rounded-lg bg-secondary" style={{ borderColor: toolColor }}>
                   <Image src={image.url} alt={`Page ${image.page}`} layout="fill" className="object-contain p-2" />
                   <div className="absolute top-2 right-2">
-                    <DownloadDialog dataUrl={image.url} fileName={`page-${image.page}`}>
-                      <Button size="icon" className="h-9 w-9" style={{ backgroundColor: toolColor }}>
-                          <Download className="h-5 w-5" />
-                      </Button>
-                    </DownloadDialog>
+                    <Button size="icon" className="h-9 w-9" style={{ backgroundColor: toolColor }} onClick={() => handleDownload(image.url, image.page)}>
+                        <Download className="h-5 w-5" />
+                    </Button>
                   </div>
               </div>
           </div>

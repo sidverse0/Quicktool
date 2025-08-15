@@ -8,13 +8,14 @@ import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Download, RefreshCw } from "lucide-react";
 import LoadingIndicator from "@/components/layout/loading-indicator";
-import { DownloadDialog } from "@/components/download-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SignatureResultPage() {
     const [signatureUrl, setSignatureUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [borderColor, setBorderColor] = useState("hsl(var(--border))");
     const router = useRouter();
+    const { toast } = useToast();
 
     useEffect(() => {
         const url = sessionStorage.getItem("signatureImageDataUrl");
@@ -37,6 +38,20 @@ export default function SignatureResultPage() {
         router.push("/text/signature");
     }
 
+     const handleDownload = () => {
+        if (!signatureUrl) return;
+        const link = document.createElement("a");
+        link.href = signatureUrl;
+        link.download = "signature.png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast({
+            title: "Download Started",
+            description: "Your signature is downloading.",
+        });
+    }
+
     if (loading || !signatureUrl) {
         return (
              <div className="flex flex-col h-full">
@@ -57,11 +72,9 @@ export default function SignatureResultPage() {
             <Image src={signatureUrl} alt="Generated Signature" layout="fill" className="object-contain p-4" />
         </div>
         <div className="space-y-2">
-            <DownloadDialog dataUrl={signatureUrl} fileName="signature">
-                <Button className="w-full">
-                    <Download className="mr-2 h-4 w-4" /> Download
-                </Button>
-            </DownloadDialog>
+            <Button className="w-full" onClick={handleDownload}>
+                <Download className="mr-2 h-4 w-4" /> Download
+            </Button>
             <Button variant="secondary" className="w-full" onClick={handleStartOver}>
                 <RefreshCw className="mr-2 h-4 w-4" /> Create Another
             </Button>

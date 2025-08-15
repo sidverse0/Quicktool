@@ -9,17 +9,18 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Download, RefreshCw } from "lucide-react";
 import LoadingIndicator from "@/components/layout/loading-indicator";
-import { DownloadDialog } from "@/components/download-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ResizeSizeResultPage() {
     const [originalUrl, setOriginalUrl] = useState<string | null>(null);
     const [resizedUrl, setResizedUrl] = useState<string | null>(null);
-    const [fileName, setFileName] = useState("resized-image");
+    const [fileName, setFileName] = useState("resized-image.jpg");
     const [originalSize, setOriginalSize] = useState<number | null>(null);
     const [resizedSize, setResizedSize] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
     const [borderColor, setBorderColor] = useState("hsl(var(--border))");
     const router = useRouter();
+    const { toast } = useToast();
 
     useEffect(() => {
         const original = sessionStorage.getItem("originalImageDataUrl");
@@ -30,7 +31,7 @@ export default function ResizeSizeResultPage() {
         if (resized && original && name) {
             setOriginalUrl(original);
             setResizedUrl(resized);
-            setFileName(name.split('.')[0]);
+            setFileName(name);
             if(color) {
                 setBorderColor(color);
             }
@@ -61,6 +62,21 @@ export default function ResizeSizeResultPage() {
         router.push("/photo/resize-size");
     }
 
+     const handleDownload = () => {
+        if (!resizedUrl) return;
+        const link = document.createElement("a");
+        link.href = resizedUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast({
+            title: "Download Started",
+            description: "Your compressed image is downloading.",
+        });
+    }
+
+
     if (loading || !resizedUrl || !originalUrl) {
         return (
              <div className="flex flex-col h-full">
@@ -89,11 +105,9 @@ export default function ResizeSizeResultPage() {
             </div>
         </div>
         <div className="space-y-2">
-            <DownloadDialog dataUrl={resizedUrl} fileName={fileName}>
-                <Button className="w-full">
-                    <Download className="mr-2 h-4 w-4" /> Download
-                </Button>
-            </DownloadDialog>
+            <Button className="w-full" onClick={handleDownload}>
+                <Download className="mr-2 h-4 w-4" /> Download
+            </Button>
             <Button variant="secondary" className="w-full" onClick={handleStartOver}>
                 <RefreshCw className="mr-2 h-4 w-4" /> Compress Another
             </Button>

@@ -8,14 +8,15 @@ import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Download, RefreshCw } from "lucide-react";
 import LoadingIndicator from "@/components/layout/loading-indicator";
-import { DownloadDialog } from "@/components/download-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 export default function ResizeResultPage() {
     const [resizedUrl, setResizedUrl] = useState<string | null>(null);
-    const [fileName, setFileName] = useState("resized-image");
+    const [fileName, setFileName] = useState("resized-image.png");
     const [loading, setLoading] = useState(true);
     const [borderColor, setBorderColor] = useState("hsl(var(--border))");
     const router = useRouter();
+    const { toast } = useToast();
 
     useEffect(() => {
         const resized = sessionStorage.getItem("resizedImageDataUrl");
@@ -24,7 +25,7 @@ export default function ResizeResultPage() {
 
         if (resized && name) {
             setResizedUrl(resized);
-            setFileName(name.split('.')[0]);
+            setFileName(name);
             if (color) {
                 setBorderColor(color);
             }
@@ -40,6 +41,20 @@ export default function ResizeResultPage() {
         sessionStorage.removeItem("resizedImageFileName");
         sessionStorage.removeItem("toolColor");
         router.push("/photo/resize-dimensions");
+    }
+
+    const handleDownload = () => {
+        if (!resizedUrl) return;
+        const link = document.createElement("a");
+        link.href = resizedUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast({
+            title: "Download Started",
+            description: "Your resized image is downloading.",
+        });
     }
 
     if (loading || !resizedUrl) {
@@ -62,11 +77,9 @@ export default function ResizeResultPage() {
             <Image src={resizedUrl} alt="Resized Image" layout="fill" className="rounded-lg object-contain p-2" />
         </div>
         <div className="space-y-2">
-            <DownloadDialog dataUrl={resizedUrl} fileName={fileName}>
-                <Button className="w-full">
-                    <Download className="mr-2 h-4 w-4" /> Download
-                </Button>
-            </DownloadDialog>
+            <Button className="w-full" onClick={handleDownload}>
+                <Download className="mr-2 h-4 w-4" /> Download
+            </Button>
             <Button variant="secondary" className="w-full" onClick={handleStartOver}>
                 <RefreshCw className="mr-2 h-4 w-4" /> Resize Another
             </Button>

@@ -7,20 +7,21 @@ import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Download, RefreshCw } from "lucide-react";
 import LoadingIndicator from "@/components/layout/loading-indicator";
-import { DownloadDialog } from "@/components/download-dialog";
 import QRCodeStyling from "qr-code-styling";
 import type { Options as QRCodeStylingOptions } from "qr-code-styling";
+import { useToast } from "@/hooks/use-toast";
 
 function QRResult() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const ref = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const qrCodeRef = useRef<QRCodeStyling | null>(null);
   
   const [qrValue, setQrValue] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [borderColor, setBorderColor] = useState("hsl(var(--border))");
-  const [dataUrl, setDataUrl] = useState<string | null>(null);
+  const { toast } = useToast();
 
   const [options, setOptions] = useState<QRCodeStylingOptions>({
     data: "https://firebasestudio.com",
@@ -64,7 +65,7 @@ function QRResult() {
     
     const size = containerRef.current.offsetWidth - 48; // p-6 is 24px, so 2*24=48
 
-    const qrCode = new QRCodeStyling({
+    qrCodeRef.current = new QRCodeStyling({
       ...options,
       width: size,
       height: size,
@@ -72,22 +73,13 @@ function QRResult() {
     
     if(ref.current) {
         ref.current.innerHTML = "";
-        qrCode.append(ref.current);
-        qrCode.getRawData("png").then((blob) => {
-            if(blob) {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    setDataUrl(reader.result as string);
-                };
-                reader.readAsDataURL(blob);
-            }
-        });
+        qrCodeRef.current.append(ref.current);
     }
     
     const handleResize = () => {
-        if (!ref.current || !containerRef.current) return;
+        if (!ref.current || !containerRef.current || !qrCodeRef.current) return;
         const newSize = containerRef.current.offsetWidth - 48;
-        qrCode.update({ width: newSize, height: newSize });
+        qrCodeRef.current.update({ width: newSize, height: newSize });
     }
     window.addEventListener('resize', handleResize);
 
@@ -101,6 +93,18 @@ function QRResult() {
     sessionStorage.removeItem("toolColor");
     router.back();
   };
+
+  const handleDownload = () => {
+      if (!qrCodeRef.current) return;
+      qrCodeRef.current.download({
+          name: "qrcode",
+          extension: "png"
+      });
+      toast({
+          title: "Download Started",
+          description: "Your QR code is downloading.",
+      });
+  }
 
   if (isLoading) {
     return (
@@ -123,15 +127,14 @@ function QRResult() {
             </div>
         </div>
         <div className="space-y-2">
-            <DownloadDialog dataUrl={dataUrl} fileName="qrcode">
-                <Button
-                    className="w-full"
-                    disabled={!qrValue}
-                >
-                    <Download className="mr-2 h-4 w-4" />
-                    Download QR Code
-                </Button>
-            </DownloadDialog>
+            <Button
+                className="w-full"
+                disabled={!qrValue}
+                onClick={handleDownload}
+            >
+                <Download className="mr-2 h-4 w-4" />
+                Download QR Code
+            </Button>
             <Button variant="secondary" className="w-full" onClick={handleStartOver}>
                 <RefreshCw className="mr-2 h-4 w-4" /> Create Another
             </Button>

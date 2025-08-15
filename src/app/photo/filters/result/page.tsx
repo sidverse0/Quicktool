@@ -8,14 +8,15 @@ import PageHeader from "@/components/layout/page-header";
 import { Button } from "@/components/ui/button";
 import { Download, RefreshCw } from "lucide-react";
 import LoadingIndicator from "@/components/layout/loading-indicator";
-import { DownloadDialog } from "@/components/download-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 export default function FilterResultPage() {
     const [filteredUrl, setFilteredUrl] = useState<string | null>(null);
-    const [fileName, setFileName] = useState("filtered-image");
+    const [fileName, setFileName] = useState("filtered-image.png");
     const [loading, setLoading] = useState(true);
     const [borderColor, setBorderColor] = useState("hsl(var(--border))");
     const router = useRouter();
+    const { toast } = useToast();
 
     useEffect(() => {
         const filtered = sessionStorage.getItem("filteredImageDataUrl");
@@ -24,7 +25,7 @@ export default function FilterResultPage() {
 
         if (filtered && name) {
             setFilteredUrl(filtered);
-            setFileName(name.split('.')[0]);
+            setFileName(name);
             if (color) {
                 setBorderColor(color);
             }
@@ -39,6 +40,20 @@ export default function FilterResultPage() {
         sessionStorage.removeItem("filteredImageFileName");
         sessionStorage.removeItem("toolColor");
         router.push("/photo/filters");
+    }
+
+    const handleDownload = () => {
+        if (!filteredUrl) return;
+        const link = document.createElement("a");
+        link.href = filteredUrl;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        toast({
+            title: "Download Started",
+            description: "Your filtered image is downloading.",
+        });
     }
 
     if (loading || !filteredUrl) {
@@ -61,11 +76,9 @@ export default function FilterResultPage() {
             <Image src={filteredUrl} alt="Filtered Image" layout="fill" className="rounded-lg object-contain p-2" />
         </div>
         <div className="space-y-2">
-            <DownloadDialog dataUrl={filteredUrl} fileName={fileName}>
-                <Button className="w-full">
-                    <Download className="mr-2 h-4 w-4" /> Download
-                </Button>
-            </DownloadDialog>
+            <Button className="w-full" onClick={handleDownload}>
+                <Download className="mr-2 h-4 w-4" /> Download
+            </Button>
             <Button variant="secondary" className="w-full" onClick={handleStartOver}>
                 <RefreshCw className="mr-2 h-4 w-4" /> Filter Another
             </Button>
