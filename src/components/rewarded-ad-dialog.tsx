@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -28,12 +28,14 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
   const [canClaim, setCanClaim] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     if (!isOpen) {
       setHasStarted(false);
       setCountdown(COUNTDOWN_SECONDS);
       setCanClaim(false);
+      videoRef.current?.pause();
       return;
     }
 
@@ -61,9 +63,10 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
 
   const handleStart = () => {
     setHasStarted(true);
+    videoRef.current?.play();
   }
   
-  const videoSrc = "https://video-link-generator.replit.app/v/opxigdj1cabi2d52epmm6g";
+  const videoSrc = "https://files.catbox.moe/3v5etq.mp4";
 
   return (
     <>
@@ -73,21 +76,18 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
             <AlertDialogTitle className="text-center">Watch & Earn</AlertDialogTitle>
           </AlertDialogHeader>
           <div className="aspect-video relative w-full bg-black rounded-md overflow-hidden flex items-center justify-center">
-             {!hasStarted ? (
-                <button onClick={handleStart} className="flex flex-col items-center justify-center text-white/80 hover:text-white transition-colors">
+             {!hasStarted && (
+                <button onClick={handleStart} className="absolute inset-0 z-10 flex flex-col items-center justify-center text-white/80 hover:text-white transition-colors bg-black/50">
                     <PlayCircle className="h-20 w-20" />
                     <span className="font-semibold mt-2">Tap to Play</span>
                 </button>
-             ) : (
-                <iframe
-                    src={videoSrc}
-                    title="YouTube video player"
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    className="w-full h-full"
-                ></iframe>
              )}
+             <video
+                ref={videoRef}
+                src={videoSrc}
+                playsInline
+                className="w-full h-full object-contain"
+             />
           </div>
           {hasStarted && (
             <AlertDialogFooter>
