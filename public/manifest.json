@@ -1,7 +1,7 @@
 {
   "name": "Quick Tool",
   "short_name": "QuickTool",
-  "description": "An all-in-one toolbox for photos, QR codes, and more.",
+  "description": "An all-in-one toolbox for photos, QR codes, and more, powered by AI.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -10,12 +10,14 @@
     {
       "src": "https://i.postimg.cc/kXnSKfgf/wrench.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "https://i.postimg.cc/kXnSKfgf/wrench.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
