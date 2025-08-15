@@ -18,6 +18,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className="h-full">
       <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#6366F1" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
           rel="preconnect"

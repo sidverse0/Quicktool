@@ -1,0 +1,21 @@
+{
+  "name": "Quick Tool",
+  "short_name": "QuickTool",
+  "description": "An all-in-one toolbox for photos, QR codes, and more.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6366F1",
+  "icons": [
+    {
+      "src": "https://i.postimg.cc/kXnSKfgf/wrench.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://i.postimg.cc/kXnSKfgf/wrench.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
