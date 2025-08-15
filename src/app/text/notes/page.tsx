@@ -124,7 +124,7 @@ export default function HandwrittenNotesPage() {
                 }
             }
             
-            ctx.font = `400 ${fontSize}px ${fontFamily.split(',')[0].replace(/'/g, "")}`;
+            ctx.font = `${fontSize}px ${fontFamily.split(',')[0].replace(/'/g, "")}`;
             ctx.fillStyle = inkColor;
             ctx.textBaseline = 'alphabetic';
 
@@ -187,7 +187,7 @@ export default function HandwrittenNotesPage() {
             className="flex-1 min-h-0 w-full rounded-lg border shadow-inner overflow-y-auto"
             style={noteStyle}
         >
-          {text}
+          <div className="whitespace-pre-wrap break-words">{text}</div>
         </div>
           
         <div className="space-y-6">
