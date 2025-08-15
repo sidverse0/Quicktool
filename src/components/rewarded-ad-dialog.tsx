@@ -13,7 +13,6 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Coins, PlayCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SuccessDialog } from "./success-dialog";
 
 interface RewardedAdDialogProps {
   isOpen: boolean;
@@ -26,9 +25,9 @@ const COUNTDOWN_SECONDS = 30;
 export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdDialogProps) {
   const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS);
   const [canClaim, setCanClaim] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     if (!isOpen) {
@@ -58,7 +57,10 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
   const handleClaim = () => {
     onReward();
     onOpenChange(false);
-    setShowSuccess(true);
+    toast({
+        title: "Reward Claimed!",
+        description: "You've earned 10 coins.",
+    });
   };
 
   const handleStart = () => {
@@ -69,7 +71,6 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
   const videoSrc = "https://files.catbox.moe/3v5etq.mp4";
 
   return (
-    <>
       <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
         <AlertDialogContent className="max-w-xl">
           <AlertDialogHeader>
@@ -102,12 +103,5 @@ export function RewardedAdDialog({ isOpen, onOpenChange, onReward }: RewardedAdD
           )}
         </AlertDialogContent>
       </AlertDialog>
-       <SuccessDialog
-            isOpen={showSuccess}
-            onClose={() => setShowSuccess(false)}
-            title="Reward Claimed!"
-            description="You've earned 10 coins."
-        />
-    </>
   );
 }
